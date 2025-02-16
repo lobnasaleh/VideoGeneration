@@ -16,7 +16,7 @@ namespace CoursesManagementSystem.Models
         // Navigation Properties
         public virtual Course? Course { get; set; }
 
-        public QuestionLevel? QuestionLevel { get; set; }
+        public QuestionLevel? QuestionLevel  { get; set; }
 
 
     }
