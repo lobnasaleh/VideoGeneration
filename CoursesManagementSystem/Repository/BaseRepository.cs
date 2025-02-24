@@ -3,12 +3,11 @@ using CoursesManagementSystem.Data;
 using CoursesManagementSystem.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using System.Security.Claims;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CoursesManagementSystem.Repository
 {
-    public class BaseRepository<T> : IBaseRepository<T> where T : Claim
+    public class BaseRepository<T> : IBaseRepository<T> where T :class
     {
         private readonly ApplicationDbContext context;
 
