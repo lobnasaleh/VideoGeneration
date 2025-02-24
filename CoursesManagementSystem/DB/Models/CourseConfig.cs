@@ -4,9 +4,9 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CoursesManagementSystem.Models
+namespace CoursesManagementSystem.DB.Models
 {
-    public class CourseConfig:SharedModel
+    public class CourseConfig : SharedModel
     {
         [Range(1, int.MaxValue, ErrorMessage = "Chapters count must be at least 1.")]
         public int ChaptersCount { get; set; }
@@ -15,16 +15,16 @@ namespace CoursesManagementSystem.Models
         [Range(1, int.MaxValue, ErrorMessage = "Video duration must be at least 1 minute.")]
         public int VideoDurationInMin { get; set; }
         [Required(ErrorMessage = "Language is required.")]
-        public  VideoPresenterLanguage Language { get; set; }
+        public VideoPresenterLanguageEnum Language { get; set; }
         [Required(ErrorMessage = "Persona is required.")]
 
-        public VideoPresenterPersona Persona { get; set; }
+        public VideoPresenterPersonaEnum Persona { get; set; }
 
         [ForeignKey(nameof(Course))]
         [Required(ErrorMessage = "Course ID is required.")]
         public int CourseId { get; set; }
         //Navigation Properties 
-        public Course? Course { get; set; }
+        public Course Course { get; set; }
 
     }
 }

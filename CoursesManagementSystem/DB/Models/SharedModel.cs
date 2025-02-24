@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CoursesManagementSystem.Models
+namespace CoursesManagementSystem.DB.Models
 {
     public abstract class SharedModel
     {
@@ -9,11 +9,10 @@ namespace CoursesManagementSystem.Models
 
         public DateTime CreatedAt { get; set; }
 
-        [Required]
         public string CreatedBy { get; set; }
 
         public DateTime? LastModifiedAt { get; set; }
 
-        public string? LastModifiedBy { get; set; }
+        public string LastModifiedBy { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace CoursesManagementSystem.Enums
 {
-    public enum VideoPresenterPersona
+    public enum VideoPresenterPersonaEnum
     {
         AFRICANLADY=1,AFRICANMAN=2
     }

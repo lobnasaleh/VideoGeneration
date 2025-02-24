@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CoursesManagementSystem.Models
+namespace CoursesManagementSystem.DB.Models
 {
     public class Question : SharedModel
     {
@@ -12,7 +12,7 @@ namespace CoursesManagementSystem.Models
 
         public string QuestionInstructions { get; set; }
         [Required(ErrorMessage = "Question type is required")]
-        public QuestionType QuestionType { get; set; }
+        public QuestionTypeEnum QuestionType { get; set; }
 
         [ForeignKey(nameof(Lesson))]
         [Required(ErrorMessage = "Lesson ID is required")]
@@ -24,12 +24,12 @@ namespace CoursesManagementSystem.Models
 
         //Navigation Properties
 
-        public virtual QuestionLevel? QuestionLevel { get; set; }
+        public QuestionLevel QuestionLevel { get; set; }
 
-        public virtual Lesson? Lesson { get; set; }
+        public  Lesson Lesson { get; set; }
 
-        public virtual ICollection<Answer>? Answers { get; set; }
-         
+        public  ICollection<Answer> Answers { get; set; }
+
 
 
     }

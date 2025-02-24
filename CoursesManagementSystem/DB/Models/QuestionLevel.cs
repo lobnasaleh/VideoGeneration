@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.InteropServices.Marshalling;
 
-namespace CoursesManagementSystem.Models
+namespace CoursesManagementSystem.DB.Models
 {
+    [Index(nameof(Name), IsUnique = true, Name = "UniqueQuestionLevelName")]
     public class QuestionLevel : SharedModel
     {
         [Required(ErrorMessage = "Level name is required")]
@@ -11,13 +13,14 @@ namespace CoursesManagementSystem.Models
         [Required(ErrorMessage = "DifficultyScore is required")]
 
         [Range(1, 100, ErrorMessage = "Difficulty score must be between 1 and 100")]
-        public int DifficultyScore { get; set; }    
+        public int DifficultyScore { get; set; }
 
         //Navigation Properties
 
-        public virtual ICollection<Question>?Questions { get; set; }
+        public ICollection<Question> Questions { get; set; }
 
-        public virtual CourseQuestionConfig CourseQuestionConfig { get; set; }
+        public CourseQuestionConfig CourseQuestionConfig { get; set; }
+
 
     }
 }

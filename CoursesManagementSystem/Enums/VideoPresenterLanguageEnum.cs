@@ -1,6 +1,6 @@
 ﻿namespace CoursesManagementSystem.Enums
 {
-    public enum VideoPresenterLanguage
+    public enum VideoPresenterLanguageEnum
     {
         ENGLISH=1, SWAHILI=2
     }

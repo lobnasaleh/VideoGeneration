@@ -2,9 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CoursesManagementSystem.Models
+namespace CoursesManagementSystem.DB.Models
 {
-    public class CourseQuestionConfig:SharedModel
+    public class CourseQuestionConfig : SharedModel
     {
         public int QuestionsCountPerLesson { get; set; }
         [ForeignKey(nameof(Course))]
@@ -14,9 +14,8 @@ namespace CoursesManagementSystem.Models
         [Required(ErrorMessage = "Question Level ID is required.")]
         public int QuestionLevelId { get; set; }//1-->easy
         // Navigation Properties
-        public virtual Course? Course { get; set; }
-
-        public QuestionLevel? QuestionLevel { get; set; }
+        public  Course Course { get; set; }
+        public QuestionLevel QuestionLevel { get; set; }
 
 
     }

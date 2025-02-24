@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CoursesManagementSystem.Models
+namespace CoursesManagementSystem.DB.Models
 {
     public class Answer : SharedModel
     {
         [Required(ErrorMessage = "Answer text is required")]
-         public string AnswerText { get; set; }
+        public string AnswerText { get; set; }
 
         public bool IsCorrect { get; set; }
 
@@ -15,6 +15,6 @@ namespace CoursesManagementSystem.Models
         public int QuestionId { get; set; }
         //Navigation Properties
 
-        public Question? Question { get; set; }
+        public Question Question { get; set; }
     }
 }

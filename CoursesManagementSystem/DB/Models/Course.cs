@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CoursesManagementSystem.Models
+namespace CoursesManagementSystem.DB.Models
 {
     public class Course : SharedModel
     {
@@ -10,10 +10,12 @@ namespace CoursesManagementSystem.Models
         public string Name { get; set; }
         [Required(ErrorMessage = "Details are required")]
         [StringLength(1000, ErrorMessage = "Details cannot exceed 1000 characters")]
+        [DataType(DataType.MultilineText)]
         public string Details { get; set; }
 
         [Url(ErrorMessage = "Invalid URL format")]
         [Required(ErrorMessage = "Book URL is required")]
+        [DataType(DataType.Url)]
         public string BookStorageURL { get; set; }
 
         [ForeignKey(nameof(Category))]
@@ -26,12 +28,12 @@ namespace CoursesManagementSystem.Models
 
         //Navigation Properties 
 
-        public virtual Category? Category { get; set; }
+        public Category Category { get; set; }
 
-        public virtual Level? Level { get; set; }
+        public Level Level { get; set; }
 
-        public virtual CourseConfig? CourseConfig { get; set; }
+        public CourseConfig CourseConfig { get; set; }
 
-        public virtual ICollection<CourseQuestionConfig>? CourseQuestionsConfig { get; set; }
+        public ICollection<CourseQuestionConfig> CourseQuestionsConfig { get; set; }
     }
 }

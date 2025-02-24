@@ -1,4 +1,4 @@
-﻿using CoursesManagementSystem.Models;
+﻿using CoursesManagementSystem.DB.Models;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -27,7 +27,7 @@ namespace CoursesManagementSystem.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<CourseConfig>()
+           /* modelBuilder.Entity<CourseConfig>()
                 .HasOne(cc => cc.Course)
                 .WithOne(c=>c.CourseConfig)
                 .HasForeignKey<CourseConfig>(c => c.CourseId);
@@ -37,7 +37,7 @@ namespace CoursesManagementSystem.Data
               .HasOne(cqc => cqc.QuestionLevel)
               .WithOne(ql => ql.CourseQuestionConfig)
               .HasForeignKey<CourseQuestionConfig>(c => c.QuestionLevelId);
-
+*/
 
 
             base.OnModelCreating(modelBuilder);

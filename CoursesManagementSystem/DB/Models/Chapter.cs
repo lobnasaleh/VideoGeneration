@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CoursesManagementSystem.Models
+namespace CoursesManagementSystem.DB.Models
 {
     public class Chapter : SharedModel
     {
@@ -11,7 +11,7 @@ namespace CoursesManagementSystem.Models
         [Required(ErrorMessage = "Details are required")]
         public string Details { get; set; }
         [Range(1, int.MaxValue, ErrorMessage = "Sort order must be at least 1")]
-        public int Sort {  get; set; }
+        public int Sort { get; set; }
 
         [ForeignKey(nameof(Course))]
         [Required(ErrorMessage = "Course ID is required")]
@@ -19,9 +19,9 @@ namespace CoursesManagementSystem.Models
 
         //Navigation Properties 
 
-        public virtual Course? Course {  get; set; } 
+        public  Course Course { get; set; }
 
-        public virtual ICollection<Lesson>? Lessons { get; set; }
+        public ICollection<Lesson> Lessons { get; set; }
 
 
     }
