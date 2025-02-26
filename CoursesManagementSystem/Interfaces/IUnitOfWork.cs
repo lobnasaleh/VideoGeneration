@@ -13,6 +13,7 @@
         public IQuestionLevelRepository QuestionLevelRepository { get; }
         public IQuestionRepository QuestionRepository { get; }
 
+        public Task<int> CompleteAsync();
 
     }
 }
