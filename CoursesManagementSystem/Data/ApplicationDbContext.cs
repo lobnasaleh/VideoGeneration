@@ -27,21 +27,24 @@ namespace CoursesManagementSystem.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           /* modelBuilder.Entity<CourseConfig>()
-                .HasOne(cc => cc.Course)
-                .WithOne(c=>c.CourseConfig)
-                .HasForeignKey<CourseConfig>(c => c.CourseId);
+            /* modelBuilder.Entity<CourseConfig>()
+                 .HasOne(cc => cc.Course)
+                 .WithOne(c=>c.CourseConfig)
+                 .HasForeignKey<CourseConfig>(c => c.CourseId);
 
 
-            modelBuilder.Entity<CourseQuestionConfig>()
-              .HasOne(cqc => cqc.QuestionLevel)
-              .WithOne(ql => ql.CourseQuestionConfig)
-              .HasForeignKey<CourseQuestionConfig>(c => c.QuestionLevelId);
-*/
-
+             modelBuilder.Entity<CourseQuestionConfig>()
+               .HasOne(cqc => cqc.QuestionLevel)
+               .WithOne(ql => ql.CourseQuestionConfig)
+               .HasForeignKey<CourseQuestionConfig>(c => c.QuestionLevelId);
+ */
+            modelBuilder.Entity<Category>()
+                 .HasIndex(c => c.Name)
+                 .IsUnique();
 
             base.OnModelCreating(modelBuilder);
         }
+        
 
     }
 }

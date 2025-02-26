@@ -1,0 +1,39 @@
+﻿@model CoursesManagementSystem.DB.Models.Category
+
+@{
+    ViewData["Title"] = "Add A Category";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <h3 class="text-primary mb-4">
+            <i class="bi bi-plus-circle-dotted"></i> Create a New Category
+        </h3>
+
+        <form asp-controller="Category" asp-action="Create" method="post">
+            <div class="row">
+                <div class="col-md-8">
+                    <!-- Category Name -->
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label fw-bold">Category Name</label>
+                        <input type="text" class="form-control" asp-for="Name" placeholder="Enter category name">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <!-- Created By -->
+                    <div class="mb-3">
+                        <label asp-for="CreatedBy" class="form-label fw-bold">Created By</label>
+                        <input type="text" class="form-control" asp-for="CreatedBy" placeholder="Enter your name">
+                        <span asp-validation-for="CreatedBy" class="text-danger"></span>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <a class="btn btn-secondary" asp-action="GetAll">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

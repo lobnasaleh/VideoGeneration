@@ -1,6 +1,7 @@
 ﻿using CoursesManagementSystem.Data;
 using CoursesManagementSystem.DB.Models;
 using CoursesManagementSystem.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoursesManagementSystem.Repository
 {
@@ -10,6 +11,10 @@ namespace CoursesManagementSystem.Repository
         public CategoryRepository(ApplicationDbContext context):base(context) 
         {
             this.context = context;
+        }
+        public async Task<Category> GetByIdAsync(int id)
+        {
+            return await context.Categories.FindAsync(id);
         }
     }
 }
