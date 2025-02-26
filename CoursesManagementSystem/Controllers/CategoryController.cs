@@ -7,11 +7,12 @@ namespace CoursesManagementSystem.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ICategoryRepository _categoryRepository;
+        //private readonly ICategoryRepository _categoryRepository;
+        private readonly IUnitOfWork unitOfWork;
 
-        public CategoryController(ICategoryRepository categoryRepository)
+        public CategoryController(IUnitOfWork unitOfWork)
         {
-            this._categoryRepository = categoryRepository;
+            this.unitOfWork = unitOfWork;
 
         }
         public IActionResult Index()
@@ -22,7 +23,7 @@ namespace CoursesManagementSystem.Controllers
 
         public async Task<IActionResult> GetAll()
         {
-            var categories = await _categoryRepository.GetAllAsync();
+            var categories = await unitOfWork.CategoryRepository.GetAllAsync();
 
             return View(categories);
         }
@@ -40,8 +41,9 @@ namespace CoursesManagementSystem.Controllers
             {
                 category.CreatedAt = DateTime.UtcNow;
                // category.CreatedBy = User.Identity.Name ?? "System";
-                await _categoryRepository.AddAsync(category);
-                
+                await unitOfWork.CategoryRepository.AddAsync(category);
+                //  _categoryRepository.AddAsync(category);
+                await unitOfWork.CompleteAsync();
                 return RedirectToAction(nameof(GetAll));
             }
 
@@ -51,7 +53,7 @@ namespace CoursesManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var category = await _categoryRepository.GetByIdAsync(id);
+            var category = await unitOfWork.CategoryRepository.GetByIdAsync(id);
 
             if (category == null)
             {
@@ -69,7 +71,7 @@ namespace CoursesManagementSystem.Controllers
 
             if (ModelState.IsValid)
             {
-                var existcategory = await _categoryRepository.GetByIdAsync(id);
+                var existcategory = await unitOfWork.CategoryRepository.GetByIdAsync(id);
 
                 if(existcategory == null)
                     return BadRequest();
@@ -78,8 +80,8 @@ namespace CoursesManagementSystem.Controllers
                 //existcategory.LastModifiedBy = User.Identity.Name ?? "System";
                 existcategory.LastModifiedBy = category.LastModifiedBy;
 
-                _categoryRepository.Update(existcategory);
-
+                unitOfWork.CategoryRepository.Update(existcategory);
+                await unitOfWork.CompleteAsync();
 
                 return RedirectToAction(nameof(GetAll));
 

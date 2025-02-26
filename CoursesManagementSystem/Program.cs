@@ -21,6 +21,7 @@ namespace CoursesManagementSystem
                 options.UseSqlServer(connectionString));
 
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             var app = builder.Build();
 

@@ -19,7 +19,7 @@ namespace CoursesManagementSystem.Repository
         {
 
            await context.Set<T>().AddAsync(entity);
-            context.SaveChanges();
+            
             return entity;
 
         }
@@ -97,7 +97,7 @@ namespace CoursesManagementSystem.Repository
         public void Update(T newentity)
         {
             context.Set<T>().Update(newentity);
-            context.SaveChanges();
+            
         }
     }
 }
