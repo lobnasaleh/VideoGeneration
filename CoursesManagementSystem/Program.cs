@@ -1,4 +1,6 @@
 using CoursesManagementSystem.Data;
+using CoursesManagementSystem.Interfaces;
+using CoursesManagementSystem.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoursesManagementSystem
@@ -17,6 +19,8 @@ namespace CoursesManagementSystem
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
+
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
             var app = builder.Build();
 
