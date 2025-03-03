@@ -1,6 +1,6 @@
 ﻿namespace CoursesManagementSystem.Interfaces
 {
-    public interface IUnitOfWork:IDisposable    
+    public interface IUnitOfWork : IDisposable
     {
         public IAnswerRepository AnswerRepository { get ; }
         public ICategoryRepository CategoryRepository { get; }

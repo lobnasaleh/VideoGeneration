@@ -6,40 +6,120 @@ namespace CoursesManagementSystem.Repository
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext _context;
+        private IAnswerRepository _AnswerRepository;
+        private ICategoryRepository _CategoryRepository;
+        private IChapterRepository _ChapterRepository;
+        private ICourseConfigRepository _CourseConfigRepository;
+        private ICourseQuestionConfigRepository _CourseQuestionConfigRepository;
+        private ICourseRepository _CourseRepository;
+        private ILessonRepository _LessonRepository;
+        private ILevelRepository _LevelRepository;
+        private IQuestionLevelRepository _QuestionLevelRepository;
+        private IQuestionRepository _QuestionRepository;
+
+
+
         public UnitOfWork(ApplicationDbContext _context)
         {
             this._context = _context;
-            AnswerRepository=new AnswerRepository(_context);
-            CategoryRepository = new CategoryRepository(_context);
-            ChapterRepository = new ChapterRepository(_context);
-            CourseConfigRepository = new CourseConfigRepository(_context);
-            CourseQuestionConfigRepository = new CourseQuestionConfigRepository(_context);
-            CourseRepository = new CourseRepository(_context);
-            LessonRepository = new LessonRepository(_context);
-            LevelRepository = new LevelRepository(_context);
-            QuestionLevelRepository = new QuestionLevelRepository(_context);
-            QuestionRepository = new QuestionRepository(_context);
         }
 
-        public IAnswerRepository AnswerRepository { get;private set; }
+        public IAnswerRepository AnswerRepository
+        {
+            get
+            {
+                _AnswerRepository ??= new AnswerRepository(_context);
+                return _AnswerRepository;
+            }
 
-        public ICategoryRepository CategoryRepository { get; private set; }
+        }
+        public ICategoryRepository CategoryRepository
+        {
+            get
+            {
+                _CategoryRepository ??= new CategoryRepository(_context);
+                return _CategoryRepository;
 
-        public IChapterRepository ChapterRepository { get; private set; }
+            }
+        }
 
-        public ICourseConfigRepository CourseConfigRepository { get; private set; }
+        public IChapterRepository ChapterRepository
+        {
+            get
+            {
+                _ChapterRepository ??= new ChapterRepository(_context);
+                return _ChapterRepository;
 
-        public ICourseQuestionConfigRepository CourseQuestionConfigRepository { get; private set; }
+            }
+        }
 
-        public ICourseRepository CourseRepository { get; private set; }
+        public ICourseConfigRepository CourseConfigRepository
+        {
+            get
+            {
+                _CourseConfigRepository ??= new CourseConfigRepository(_context);
+                return _CourseConfigRepository;
 
-        public ILessonRepository LessonRepository { get; private set; }
+            }
+        }
 
-        public ILevelRepository LevelRepository { get; private set; }
+        public ICourseQuestionConfigRepository CourseQuestionConfigRepository
+        {
+            get
+            {
+                _CourseQuestionConfigRepository ??= new CourseQuestionConfigRepository(_context);
+                return _CourseQuestionConfigRepository;
 
-        public IQuestionLevelRepository QuestionLevelRepository { get; private set; }
+            }
+        }
 
-        public IQuestionRepository QuestionRepository { get; private set; }
+        public ICourseRepository CourseRepository
+        {
+            get
+            {
+                _CourseRepository ??= new CourseRepository(_context);
+                return _CourseRepository;
+
+            }
+        }
+
+        public ILessonRepository LessonRepository
+        {
+            get
+            {
+                _LessonRepository ??= new LessonRepository(_context);
+                return _LessonRepository;
+
+            }
+        }
+
+        public ILevelRepository LevelRepository
+        {
+            get
+            {
+                _LevelRepository ??= new LevelRepository(_context);
+                return _LevelRepository;
+            }
+        }
+
+        public IQuestionLevelRepository QuestionLevelRepository
+        {
+            get
+            {
+
+                _QuestionLevelRepository ??= new QuestionLevelRepository(_context);
+                return _QuestionLevelRepository;
+            }
+        }
+
+        public IQuestionRepository QuestionRepository
+        {
+            get
+            {
+                _QuestionRepository ??= new QuestionRepository(_context);
+                return _QuestionRepository;
+            }
+        }
 
         public void Dispose()
         {
@@ -49,6 +129,6 @@ namespace CoursesManagementSystem.Repository
         public async Task<int> CompleteAsync()
         {
             return await _context.SaveChangesAsync();
-        } 
+        }
     }
 }
