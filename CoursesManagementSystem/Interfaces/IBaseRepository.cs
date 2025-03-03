@@ -17,6 +17,10 @@ namespace CoursesManagementSystem.Interfaces
 
         public Task<T> GetAsync(Expression<Func<T, bool>>? condition, string[] include = null,bool Tracking=true);
 
+        //getById 
+        public Task<T> GetByIdAsync(int id);
+
+
         //add
         public Task<T> AddAsync(T entity);
 

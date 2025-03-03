@@ -94,6 +94,14 @@ namespace CoursesManagementSystem.Repository
             return await res.FirstOrDefaultAsync();
         }
 
+        public async Task<T> GetByIdAsync(int id)
+        {
+            var res = context.Set<T>();
+
+            return await res.FindAsync(id);
+           
+        }
+
         public void Update(T newentity)
         {
             context.Set<T>().Update(newentity);
