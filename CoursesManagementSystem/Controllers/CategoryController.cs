@@ -160,7 +160,7 @@ namespace CoursesManagementSystem.Controllers
             }
 
             c.IsDeleted = true;
-        await unitOfWork.CompleteAsync();
+            await unitOfWork.CompleteAsync();
             return RedirectToAction("GetAll");
 
 

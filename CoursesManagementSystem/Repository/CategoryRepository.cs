@@ -12,9 +12,6 @@ namespace CoursesManagementSystem.Repository
         {
             this.context = context;
         }
-        public async Task<Category> GetByIdAsync(int id)
-        {
-            return await context.Categories.FindAsync(id);
-        }
+
     }
 }
