@@ -1,0 +1,92 @@
+﻿@model IEnumerable<CoursesManagementSystem.DB.Models.QuestionLevel>
+
+@{
+    ViewData["Title"] = "QuestionLevels";
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-primary">QuestionLevels</h2>
+        <a class="btn btn-success btn-lg" asp-action="Create">
+        <i class="bi bi-plus-circle"></i> Add A QuestionLevel
+        </a>
+    </div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning text-center py-4">
+        <h4 class="alert-heading">No Question Levels Found!</h4>
+        <p class="mb-0">Start by adding a new Question Level.</p>
+    </div>
+}
+else{
+
+    <div class="col-12">
+        <div class="bg-light rounded h-100 p-4">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered shadow-sm rounded">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">DifficultyScore</th>
+                            <th scope="col">Created At</th>
+                            <th scope="col">Created By</th>
+                            <th scope="col">Last Modified At</th>
+                            <th scope="col">Last Modified By</th>
+                            <th scope="col" class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach(var questionLevel in Model)
+                    {
+                            <tr class="align-middle text-center clickable-row" data-id="@questionLevel.ID">
+                                <td>@questionLevel.Name</td>
+                                <td>@questionLevel.DifficultyScore</td>
+                                <td>@questionLevel.CreatedAt</td>
+                                <td>@questionLevel.CreatedBy</td>
+                                <td>@questionLevel.LastModifiedAt</td>
+                                <td>@questionLevel.LastModifiedBy</td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <a class="btn btn-warning btn-sm me-2" asp-action="Edit" asp-route-id="@questionLevel.ID" title="Edit">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+
+                                        <a class="btn btn-danger btn-sm me-2" asp-controller="QuestionLevel" asp-action="Delete" asp-route-id="@questionLevel.ID" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+
+                                    </div>
+                                </td>
+                            </tr>
+                    }
+                    
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const rows = document.querySelectorAll('.clickable-row');
+        rows.forEach(row => {
+            row.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                window.location.href = `@Url.Action("Details", "QuestionLevel")/${id}`;
+            });
+        });
+    });
+</script>
+
+<style>
+    .clickable-row {
+        cursor: pointer;
+    }
+
+</style>

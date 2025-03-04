@@ -1,0 +1,50 @@
+﻿@model CoursesManagementSystem.DB.Models.QuestionLevel
+
+@{
+    ViewData["Title"] = "Edit A Question Level";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <h3 class="text-warning mb-4">
+            <i class="bi bi-pencil-square"></i> Edit Category
+        </h3>
+
+        <form asp-controller="QuestionLevel" asp-action="Edit" method="post">
+            <div class="row">
+                <div class="col-md-8">
+                    <input type="hidden" asp-for="ID" />
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label fw-bold">QuestionLevel Name</label>
+                        <input type="text" class="form-control" asp-for="Name" placeholder="Enter Question Level name">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DifficultyScore" class="form-label fw-bold">Difficulty Score</label>
+                        <input type="number" class="form-control" asp-for="DifficultyScore" placeholder="Enter Difficulty Score">
+                        <span asp-validation-for="DifficultyScore" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="CreatedBy" class="form-label fw-bold">Created By</label>
+                        <input type="text" class="form-control" asp-for="CreatedBy" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="CreatedAt" class="form-label fw-bold">Created At</label>
+                        <input type="text" class="form-control" asp-for="CreatedAt" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="LastModifiedBy" class="form-label fw-bold">Last Modified By</label>
+                        <input type="text" class="form-control" asp-for="LastModifiedBy" placeholder="Enter your name">
+                        <span asp-validation-for="LastModifiedBy" class="text-danger"></span>
+                    </div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <a class="btn btn-secondary" asp-action="GetAll">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -4,6 +4,6 @@ namespace CoursesManagementSystem.Interfaces
 {
     public interface ICategoryRepository : IBaseRepository<Category>
     {
-       
+        
     }
 }

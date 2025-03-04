@@ -10,8 +10,9 @@ namespace CoursesManagementSystem.DB.Models
         [Required(ErrorMessage = "Level name is required")]
         [StringLength(50, ErrorMessage = "Name cannot exceed 50 characters")]
         public string Name { get; set; }
-        [Required(ErrorMessage = "DifficultyScore is required")]
 
+
+        [Required(ErrorMessage = "DifficultyScore is required")]
         [Range(1, 100, ErrorMessage = "Difficulty score must be between 1 and 100")]
         public int DifficultyScore { get; set; }
 
