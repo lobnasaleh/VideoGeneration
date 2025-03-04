@@ -33,16 +33,27 @@ namespace CoursesManagementSystem.Controllers
             if(ModelState.IsValid)
             {
                 category.CreatedAt = DateTime.UtcNow;
-               // category.CreatedBy = User.Identity.Name ?? "System";
+                // category.CreatedBy = User.Identity.Name ?? "System";
 
+                //check if category with this name already exists
+                var cat = await unitOfWork.CategoryRepository.GetAsync(c => !c.IsDeleted && c.Name == category.Name);
+                if (cat is not null)
+                {
+                    ModelState.AddModelError("Name", "A Category With This Name already exists");
+                    return View(category);
 
-                //check if category.name is unique and --->deleted?
+                }
 
+                //check if category is already marked deleted instead of inserting another row -->mark undeleted
 
-
-
+                var foundcategory = await unitOfWork.CategoryRepository.GetAsync(c=>c.IsDeleted && c.Name==category.Name);
+                if (foundcategory is not null)
+                {
+                    foundcategory.IsDeleted=false;
+                    await unitOfWork.CompleteAsync();
+                    return RedirectToAction(nameof(GetAll));
+                }
                 await unitOfWork.CategoryRepository.AddAsync(category);
-                //  _categoryRepository.AddAsync(category);
                 await unitOfWork.CompleteAsync();
                 return RedirectToAction(nameof(GetAll));
             }
