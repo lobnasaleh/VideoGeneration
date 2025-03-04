@@ -7,7 +7,7 @@ namespace CoursesManagementSystem.Controllers
 {
     public class CategoryController : Controller
     {
-          private readonly IUnitOfWork unitOfWork;
+        private readonly IUnitOfWork unitOfWork;
 
         public CategoryController(IUnitOfWork unitOfWork)
         {

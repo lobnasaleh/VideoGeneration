@@ -2,7 +2,7 @@
 
 namespace CoursesManagementSystem.Interfaces
 {
-    public interface IQuestionLevelRepository:IBaseRepository<QuestionLevel>
+    public interface IQuestionLevelRepository : IBaseRepository<QuestionLevel>
     {
     }
 }
