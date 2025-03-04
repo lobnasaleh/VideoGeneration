@@ -1,4 +1,5 @@
 using CoursesManagementSystem.Data;
+using CoursesManagementSystem.Helpers;
 using CoursesManagementSystem.Interfaces;
 using CoursesManagementSystem.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,7 @@ namespace CoursesManagementSystem
                 options.UseSqlServer(connectionString));
 
             builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
-
+            builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 
             var app = builder.Build();

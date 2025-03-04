@@ -1,0 +1,40 @@
+﻿
+@model LevelVM
+
+@{
+    ViewData["Title"] = "Add A Level";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <h3 class="text-primary mb-4">
+            <i class="bi bi-plus-circle-dotted"></i> Create a New Level
+        </h3>
+
+        <form asp-controller="Level" asp-action="Create" method="post">
+            <div class="row">
+                <div class="col-md-8">
+                    <!-- Category Name -->
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label fw-bold">Level Name</label>
+                        <input type="text" class="form-control" asp-for="Name" placeholder="Enter Level name">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <!-- Sort -->
+                    <div class="mb-3">
+                        <label asp-for="Sort" class="form-label fw-bold">Level Name</label>
+                        <input type="text" class="form-control" asp-for="Sort" placeholder="Enter Course Difficulty in Numbers ">
+                        <span asp-validation-for="Sort" class="text-danger"></span>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <a class="btn btn-secondary" asp-controller="Level" asp-action="Index">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

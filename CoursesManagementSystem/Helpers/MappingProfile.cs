@@ -10,7 +10,7 @@ namespace CoursesManagementSystem.Helpers
     {
         public MappingProfile() {
 
-           
+           CreateMap<Level,LevelVM>().ReverseMap();
           
         }
     }

@@ -68,28 +68,26 @@ namespace CoursesManagementSystem.Repository
 
             return await res.ToListAsync();
         }
-
         public async Task<T> GetAsync(Expression<Func<T, bool>> condition, string[] include = null, bool Tracking = true)
         {
             IQueryable<T> res = context.Set<T>();
 
             if (condition != null)
             {
-               res= res.Where(condition);
+                res = res.Where(condition);
             }
             if (include != null)
             {
 
                 foreach (var incl in include)
                 {
-                   res= res.Include(incl);
+                    res = res.Include(incl);
                 }
             }
             if (!Tracking)
             {
-               res= res.AsNoTracking();
+                res = res.AsNoTracking();
             }
-
 
             return await res.FirstOrDefaultAsync();
         }

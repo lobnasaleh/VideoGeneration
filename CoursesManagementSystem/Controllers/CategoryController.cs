@@ -88,6 +88,15 @@ namespace CoursesManagementSystem.Controllers
                 if(existcategory == null)
                     return BadRequest();
 
+                //if category is found but deleted ,mark undeleted and delete the existing one
+                var foundcategory = await unitOfWork.CategoryRepository.GetAsync(c => c.IsDeleted && c.Name == category.Name);
+                if (foundcategory is not null)
+                {
+                    existcategory.IsDeleted=true;
+                    foundcategory.IsDeleted = false;
+                    await unitOfWork.CompleteAsync();
+                    return RedirectToAction(nameof(GetAll));
+                }
                 existcategory.LastModifiedAt = DateTime.UtcNow;
                 //existcategory.LastModifiedBy = User.Identity.Name ?? "System";
                 existcategory.LastModifiedBy = category.LastModifiedBy;

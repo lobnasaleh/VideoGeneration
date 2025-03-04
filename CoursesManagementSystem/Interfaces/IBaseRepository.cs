@@ -19,8 +19,6 @@ namespace CoursesManagementSystem.Interfaces
 
         //getById 
         public Task<T> GetByIdAsync(int id);
-
-
         //add
         public Task<T> AddAsync(T entity);
 
