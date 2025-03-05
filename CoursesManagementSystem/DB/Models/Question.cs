@@ -8,15 +8,20 @@ namespace CoursesManagementSystem.DB.Models
     {
         [Required(ErrorMessage = "Question text is required")]
         public string QuestionText { get; set; }
-        [Required(ErrorMessage = "Question Instructions are required")]
 
+
+        [Required(ErrorMessage = "Question Instructions are required")]
         public string QuestionInstructions { get; set; }
+
+
         [Required(ErrorMessage = "Question type is required")]
         public QuestionTypeEnum QuestionType { get; set; }
+
 
         [ForeignKey(nameof(Lesson))]
         [Required(ErrorMessage = "Lesson ID is required")]
         public int LessonId { get; set; }
+
 
         [ForeignKey(nameof(QuestionLevel))]
         [Required(ErrorMessage = "Question level ID is required")]

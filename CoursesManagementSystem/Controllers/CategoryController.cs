@@ -98,7 +98,7 @@ namespace CoursesManagementSystem.Controllers
                     return RedirectToAction(nameof(GetAll));
                 }
                 existcategory.LastModifiedAt = DateTime.UtcNow;
-                //existcategory.LastModifiedBy = User.Identity.Name ?? "System";
+                existcategory.LastModifiedBy = User.Identity.Name ?? "System";
                 existcategory.LastModifiedBy = category.LastModifiedBy;
 
                 unitOfWork.CategoryRepository.Update(existcategory);

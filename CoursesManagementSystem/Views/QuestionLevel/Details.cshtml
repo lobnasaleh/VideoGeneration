@@ -1,4 +1,4 @@
-﻿@model QuestionLevel
+﻿@model CoursesManagementSystem.DB.Models.QuestionLevel
 
 @{
     ViewData["Title"] = "QuestionLevels";
@@ -11,7 +11,7 @@
 <div class="container mt-5">
     <div class="card text-center">
         <div class="card-header">
-            Category Details
+            Question Level Details
         </div>
         <div class="card-body">
             <p class="card-title"><strong>Question Level Name:</strong> @Model.Name</p>
@@ -21,8 +21,8 @@
             <p class="card-title"><strong>Last Modified At:</strong> @Model.LastModifiedAt</p>
             <p class="card-title"><strong>Last Modified By:</strong> @Model.LastModifiedBy</p>
             <div class="d-flex justify-content-center">
-                <a asp-action="Edit" asp-controller="Category" asp-route-id="@Model.ID" class="btn btn-primary mx-2">Update Category</a>
-                <a asp-action="ConfirmDelete" asp-controller="Category" asp-route-id="@Model.ID" class="btn btn-danger">Delete Category</a>
+                <a asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-primary mx-2">Update QuestionLevel</a>
+                <a asp-action="ConfirmDelete" asp-route-id="@Model.ID" class="btn btn-danger">Delete QuestionLevel</a>
 
             </div>
         </div>

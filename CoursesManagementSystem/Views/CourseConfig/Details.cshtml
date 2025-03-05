@@ -1,0 +1,34 @@
+﻿@model CoursesManagementSystem.DB.Models.CourseConfig
+
+@{
+    ViewData["Title"] = "CourseConfigs";
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="container mt-5">
+    <div class="card text-center">
+        <div class="card-header">
+            Course Config Details
+        </div>
+        <div class="card-body">
+            <p class="card-title"><strong>ChaptersCount:</strong> @Model.ChaptersCount</p>
+            <p class="card-title"><strong>LessonsCountPerChapter:</strong> @Model.LessonsCountPerChapter</p>
+            <p class="card-title"><strong>VideoDurationInMin:</strong> @Model.VideoDurationInMin</p>
+            <p class="card-title"><strong>Language:</strong> @Model.Language.ToString()</p>
+            <p class="card-title"><strong>Persona:</strong> @Model.Persona.ToString()</p>
+            <p class="card-title"><strong>Course Name:</strong> @Model.Course.Name</p>
+            <p class="card-title"><strong>Created By:</strong>@Model.CreatedBy</p>
+            <p class="card-title"><strong>Created At</strong> @Model.CreatedAt.ToString("t")</p>
+            <p class="card-title"><strong>Last Modified At:</strong> @Model.LastModifiedAt</p>
+            <p class="card-title"><strong>Last Modified By:</strong> @Model.LastModifiedBy</p>
+            <div class="d-flex justify-content-center">
+                <a asp-action="Edit" asp-controller="CourseConfig" asp-route-id="@Model.ID" class="btn btn-primary mx-2">Update Course Config </a>
+                <a asp-action="Delete" asp-controller="CourseConfig" asp-route-id="@Model.ID" class="btn btn-danger">Delete Course Config</a>
+
+            </div>
+        </div>
+    </div>
+</div>

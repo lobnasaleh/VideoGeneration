@@ -1,0 +1,71 @@
+﻿@model CoursesManagementSystem.DB.Models.CourseConfig
+
+@{
+    ViewData["Title"] = "Add Course Configuration";
+}
+
+<h3 class="text-primary mb-4 text-start">
+    <i class="bi bi-plus-circle-dotted"></i> Create a New Course Configuration
+</h3>
+
+<form asp-controller="CourseConfig" asp-action="Create" method="post">
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Chapters Count -->
+            <div class="mb-3">
+                <label asp-for="ChaptersCount" class="form-label fw-bold">Chapters Count</label>
+                <input type="number" class="form-control" asp-for="ChaptersCount" placeholder="Enter number of chapters">
+                <span asp-validation-for="ChaptersCount" class="text-danger"></span>
+            </div>
+
+            <!-- Lessons Count Per Chapter -->
+            <div class="mb-3">
+                <label asp-for="LessonsCountPerChapter" class="form-label fw-bold">Lessons Per Chapter</label>
+                <input type="number" class="form-control" asp-for="LessonsCountPerChapter" placeholder="Enter lessons count">
+                <span asp-validation-for="LessonsCountPerChapter" class="text-danger"></span>
+            </div>
+
+            <!-- Video Duration -->
+            <div class="mb-3">
+                <label asp-for="VideoDurationInMin" class="form-label fw-bold">Video Duration (Minutes)</label>
+                <input type="number" class="form-control" asp-for="VideoDurationInMin" placeholder="Enter duration in minutes">
+                <span asp-validation-for="VideoDurationInMin" class="text-danger"></span>
+            </div>
+
+            <!-- Language Dropdown -->
+            <div class="mb-3">
+                <label asp-for="Language" class="form-label fw-bold">Language</label>
+                <select asp-for="Language" asp-items="ViewBag.Languages" class="form-control">
+                    <option value="">Select Language</option>
+                </select>
+                <span asp-validation-for="Language" class="text-danger"></span>
+            </div>
+
+            <!-- Persona Dropdown -->
+            <div class="mb-3">
+                <label asp-for="Persona" class="form-label fw-bold">Persona</label>
+                <select asp-for="Persona" asp-items="ViewBag.Personas" class="form-control">
+                    <option value="">Select Persona</option>
+                </select>
+                <span asp-validation-for="Persona" class="text-danger"></span>
+            </div>
+
+            <!-- Course Dropdown -->
+            <div class="mb-3">
+                <label asp-for="CourseId" class="form-label fw-bold">Course</label>
+                <select asp-for="CourseId" asp-items="ViewBag.Courses" class="form-control">
+                    <option value="">Select Course</option>
+                </select>
+                <span asp-validation-for="CourseId" class="text-danger"></span>
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-between mt-4">
+                <a class="btn btn-secondary" asp-action="GetAll">Cancel</a>
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+

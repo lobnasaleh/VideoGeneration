@@ -71,7 +71,6 @@ namespace CoursesManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            // 1️⃣ Check if the QuestionLevel exists
             var questionLevel = await unitOfWork.QuestionLevelRepository.GetByIdAsync(id);
 
             if (questionLevel == null)
@@ -135,7 +134,7 @@ namespace CoursesManagementSystem.Controllers
                 return RedirectToAction(nameof(GetAll));
             }
 
-            return View(questionLevel); // Show confirmation page
+            return View(questionLevel); 
         }
 
         [HttpPost]
@@ -151,7 +150,7 @@ namespace CoursesManagementSystem.Controllers
                 return RedirectToAction(nameof(GetAll));
             }
 
-            questionLevel.IsDeleted = true; // Soft delete
+            questionLevel.IsDeleted = true; 
             await unitOfWork.CompleteAsync();
 
             TempData["Success"] = "Question Level deleted successfully.";
