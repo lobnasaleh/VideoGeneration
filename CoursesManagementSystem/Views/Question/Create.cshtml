@@ -1,0 +1,62 @@
+﻿@model CoursesManagementSystem.DB.Models.Question
+
+@{
+    ViewData["Title"] = "Add Question";
+}
+
+<h3 class="text-primary mb-4 text-start">
+    <i class="bi bi-plus-circle-dotted"></i> Create a New Question
+</h3>
+
+<form asp-controller="Question" asp-action="Create" method="post">
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Question Text -->
+            <div class="mb-3">
+                <label asp-for="QuestionText" class="form-label fw-bold">Question Text</label>
+                <textarea class="form-control" asp-for="QuestionText" placeholder="Enter question text"></textarea>
+                <span asp-validation-for="QuestionText" class="text-danger"></span>
+            </div>
+
+            <!-- Question Instructions -->
+            <div class="mb-3">
+                <label asp-for="QuestionInstructions" class="form-label fw-bold">Instructions</label>
+                <textarea class="form-control" asp-for="QuestionInstructions" placeholder="Enter instructions"></textarea>
+                <span asp-validation-for="QuestionInstructions" class="text-danger"></span>
+            </div>
+
+            <!-- Question Type Dropdown -->
+            <div class="mb-3">
+                <label asp-for="QuestionType" class="form-label fw-bold">Question Type</label>
+                <select asp-for="QuestionType" asp-items="ViewBag.QuestionTypes" class="form-control">
+                    <option value="">Select Type</option>
+                </select>
+                <span asp-validation-for="QuestionType" class="text-danger"></span>
+            </div>
+
+            <!-- Lesson Dropdown -->
+            <div class="mb-3">
+                <label asp-for="LessonId" class="form-label fw-bold">Lesson</label>
+                <select asp-for="LessonId" asp-items="ViewBag.Lessons" class="form-control">
+                    <option value="">Select Lesson</option>
+                </select>
+                <span asp-validation-for="LessonId" class="text-danger"></span>
+            </div>
+
+            <!-- Question Level Dropdown -->
+            <div class="mb-3">
+                <label asp-for="QuestionLevelId" class="form-label fw-bold">Question Level</label>
+                <select asp-for="QuestionLevelId" asp-items="ViewBag.QuestionLevels" class="form-control">
+                    <option value="">Select Level</option>
+                </select>
+                <span asp-validation-for="QuestionLevelId" class="text-danger"></span>
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-between mt-4">
+                <a class="btn btn-secondary" asp-action="GetAll">Cancel</a>
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+        </div>
+    </div>
+</form>

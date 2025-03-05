@@ -1,0 +1,13 @@
+﻿@model CoursesManagementSystem.DB.Models.Question
+
+<h3>Are you sure you want to delete this Question?</h3>
+
+<p><strong>Question Text:</strong> @Model.QuestionText</p>
+<p><strong>Instruction:</strong> @Model.QuestionInstructions</p>
+<p><strong>Lesson Name:</strong> @Model.Lesson.Name</p>
+<p><strong>Question Level:</strong> @Model.QuestionLevel.Name</p>
+
+<form asp-action="DeleteConfirmed" asp-route-id="@Model.ID" method="post">
+    <button type="submit" class="btn btn-danger">Confirm Delete</button>
+    <a asp-action="GetAll" class="btn btn-secondary">Cancel</a>
+</form>

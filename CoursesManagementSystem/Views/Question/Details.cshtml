@@ -1,0 +1,33 @@
+﻿@model CoursesManagementSystem.DB.Models.Question
+
+@{
+    ViewData["Title"] = "Questions";
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="container mt-5">
+    <div class="card text-center">
+        <div class="card-header">
+            Question Details
+        </div>
+        <div class="card-body">
+            <p class="card-title"><strong>Question Text:</strong> @Model.QuestionText</p>
+            <p class="card-title"><strong>Question Instructions:</strong> @Model.QuestionInstructions</p>
+            <p class="card-title"><strong>Question Type:</strong> @Model.QuestionType.ToString()</p>
+            <p class="card-title"><strong>Lesson:</strong> @Model.Lesson.Name</p>
+            <p class="card-title"><strong>Question Level:</strong> @Model.QuestionLevel.Name</p>
+            <p class="card-title"><strong>Created By:</strong>@Model.CreatedBy</p>
+            <p class="card-title"><strong>Created At</strong> @Model.CreatedAt.ToString("t")</p>
+            <p class="card-title"><strong>Last Modified At:</strong> @Model.LastModifiedAt</p>
+            <p class="card-title"><strong>Last Modified By:</strong> @Model.LastModifiedBy</p>
+            <div class="d-flex justify-content-center">
+                <a asp-action="Edit" asp-controller="Question" asp-route-id="@Model.ID" class="btn btn-primary mx-2">Update Question </a>
+                <a asp-action="Delete" asp-controller="Question" asp-route-id="@Model.ID" class="btn btn-danger">Delete Question</a>
+
+            </div>
+        </div>
+    </div>
+</div>

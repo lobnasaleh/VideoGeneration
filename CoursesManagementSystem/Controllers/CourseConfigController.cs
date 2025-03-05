@@ -97,8 +97,6 @@ namespace CoursesManagementSystem.Controllers
             return View(courseConfig);
         }
 
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, CourseConfig courseConfig)
@@ -150,6 +148,7 @@ namespace CoursesManagementSystem.Controllers
 
             return View(courseConfig);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
