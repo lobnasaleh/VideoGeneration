@@ -34,6 +34,35 @@ namespace CoursesManagementSystem.Controllers
         }
 
 
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create(Question question)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        PopulateDropdowns();
+        //        return View(question);
+        //    }
+
+        //    var existingQuestion = await unitOfWork.QuestionRepository
+        //        .GetAsync(q => q.QuestionText == question.QuestionText && q.LessonId == question.LessonId);
+
+        //    if (existingQuestion != null)
+        //    {
+        //        ModelState.AddModelError("QuestionText", "This question already exists for the selected lesson.");
+        //        PopulateDropdowns();
+        //        return View(question);
+        //    }
+
+        //    question.CreatedAt = DateTime.UtcNow;
+        //    question.CreatedBy = User.Identity?.Name ?? "System";
+
+        //    await unitOfWork.QuestionRepository.AddAsync(question);
+        //    await unitOfWork.CompleteAsync();
+
+        //    return RedirectToAction(nameof(GetAll));
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Question question)
@@ -49,6 +78,19 @@ namespace CoursesManagementSystem.Controllers
 
             if (existingQuestion != null)
             {
+                if (existingQuestion.IsDeleted)
+                {
+                    existingQuestion.IsDeleted = false;
+                    existingQuestion.LastModifiedAt = DateTime.UtcNow;
+                    existingQuestion.LastModifiedBy = User.Identity?.Name ?? "System";
+
+                    unitOfWork.QuestionRepository.Update(existingQuestion);
+                    await unitOfWork.CompleteAsync();
+
+                    TempData["Success"] = "Question restored successfully!";
+                    return RedirectToAction(nameof(GetAll));
+                }
+
                 ModelState.AddModelError("QuestionText", "This question already exists for the selected lesson.");
                 PopulateDropdowns();
                 return View(question);
@@ -60,8 +102,10 @@ namespace CoursesManagementSystem.Controllers
             await unitOfWork.QuestionRepository.AddAsync(question);
             await unitOfWork.CompleteAsync();
 
+            TempData["Success"] = "Question added successfully!";
             return RedirectToAction(nameof(GetAll));
         }
+
 
 
         [HttpGet]
@@ -172,15 +216,15 @@ namespace CoursesManagementSystem.Controllers
         }
 
 
-
-
-
-
-
         private void PopulateDropdowns()
         {
-            ViewBag.Lessons = new SelectList(unitOfWork.LessonRepository.GetAllAsync().Result, "ID", "Name");
-            ViewBag.QuestionLevels = new SelectList(unitOfWork.QuestionLevelRepository.GetAllAsync().Result, "ID", "Name");
+            ViewBag.Lessons = new SelectList(
+                unitOfWork.LessonRepository.GetAllAsync(l => !l.IsDeleted).Result, "ID", "Name"
+            );
+
+            ViewBag.QuestionLevels = new SelectList(
+                unitOfWork.QuestionLevelRepository.GetAllAsync(q => !q.IsDeleted).Result, "ID", "Name"
+            );
 
             ViewBag.QuestionTypes = Enum.GetValues(typeof(QuestionTypeEnum))
                 .Cast<QuestionTypeEnum>()
@@ -190,6 +234,7 @@ namespace CoursesManagementSystem.Controllers
                     Text = e.ToString()
                 });
         }
+
 
     }
 }
