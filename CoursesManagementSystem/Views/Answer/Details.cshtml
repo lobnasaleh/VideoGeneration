@@ -1,0 +1,36 @@
+﻿@model CoursesManagementSystem.DB.Models.Answer
+
+@{
+    ViewData["Title"] = "Answer Details";
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="container mt-5">
+    <div class="card text-center">
+        <div class="card-header">
+            Answer Details
+        </div>
+        <div class="card-body">
+            <p class="card-title"><strong>Answer Text:</strong> @Model.AnswerText</p>
+            <p class="card-title"><strong>Is Correct:</strong> @(Model.IsCorrect ? "Yes" : "No")</p>
+            <p class="card-title"><strong>Related Question:</strong> @Model.Question.QuestionText</p>
+            <p class="card-title"><strong>Created By:</strong> @Model.CreatedBy</p>
+            <p class="card-title"><strong>Created At:</strong> @Model.CreatedAt.ToString("g")</p>
+            <p class="card-title"><strong>Last Modified At:</strong> @(Model.LastModifiedAt?.ToString("g") ?? "N/A")</p>
+            <p class="card-title"><strong>Last Modified By:</strong> @(Model.LastModifiedBy ?? "N/A")</p>
+
+            <div class="d-flex justify-content-center">
+                <a asp-action="Edit" asp-controller="Answer" asp-route-id="@Model.ID" class="btn btn-primary mx-2">
+                    <i class="bi bi-pencil-square"></i> Edit Answer
+                </a>
+                <a asp-action="Delete" asp-controller="Answer" asp-route-id="@Model.ID" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Delete Answer
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
