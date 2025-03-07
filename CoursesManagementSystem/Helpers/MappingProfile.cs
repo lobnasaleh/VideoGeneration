@@ -11,7 +11,12 @@ namespace CoursesManagementSystem.Helpers
         public MappingProfile() {
 
            CreateMap<Level,LevelVM>().ReverseMap();
-          
+            CreateMap<Course, CourseVM>().ReverseMap()
+                 .ForMember(dest => dest.Category, opt => opt.Ignore())
+                 .ForMember(dest => dest.Level, opt => opt.Ignore());
+            
+
+
         }
     }
 }

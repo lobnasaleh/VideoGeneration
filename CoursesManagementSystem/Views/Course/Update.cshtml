@@ -1,0 +1,65 @@
+﻿@model CourseVM
+
+@{
+    ViewData["Title"] = "Edit Course";
+}
+@{
+    SelectList CategoryOptions = new SelectList(Model.Categories, "ID", "Name");
+    SelectList LevelOptions = new SelectList(Model.Levels, "ID", "Name");
+}
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <h3 class="text-warning mb-4">
+            <i class="bi bi-pencil-square"></i> Update Course
+        </h3>
+
+        <form asp-controller="Course" asp-action="Update" method="post">
+            <div class="row">
+                <div class="col-md-8">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label fw-bold">Course Name</label>
+                        <input class="form-control" asp-for="Name">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <!-- Course Details -->
+                    <div class="mb-3">
+                        <label asp-for="Details" class="form-label fw-bold"></label>
+                        <textarea class="form-control" asp-for="Details" placeholder="Enter Course Details" rows="4"></textarea>
+                        <span asp-validation-for="Details" class="text-danger"></span>
+                    </div>
+
+                    <!-- Course Category -->
+                    <div class="mb-3">
+                        <label asp-for="CategoryId" class="form-label fw-bold"></label>
+                        <select asp-for="CategoryId" asp-items="CategoryOptions" class="form-control">
+                            <option disabled selected>--Select Course Category--</option>
+                        </select>
+                        <span asp-validation-for="CategoryId" class="text-danger"></span>
+                    </div>
+
+                    <!-- Course Level -->
+                    <div class="mb-3">
+                        <label asp-for="LevelId" class="form-label fw-bold"></label>
+                        <select asp-for="LevelId" asp-items="LevelOptions" class="form-control">
+                            <option disabled selected>--Select Course Level--</option>
+                        </select>
+                        <span asp-validation-for="LevelId" class="text-danger"></span>
+                    </div>
+
+                    <!-- Book Storage url -->
+                    <div class="mb-3">
+                        <label asp-for="BookStorageURL" class="form-label fw-bold"></label>
+                        <input class="form-control" asp-for="BookStorageURL" placeholder="Enter Book URL">
+                        <span asp-validation-for="BookStorageURL" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a class="btn btn-secondary" asp-action="Index">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

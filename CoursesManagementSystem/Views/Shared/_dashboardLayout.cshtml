@@ -171,6 +171,9 @@
             <div class="container pt-4 px-4">
                     
                         @RenderBody()
+                <script src="~/lib/jquery/dist/jquery.min.js"></script>
+                @await RenderSectionAsync("Scripts", required: false)
+
                     
                
             </div>
@@ -209,6 +212,8 @@
 
     <!-- Template Javascript -->
     <script src="~/js/main.js"></script>
+  
+
 </body>
 
 </html>

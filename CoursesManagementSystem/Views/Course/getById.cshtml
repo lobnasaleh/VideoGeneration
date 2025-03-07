@@ -1,0 +1,35 @@
+﻿@model CourseVM
+
+@{
+    ViewData["Title"] = "Levels";
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="container mt-5">
+    <div class="card text-center">
+        <div class="card-header">
+            Course Details
+        </div>
+        <div class="card-body">
+            <p class="card-title"><strong>Course Name:</strong> @Model.Name</p>
+            <p class="card-title"><strong>Course Details:</strong> @Model.Details</p>
+            <p class="card-title"><strong>Course Category:</strong> @Model.CategoryName</p>
+            <p class="card-title"><strong>Course Level:</strong> @Model.LevelName</p>
+            <p>
+                <strong> Book Url :</strong><a href="@Model.BookStorageURL" class="card-title" target="_blank">@Model.BookStorageURL</a>
+            </p> 
+           @*  <p class="card-title"><strong>Created By:</strong>@Model.CreatedBy</p>
+            <p class="card-title"><strong>Created At</strong> @Model.CreatedAt.ToString("t")</p>
+            <p class="card-title"><strong>Last Modified At:</strong> @Model.LastModifiedAt</p>
+            <p class="card-title"><strong>Last Modified By:</strong> @Model.LastModifiedBy</p> *@
+            <div class="d-flex justify-content-center">
+                <a asp-action="Update" asp-controller="Course" asp-route-id="@Model.Id" class="btn btn-primary mx-2">Update Course</a>
+                <a asp-action="ConfirmDelete" asp-controller="Course" asp-route-id="@Model.Id" class="btn btn-danger">Delete Course</a>
+
+            </div>
+        </div>
+    </div>
+</div>
