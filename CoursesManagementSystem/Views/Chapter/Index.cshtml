@@ -1,0 +1,98 @@
+﻿@model IEnumerable<ChapterVM>
+@{
+    ViewData["Title"] = "Chapters";
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary">Chapters</h2>
+        <a class="btn btn-success btn-lg" asp-action="Create" asp-controller="Chapter">
+            <i class="bi bi-plus-circle"></i> Add Chapter
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning text-center py-4">
+            <h4 class="alert-heading">No Chapters Found!</h4>
+            <p class="mb-0">Start by adding a new Chapter.</p>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered shadow-sm rounded">
+                <thead class="table-light">
+                    <tr class="text-center">
+                        <th scope="col">Name</th>
+                        <th scope="col">Details</th>
+                        <th scope="col">Course</th>
+                        <th scope="col">Order</th>
+                       
+                        @*  <th scope="col">Created At</th>
+                    <th scope="col">Created By</th>
+                    <th scope="col">Last Modified At</th>
+                    <th scope="col">Last Modified By</th> *@
+                        <th scope="col" class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var Chapter in Model)
+                    {
+                        <tr class="align-middle text-center clickable-row" data-id="@Chapter.Id">
+                            <td>@Chapter.Name</td>
+                            <td>@Chapter.Details</td>
+                            <td>@Chapter.CourseName</td>
+                            <td>@Chapter.Sort</td>
+
+
+
+                            @*  <td>@Chapter.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@Chapter.CreatedBy</td>
+                    <td>@Chapter.LastModifiedAt?.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@Chapter.LastModifiedBy</td> *@
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <a class="btn btn-warning btn-sm me-2" asp-controller="Chapter" asp-action="Update" asp-route-id="@Chapter.Id" title="Edit">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+
+                                    <a class="btn btn-danger btn-sm me-2" asp-controller="Chapter" asp-action="ConfirmDelete" asp-route-id="@Chapter.Id" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const rows = document.querySelectorAll('.clickable-row');
+        rows.forEach(row => {
+            row.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                window.location.href = `@Url.Action("getById", "Chapter")/${id}`;
+            });
+        });
+    });
+</script>
+
+
+<style>
+    .clickable-row {
+        cursor: pointer;
+    }
+
+</style>
+

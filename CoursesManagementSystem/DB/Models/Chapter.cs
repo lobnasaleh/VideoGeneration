@@ -9,6 +9,7 @@ namespace CoursesManagementSystem.DB.Models
         [StringLength(100, ErrorMessage = "Name cannot exceed 100 characters")]
         public string Name { get; set; }
         [Required(ErrorMessage = "Details are required")]
+        [DataType(DataType.MultilineText)]
         public string Details { get; set; }
         [Range(1, int.MaxValue, ErrorMessage = "Sort order must be at least 1")]
         public int Sort { get; set; }
