@@ -50,6 +50,9 @@ namespace CoursesManagementSystem.Controllers
                 if (foundcategory is not null)
                 {
                     foundcategory.IsDeleted=false;
+                    foundcategory.LastModifiedAt = DateTime.UtcNow;
+                    //foundcategory.LastModifiedBy = User.Identity.Name ?? "System";
+
                     await unitOfWork.CompleteAsync();
                     return RedirectToAction(nameof(GetAll));
                 }
@@ -100,8 +103,7 @@ namespace CoursesManagementSystem.Controllers
                 //Name?
                 existcategory.LastModifiedAt = DateTime.UtcNow;
                 existcategory.LastModifiedBy = User.Identity.Name ?? "System";
-                existcategory.LastModifiedBy = category.LastModifiedBy;
-
+              
                 unitOfWork.CategoryRepository.Update(existcategory);
                 await unitOfWork.CompleteAsync();
 

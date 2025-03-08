@@ -30,10 +30,10 @@
                 <thead class="table-light">
                     <tr class="text-center">
                         <th scope="col">Name</th>
-                        <th scope="col">Created At</th>
+                        @* <th scope="col">Created At</th>
                         <th scope="col">Created By</th>
                         <th scope="col">Last Modified At</th>
-                        <th scope="col">Last Modified By</th>
+                        <th scope="col">Last Modified By</th> *@
                         <th scope="col" class="text-center">Actions</th>
                     </tr>
                 </thead>
@@ -42,10 +42,10 @@
                     {
                         <tr class="align-middle text-center clickable-row" data-id="@category.ID">
                             <td>@category.Name</td>
-                            <td>@category.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                           @*  <td>@category.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
                             <td>@category.CreatedBy</td>
                             <td>@category.LastModifiedAt?.ToString("yyyy-MM-dd HH:mm")</td>
-                            <td>@category.LastModifiedBy</td>
+                            <td>@category.LastModifiedBy</td> *@
                             <td>
                                 <div class="d-flex justify-content-center">
                                     <a class="btn btn-warning btn-sm me-2" asp-action="Edit" asp-route-id="@category.ID" title="Edit">
