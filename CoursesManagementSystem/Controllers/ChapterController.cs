@@ -163,15 +163,19 @@ namespace CoursesManagementSystem.Controllers
         public async Task<IActionResult> getById(int id)
         {
           
-                ChapterVM cv=await unitOfWork.ChapterRepository.GetQuery(c=>!c.IsDeleted && c.ID==id)
-                .Select(cc=>new ChapterVM
+                ChapterDetailsVM cv=await unitOfWork.ChapterRepository.GetQuery(c=>!c.IsDeleted && c.ID==id)
+                .Select(cc=>new ChapterDetailsVM
                 {
                     CourseId = cc.CourseId,
                     Name = cc.Name,
                     CourseName=cc.Course.Name,
                     Details = cc.Details,
                     Id = id,
-                    Sort=cc.Sort
+                    Sort=cc.Sort,
+                    LastModifiedBy = cc.LastModifiedBy,
+                    CreatedBy=cc.CreatedBy,
+                    CreatedAt=cc.CreatedAt,
+                    LastModifiedAt=cc.LastModifiedAt
                     
                 })
                 .FirstOrDefaultAsync();

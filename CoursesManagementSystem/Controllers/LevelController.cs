@@ -22,9 +22,9 @@ namespace CoursesManagementSystem.Controllers
         public async Task<IActionResult> Index()
         {
             var res = await unitOfWork.LevelRepository.GetAllAsync(l => !l.IsDeleted);
-            /*IEnumerable<LevelVM> levelsmp = mapper.Map<IEnumerable<LevelVM>>(res);*/
+            IEnumerable<LevelVM> levelsmp = mapper.Map<IEnumerable<LevelVM>>(res);
 
-            return View(res);
+            return View(levelsmp);
         }
         [HttpGet]
         public async Task<IActionResult> Create()
@@ -160,7 +160,10 @@ namespace CoursesManagementSystem.Controllers
                 TempData["Error"] = "No Level with This Id is Found";
                 return RedirectToAction("Index");
             }
-            return View(l);
+            //map level to levelDetailsVM
+           LevelDetailsVM levmp= mapper.Map<LevelDetailsVM>(l);
+           
+            return View(levmp);
         }
         [HttpGet]
         public async Task<IActionResult> ConfirmDelete(int id)

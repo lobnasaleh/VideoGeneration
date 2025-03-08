@@ -31,6 +31,8 @@
     <link href="~/css/styleAdmin.css" rel="stylesheet">
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
 </head>
 
 <body>
@@ -62,16 +64,22 @@
                     <a href="index.html" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Elements</a>
-                        <div class="dropdown-menu bg-transparent border-0">
-                            <a href="button.html" class="dropdown-item">Buttons</a>
-                            <a href="typography.html" class="dropdown-item">Typography</a>
-                            <a href="element.html" class="dropdown-item">Other Elements</a>
+                        <div class="dropdown-menu @* bg-transparent border-0 *@">
+                           
+
                         </div>
                     </div>
-                    <a href="#" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Widgets</a>
-                    <a href="#" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Forms</a>
-                    <a href="#" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Tables</a>
-                    <a href="#" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Charts</a>
+                    <a asp-controller="Category" asp-action="GetAll" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Course Categories</a>
+                    <a asp-controller="Level" asp-action="Index" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Course Levels</a>
+                    <a asp-controller="Course" asp-action="Index" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Course</a>
+                    <a asp-controller="Chapter" asp-action="Index" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Chapters</a>
+                    <a asp-controller="Lesson" asp-action="Index" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Lessons</a>
+                    <a asp-controller="QuestionLevel" asp-action="GetAll" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i> Questions Level</a>
+                    <a asp-controller="Question" asp-action="GetAll" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Questions</a>
+                    <a asp-controller="Answer" asp-action="GetAll" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Questions Answers</a>
+                    <a asp-controller="CourseConfig" asp-action="GetAll" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Add Courses Configurations</a>
+                    <a asp-controller="CourseQuestionConfig" asp-action="GetAll" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Add Questions Configurations</a>
+
                 </div>
             </nav>
         </div>

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Level>
+﻿@model IEnumerable<LevelVM>
 @{
     ViewData["Title"] = "Levels";
 }
@@ -30,10 +30,7 @@
                     <tr class="text-center">
                         <th scope="col">Name</th>
                         <th scope="col">Difficulty Level</th>
-                        <th scope="col">Created At</th>
-                        <th scope="col">Created By</th>
-                        <th scope="col">Last Modified At</th>
-                        <th scope="col">Last Modified By</th>
+                       
                         <th scope="col" class="text-center">Actions</th>
                     </tr>
                 </thead>
@@ -43,10 +40,7 @@
                         <tr class="align-middle text-center clickable-row" data-id="@level.ID">
                             <td>@level.Name</td>
                             <td>@level.Sort</td>
-                            <td>@level.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
-                            <td>@level.CreatedBy</td>
-                            <td>@level.LastModifiedAt?.ToString("yyyy-MM-dd HH:mm")</td>
-                            <td>@level.LastModifiedBy</td>
+                           
                             <td>
                                 <div class="d-flex justify-content-center">
                                     <a class="btn btn-warning btn-sm me-2" asp-controller="Level" asp-action="Update" asp-route-id="@level.ID" title="Edit">

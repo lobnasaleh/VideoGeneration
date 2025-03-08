@@ -1,4 +1,4 @@
-﻿@model LessonVM
+﻿@model LessonDetailsVM
 
 @{
     ViewData["Title"] = "Lessons";
@@ -25,10 +25,10 @@
             <p>
                 <strong>Video Url :</strong><a href="@Model.VideoStorageURL" class="card-title" target="_blank">@Model.VideoStorageURL</a>
             </p>
-            @*  <p class="card-title"><strong>Created By:</strong>@Model.CreatedBy</p>
+             <p class="card-title"><strong>Created By:</strong>@Model.CreatedBy</p>
             <p class="card-title"><strong>Created At</strong> @Model.CreatedAt.ToString("t")</p>
             <p class="card-title"><strong>Last Modified At:</strong> @Model.LastModifiedAt</p>
-            <p class="card-title"><strong>Last Modified By:</strong> @Model.LastModifiedBy</p> *@
+            <p class="card-title"><strong>Last Modified By:</strong> @Model.LastModifiedBy</p>
             <div class="d-flex justify-content-center">
                 <a asp-action="Update" asp-controller="Lesson" asp-route-id="@Model.Id" class="btn btn-primary mx-2">Update Lesson</a>
                 <a asp-action="ConfirmDelete" asp-controller="Lesson" asp-route-id="@Model.Id" class="btn btn-danger">Delete Lesson</a>

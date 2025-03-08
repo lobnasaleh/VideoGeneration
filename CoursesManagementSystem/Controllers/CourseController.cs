@@ -178,8 +178,8 @@ namespace CoursesManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> getById(int id)
         {
-            CourseVM l = await unitOfWork.CourseRepository.GetQuery(c => !c.IsDeleted && c.ID == id)
-                .Select(c => new CourseVM
+            CourseDetailsVM l = await unitOfWork.CourseRepository.GetQuery(c => !c.IsDeleted && c.ID == id)
+                .Select(c => new CourseDetailsVM
                 {
                     CategoryName = c.Category.Name,
                     LevelName = c.Level.Name,
@@ -188,7 +188,12 @@ namespace CoursesManagementSystem.Controllers
                     BookStorageURL = c.BookStorageURL,
                     CategoryId = c.CategoryId,
                     LevelId = c.LevelId,
-                    Id = id
+                    Id = c.ID,
+                    LastModifiedAt = c.LastModifiedAt,
+                    CreatedAt = c.CreatedAt,
+                    CreatedBy = c.CreatedBy,
+                    LastModifiedBy = c.LastModifiedBy
+                    
 
                 })
                 .FirstOrDefaultAsync();

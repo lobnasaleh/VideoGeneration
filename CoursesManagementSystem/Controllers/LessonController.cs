@@ -174,8 +174,8 @@ namespace CoursesManagementSystem.Controllers
         public async Task<IActionResult> getById(int id)
         {
 
-            LessonVM cv = await unitOfWork.LessonRepository.GetQuery(c => !c.IsDeleted && c.ID == id)
-            .Select(l => new LessonVM
+            LessonDetailsVM cv = await unitOfWork.LessonRepository.GetQuery(c => !c.IsDeleted && c.ID == id)
+            .Select(l => new LessonDetailsVM
             {
                 AudioStorageURL = l.AudioStorageURL,
                 ChapterId = l.ChapterId,
@@ -185,7 +185,11 @@ namespace CoursesManagementSystem.Controllers
                 ScriptText = l.ScriptText,
                 Sort = l.Sort,
                 VideoStorageURL = l.VideoStorageURL,
-                Id = l.ID
+                Id = l.ID,
+                LastModifiedAt = l.LastModifiedAt,
+                CreatedAt = l.CreatedAt,
+                CreatedBy = l.CreatedBy,
+                LastModifiedBy = l.LastModifiedBy
 
             })
             .FirstOrDefaultAsync();
