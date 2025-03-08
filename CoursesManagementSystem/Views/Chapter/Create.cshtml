@@ -6,7 +6,7 @@
 }
 
 @{
-    SelectList CourseOptions = new SelectList(ViewBag.Course, "ID", "Name");
+    SelectList ChapterOptions = new SelectList(ViewBag.Course, "ID", "Name");
    
 }
 <div class="container mt-5">
@@ -36,7 +36,7 @@
                     <!-- Course Chapter -->
                     <div class="mb-3">
                         <label asp-for="CourseId" class="form-label fw-bold"></label>
-                        <select asp-for="CourseId" asp-items="CourseOptions" class="form-control">
+                        <select asp-for="CourseId" asp-items="ChapterOptions" class="form-control">
                             <option disabled selected>--Select Course--</option>
                         </select>
                         <span asp-validation-for="CourseId" class="text-danger"></span>

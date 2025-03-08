@@ -1,0 +1,79 @@
+﻿@model LessonVM
+
+@{
+    ViewData["Title"] = "Edit Lesson";
+}
+@{
+    SelectList ChapterOptions = new SelectList(ViewBag.Chapters, "ID", "Name");
+
+}
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <h3 class="text-warning mb-4">
+            <i class="bi bi-pencil-square"></i> Update Lesson
+        </h3>
+
+        <form asp-controller="Lesson" asp-action="Update" method="post">
+            <div class="row">
+                <div class="col-md-8">
+                    <input type="hidden" asp-for="Id" />
+                    <!-- Lesson Name -->
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label fw-bold"></label>
+                        <input class="form-control" asp-for="Name" placeholder="Enter Lesson name">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <!-- Lesson Details -->
+                    <div class="mb-3">
+                        <label asp-for="Details" class="form-label fw-bold"></label>
+                        <textarea class="form-control" asp-for="Details" placeholder="Enter Lesson Details" rows="4"></textarea>
+                        <span asp-validation-for="Details" class="text-danger"></span>
+                    </div>
+
+                    <!-- Chapter Lesson -->
+                    <div class="mb-3">
+                        <label asp-for="ChapterId" class="form-label fw-bold"></label>
+                        <select asp-for="ChapterId" asp-items="ChapterOptions" class="form-control">
+                            <option disabled selected>--Select Chapter--</option>
+                        </select>
+                        <span asp-validation-for="ChapterId" class="text-danger"></span>
+                    </div>
+
+                    <!-- Lesson Order -->
+                    <div class="mb-3">
+                        <label asp-for="Sort" class="form-label fw-bold"></label>
+                        <input class="form-control" asp-for="Sort" placeholder="Enter Lesson Order">
+                        <span asp-validation-for="Sort" class="text-danger"></span>
+                    </div>
+
+                    <!-- Script Text -->
+                    <div class="mb-3">
+                        <label asp-for="ScriptText" class="form-label fw-bold"></label>
+                        <textarea class="form-control" asp-for="ScriptText" placeholder="Enter Lesson Script" rows="4"></textarea>
+                        <span asp-validation-for="ScriptText" class="text-danger"></span>
+                    </div>
+
+
+                    <!-- Audio storage URl -->
+                    <div class="mb-3">
+                        <label asp-for="AudioStorageURL" class="form-label fw-bold"></label>
+                        <input class="form-control" asp-for="AudioStorageURL" placeholder="Enter Audio URL">
+                        <span asp-validation-for="AudioStorageURL" class="text-danger"></span>
+
+                    </div>
+
+                    <!-- Video Storage URL -->
+                    <div class="mb-3">
+                        <label asp-for="VideoStorageURL" class="form-label fw-bold"></label>
+                        <input class="form-control" asp-for="VideoStorageURL" placeholder="Enter Video URL">
+                        <span asp-validation-for="VideoStorageURL" class="text-danger"></span>
+                    </div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <a class="btn btn-secondary" asp-action="Index">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

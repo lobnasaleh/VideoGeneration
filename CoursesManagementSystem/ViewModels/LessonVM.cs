@@ -1,17 +1,21 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CoursesManagementSystem.DB.Models;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
-namespace CoursesManagementSystem.DB.Models
+namespace CoursesManagementSystem.ViewModels
 {
-    public class Lesson : SharedModel
+    public class LessonVM
     {
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "Lesson name is required")]
         [StringLength(100, ErrorMessage = "Name cannot exceed 100 characters")]
         public string Name { get; set; }
         [Required(ErrorMessage = "Details are required")]
         [StringLength(1000, ErrorMessage = "Details cannot exceed 1000 characters")]
+        [DataType(DataType.MultilineText)]
         public string Details { get; set; }
-        [Required(ErrorMessage = "Scriptis required")]
+        [Required(ErrorMessage = "Script is required")]
         [DataType(DataType.MultilineText)]
         public string ScriptText { get; set; }
         [Url(ErrorMessage = "Invalid URL format")]
@@ -21,17 +25,14 @@ namespace CoursesManagementSystem.DB.Models
         [Required(ErrorMessage = "Audio URL is required")]
         public string AudioStorageURL { get; set; }
         [Range(1, int.MaxValue, ErrorMessage = "Sort order must be at least 1")]
+        [Display(Name = "Lesson Order")]
         public int Sort { get; set; }
-        [ForeignKey(nameof(Chapter))]
-        [Required(ErrorMessage = "Chapter ID is required")]
+        [Required(ErrorMessage = "Chapter is required")]
+        [Display (Name="Chapter")]
         public int ChapterId { get; set; }
 
-        //Navigation Proprties
-
-        public Chapter Chapter { get; set; }
-
-        public ICollection<Question> Questions { get; set; }
-
+        //for select loading
+        public string ChapterName { get; set; }
 
     }
 }

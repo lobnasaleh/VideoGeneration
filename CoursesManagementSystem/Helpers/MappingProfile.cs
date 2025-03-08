@@ -17,7 +17,10 @@ namespace CoursesManagementSystem.Helpers
 
             CreateMap<Chapter, ChapterVM>().ReverseMap()
                .ForMember(dest => dest.Course, opt => opt.Ignore());
-              
+
+            CreateMap<Lesson, LessonVM>().ReverseMap()
+              .ForMember(dest => dest.Chapter, opt => opt.Ignore());
+
 
 
         }

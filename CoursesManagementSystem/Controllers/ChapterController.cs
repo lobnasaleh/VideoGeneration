@@ -46,7 +46,7 @@ namespace CoursesManagementSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                //check if course name is unique
+                //check if Chapter name is unique
 
                 Chapter Chapterfound = await unitOfWork.ChapterRepository.GetAsync(c => !c.IsDeleted && c.Name == ChapterVM.Name && c.CourseId==ChapterVM.CourseId);
                 if (Chapterfound != null)

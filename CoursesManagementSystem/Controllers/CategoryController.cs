@@ -97,6 +97,7 @@ namespace CoursesManagementSystem.Controllers
                     await unitOfWork.CompleteAsync();
                     return RedirectToAction(nameof(GetAll));
                 }
+                //Name?
                 existcategory.LastModifiedAt = DateTime.UtcNow;
                 existcategory.LastModifiedBy = User.Identity.Name ?? "System";
                 existcategory.LastModifiedBy = category.LastModifiedBy;
@@ -122,7 +123,7 @@ namespace CoursesManagementSystem.Controllers
         {
                 // return NotFound();
 
-                TempData["Error"] = "No Course Category with Id is Found";
+                TempData["Error"] = "No Course Category with This Id is Found";
                 return RedirectToAction("GetAll");
         }
 
@@ -150,7 +151,7 @@ namespace CoursesManagementSystem.Controllers
         {
                 //return NotFound();
 
-                TempData["Error"] = "No Course Category with Id is Found";
+                TempData["Error"] = "No Course Category with This Id is Found";
                 return RedirectToAction("GetAll");
             }
             return View(c);
