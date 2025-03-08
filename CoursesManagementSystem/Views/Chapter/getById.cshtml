@@ -1,0 +1,33 @@
+﻿@model ChapterVM
+
+@{
+    ViewData["Title"] = "Chapters";
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="container mt-5">
+    <div class="card text-center">
+        <div class="card-header">
+            Chapter Details
+        </div>
+        <div class="card-body">
+            <p class="card-title"><strong>Chapter Name:</strong> @Model.Name</p>
+            <p class="card-title"><strong>Chapter Details:</strong> @Model.Details</p>
+            <p class="card-title"><strong>Chapter of Course:</strong> @Model.CourseName</p>
+            <p class="card-title"><strong>Chapter Order:</strong> @Model.Sort</p>
+           
+            @*  <p class="card-title"><strong>Created By:</strong>@Model.CreatedBy</p>
+            <p class="card-title"><strong>Created At</strong> @Model.CreatedAt.ToString("t")</p>
+            <p class="card-title"><strong>Last Modified At:</strong> @Model.LastModifiedAt</p>
+            <p class="card-title"><strong>Last Modified By:</strong> @Model.LastModifiedBy</p> *@
+            <div class="d-flex justify-content-center">
+                <a asp-action="Update" asp-controller="Chapter" asp-route-id="@Model.Id" class="btn btn-primary mx-2">Update Chapter</a>
+                <a asp-action="ConfirmDelete" asp-controller="Chapter" asp-route-id="@Model.Id" class="btn btn-danger">Delete Chapter</a>
+
+            </div>
+        </div>
+    </div>
+</div>

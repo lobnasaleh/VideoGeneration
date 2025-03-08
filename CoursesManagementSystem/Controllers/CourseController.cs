@@ -44,8 +44,8 @@ namespace CoursesManagementSystem.Controllers
         {
             CourseVM catLvl = new CourseVM()
             {
-                Categories = await unitOfWork.CategoryRepository.GetAllAsync(),
-                Levels = await unitOfWork.LevelRepository.GetAllAsync()
+                Categories = await unitOfWork.CategoryRepository.GetAllAsync(c=>!c.IsDeleted),
+                Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted)
             };
 
             return View(catLvl);
@@ -65,8 +65,8 @@ namespace CoursesManagementSystem.Controllers
                     
                     //refill selects
 
-                    courseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync();
-                    courseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync();
+                    courseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted);
+                    courseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted);
                   
                     return View(courseVM);
                 }
@@ -95,8 +95,8 @@ namespace CoursesManagementSystem.Controllers
             }
             //refill selects
 
-            courseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync();
-            courseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync();
+            courseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted);
+            courseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted);
 
             return View(courseVM);
 
@@ -112,8 +112,8 @@ namespace CoursesManagementSystem.Controllers
             }
             CourseVM res = mapper.Map<CourseVM>(Course);
 
-            res.Categories = await unitOfWork.CategoryRepository.GetAllAsync();
-                res.Levels = await unitOfWork.LevelRepository.GetAllAsync();
+            res.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted);
+                res.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted);
             return View(res);
         }
 
@@ -138,8 +138,8 @@ namespace CoursesManagementSystem.Controllers
                 if (Course != null)
                 {
                     ModelState.AddModelError("Name", "Course Name already exists ");
-                    CourseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync();
-                    CourseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync();
+                    CourseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted);
+                    CourseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted);
 
                     return View(CourseVM);
                 }
@@ -169,8 +169,8 @@ namespace CoursesManagementSystem.Controllers
                 return RedirectToAction("Index");
 
             }
-            CourseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync();
-            CourseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync();
+            CourseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted);
+            CourseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted);
 
             return View(CourseVM);
 
@@ -232,25 +232,23 @@ namespace CoursesManagementSystem.Controllers
             var coursewithCourseConfigfound = await unitOfWork.CourseConfigRepository.GetAsync(cc => !cc.IsDeleted && cc.CourseId == id);
             var coursewithCourseQuestionConfigfound = await unitOfWork.CourseQuestionConfigRepository.GetAsync(cq => !cq.IsDeleted && cq.CourseId == id);
 
-
-
             if (coursewithChapterfound != null)
             {
                 //return BadRequest();
-                TempData["Error"] = "Can not delete a Course that is assigned to a Course";
+                TempData["Error"] = "Can not delete a Course that is assigned to a Chapter";
                 return RedirectToAction("Index");
             }
-
+            if (coursewithCourseConfigfound != null || coursewithCourseQuestionConfigfound != null)
+            {
+                //return BadRequest();
+                TempData["Error"] = "Can not delete a Course that has Configurations";
+                return RedirectToAction("Index");
+            }
             l.IsDeleted = true;
             await unitOfWork.CompleteAsync();
             return RedirectToAction("Index");
 
 
         }
-
-
-
-
-
     }
 }
