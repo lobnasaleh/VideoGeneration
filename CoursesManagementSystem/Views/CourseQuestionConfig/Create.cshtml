@@ -4,8 +4,13 @@
     ViewData["Title"] = "Create Course Question Config";
 }
 
-<h2>Create Course Question Config</h2>
 
+
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <h3 class="text-primary mb-4">
+            <i class="bi bi-plus-circle-dotted"></i> Create Course Question Config
+        </h3>
 <form asp-action="Create" method="post">
     <div class="form-group">
         <label asp-for="QuestionsCountPerLesson" class="control-label"></label>
@@ -34,5 +39,6 @@
         <a asp-action="GetAll" class="btn btn-secondary">Cancel</a>
     </div>
 </form>
-
+</div>
+</div>
 

@@ -74,6 +74,7 @@ namespace CoursesManagementSystem.Controllers
                 {
                     deletedLesson.IsDeleted = false;
                     deletedLesson.LastModifiedAt = DateTime.Now;
+                    //deletedLesson.LastModifiedBy=
                     await unitOfWork.CompleteAsync();
                     return RedirectToAction("Index");
 
@@ -150,6 +151,7 @@ namespace CoursesManagementSystem.Controllers
 
                 }
                 lv.LastModifiedAt = DateTime.Now;
+                //lv.LastModifiedBy =;
                 lv.Name = LessonVM.Name;
                 lv.Details = LessonVM.Details;
                 lv.ChapterId = LessonVM.ChapterId;

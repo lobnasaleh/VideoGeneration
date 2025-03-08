@@ -15,16 +15,17 @@ namespace CoursesManagementSystem.DB.Models
 
 
         [Required(ErrorMessage = "Question type is required")]
+        [Display(Name ="Question Type")]
         public QuestionTypeEnum QuestionType { get; set; }
 
 
         [ForeignKey(nameof(Lesson))]
-        [Required(ErrorMessage = "Lesson ID is required")]
+        [Required(ErrorMessage = "Lesson is required")]
         public int LessonId { get; set; }
 
 
         [ForeignKey(nameof(QuestionLevel))]
-        [Required(ErrorMessage = "Question level ID is required")]
+        [Required(ErrorMessage = "Question level is required")]
         public int QuestionLevelId { get; set; }
 
         //Navigation Properties
