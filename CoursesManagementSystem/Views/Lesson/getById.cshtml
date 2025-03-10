@@ -31,8 +31,8 @@
                 <strong>Video Url :</strong><a href="@Model.VideoStorageURL" class="card-title" target="_blank">@Model.VideoStorageURL</a>
             </p>
             <div class="d-flex justify-content-center">
-                <a asp-action="Update" asp-controller="Lesson" asp-route-id="@Model.Id" class="btn btn-primary mx-2">Update Lesson</a>
-                <a asp-action="ConfirmDelete" asp-controller="Lesson" asp-route-id="@Model.Id" class="btn btn-danger">Delete Lesson</a>
+                <a asp-action="Update" asp-controller="Lesson" asp-route-id="@Model.Id" class="btn btn-outline-warning mx-2">Update Lesson</a>
+                <a asp-action="Index" asp-controller="Lesson" class="btn btn-outline-primary">Back</a>
 
             </div>
         </div>

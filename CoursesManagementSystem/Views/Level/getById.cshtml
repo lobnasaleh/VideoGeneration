@@ -14,15 +14,15 @@
             Level Details
         </div>
         <div class="card-body">
-            <p class="card-title"><strong>Level of Course:</strong> @Model.Name</p>
+            <p class="card-title "><strong>Level of Course:</strong> @Model.Name</p>
             <p class="card-title"><strong>Difficulty Level:</strong> @Model.Sort</p>
             <p class="card-title"><strong>Created By:</strong>@Model.CreatedBy</p>
             <p class="card-title"><strong>Created At</strong> @Model.CreatedAt.ToString("t")</p>
             <p class="card-title"><strong>Last Modified At:</strong> @Model.LastModifiedAt</p>
             <p class="card-title"><strong>Last Modified By:</strong> @Model.LastModifiedBy</p>
             <div class="d-flex justify-content-center">
-                <a asp-action="Update" asp-controller="Level" asp-route-id="@Model.ID" class="btn btn-primary mx-2">Update Level</a>
-                <a asp-action="ConfirmDelete" asp-controller="Level" asp-route-id="@Model.ID" class="btn btn-danger">Delete Level</a>
+                <a asp-action="Update" asp-controller="Level" asp-route-id="@Model.ID" class="btn btn-outline-warning mx-2">Update Level</a>
+                <a asp-action="Index" asp-controller="Level" class="btn btn-outline-primary">Back</a>
 
             </div>
         </div>
