@@ -145,19 +145,7 @@ namespace CoursesManagementSystem.Controllers
         }
         return View(c);
     }
-    [HttpGet]
-    public async Task<IActionResult> ConfirmDelete(int id)
-    {
-        Category c = await unitOfWork.CategoryRepository.GetAsync(c => !c.IsDeleted && c.ID == id);
-        if (c == null)
-        {
-                //return NotFound();
-
-                TempData["Error"] = "No Course Category with This Id is Found";
-                return RedirectToAction("GetAll");
-            }
-            return View(c);
-    }
+   
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
@@ -169,8 +157,8 @@ namespace CoursesManagementSystem.Controllers
                 // return NotFound();
 
                 TempData["Error"] = "No Course Category with Id is Found";
-                return RedirectToAction("GetAll");
-        }
+                return Json(new { success = false });
+            }
         //check if Category is not assigned to a course
         var coursewithcategoryfound = await unitOfWork.CourseRepository.GetAsync(c => !c.IsDeleted && c.CategoryId == id);
 
@@ -179,13 +167,13 @@ namespace CoursesManagementSystem.Controllers
                 //return BadRequest();
 
                 TempData["Error"] = "Can not delete a Category that is assigned to a Course";
-                return RedirectToAction("GetAll");
+                return Json(new { success = false });
             }
 
             c.IsDeleted = true;
             await unitOfWork.CompleteAsync();
-            return RedirectToAction("GetAll");
-
+            TempData["Success"] = "Category Deleted Successfully";
+            return Json(new { success = true });
 
         }
 

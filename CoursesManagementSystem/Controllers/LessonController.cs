@@ -238,19 +238,6 @@ namespace CoursesManagementSystem.Controllers
             }
             return View(cv);
         }
-        [HttpGet]
-        public async Task<IActionResult> ConfirmDelete(int id)
-        {
-            Lesson l = await unitOfWork.LessonRepository.GetAsync(l => !l.IsDeleted && l.ID == id);
-            if (l == null)
-            {
-                //return NotFound();
-
-                TempData["Error"] = "No Lesson with this Id is Found";
-                return RedirectToAction("Index");
-            }
-            return View(l);
-        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
@@ -261,7 +248,7 @@ namespace CoursesManagementSystem.Controllers
                 //return NotFound();
 
                 TempData["Error"] = "No Lesson with this Id is Found";
-                return RedirectToAction("Index");
+                return Json(new { success = false});
             }
             //check if Lesson is not assigned to a Question
             var QuestionWithLessonfound = await unitOfWork.QuestionRepository.GetAsync(q => !q.IsDeleted && q.LessonId == id);
@@ -270,13 +257,13 @@ namespace CoursesManagementSystem.Controllers
             {
                 //return BadRequest();
                 TempData["Error"] = "Can not delete a Lesson having Questions";
-                return RedirectToAction("Index");
+                return Json(new { success = false });
             }
 
             l.IsDeleted = true;
             await unitOfWork.CompleteAsync();
-            return RedirectToAction("Index");
-
+            TempData["Success"] = "Lesson Deleted Successfully";
+            return Json(new { success = true });
 
         }
 

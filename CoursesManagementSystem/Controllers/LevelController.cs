@@ -165,19 +165,6 @@ namespace CoursesManagementSystem.Controllers
            
             return View(levmp);
         }
-        [HttpGet]
-        public async Task<IActionResult> ConfirmDelete(int id)
-        {
-            Level l = await unitOfWork.LevelRepository.GetAsync(l => !l.IsDeleted && l.ID == id);
-            if (l == null)
-            {
-                //return NotFound();
-
-                TempData["Error"] = "No Level with this Id is Found";
-                return RedirectToAction("Index");
-            }
-            return View(l);
-        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
@@ -188,7 +175,7 @@ namespace CoursesManagementSystem.Controllers
                 //return NotFound();
 
                 TempData["Error"] = "No Level with this Id is Found";
-                return RedirectToAction("Index");
+                return Json(new { success = false });
             }
             //check if Level is not assigned to a course
             var coursewithlevelfound = await unitOfWork.CourseRepository.GetAsync(c => !c.IsDeleted && c.LevelId == id);
@@ -198,12 +185,13 @@ namespace CoursesManagementSystem.Controllers
                 //return BadRequest();
 
                 TempData["Error"] = "Can not delete a Level that is assigned to a Course";
-                return RedirectToAction("Index");
+                return Json(new { success = false });
             }
 
             l.IsDeleted = true;
             await unitOfWork.CompleteAsync();
-            return RedirectToAction("Index");
+            TempData["Success"] = "Level Deleted Successfully";
+            return Json(new { success = true });
 
 
         }

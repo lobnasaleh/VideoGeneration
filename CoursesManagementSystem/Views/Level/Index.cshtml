@@ -6,8 +6,14 @@
 {
     <div class="alert alert-danger">@TempData["Error"]</div>
 }
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-info">@TempData["Success"]</div>
+}
+
 
 <div class="container mt-5">
+    @Html.AntiForgeryToken()
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="text-primary">Levels</h2>
         <a class="btn btn-success btn-lg" asp-action="Create" asp-controller="Level">
@@ -47,9 +53,7 @@
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
 
-                                    <a class="btn btn-danger btn-sm me-2" asp-controller="Level" asp-action="ConfirmDelete" asp-route-id="@level.ID" title="Delete">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
+                                    <button class="btn btn-danger btn-sm me-2 delete-btn" data-name="@level.Name" data-id="@level.ID" title="Delete"><i class="bi bi-trash"></i></button>
 
                                 </div>
                             </td>
@@ -81,3 +85,59 @@
     }
 
 </style>
+
+<!-- Include the Delete Modal -->
+@await Html.PartialAsync("_DeleteModal")
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const deleteModal = new bootstrap.Modal(document.getElementById("deleteModal"));
+        let deleteUrl = "";
+        let rowToDelete = null;
+
+        $(".delete-btn").click(function () {
+            event.stopPropagation(); // Prevent row click from interfering
+
+            let LevelId = $(this).data("id");
+            let LevelName = $(this).data("name");
+            console.log("Clicked button's LevelId:", LevelId);
+            $("#modalItemName").text(LevelName);
+            deleteUrl = "/Level/Delete/" + LevelId;
+            rowToDelete = $(this).closest("tr");
+
+            console.log("Row to delete:", rowToDelete);
+            console.log("Row HTML:", rowToDelete.html()); // Check if it exists
+
+            deleteModal.show();
+        });
+
+        $("#confirmDelete").click(function () {
+            let token = $('input[name="__RequestVerificationToken"]').val(); // Get the token
+
+            if (!deleteUrl) return;
+
+            $.ajax({
+                url: deleteUrl,
+                type: "POST",
+                headers: { "RequestVerificationToken": token },
+                success: function (result) {
+                    if (result.success) {
+                        deleteModal.hide();
+                        rowToDelete.remove(); // Remove row from table
+                        location.reload();
+                    }
+                    else {
+                        deleteModal.hide();
+                        location.reload();
+                        // alert("Error: Level could not be deleted.");
+                    }
+                },
+                error: function (error) {
+                    console.log("Error Thrown:", error);
+                }
+            });
+        });
+    });
+</script>
