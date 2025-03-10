@@ -3,6 +3,7 @@ using CoursesManagementSystem.DB.Models;
 using CoursesManagementSystem.Interfaces;
 using CoursesManagementSystem.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoursesManagementSystem.Controllers
@@ -26,6 +27,7 @@ namespace CoursesManagementSystem.Controllers
                     AudioStorageURL = l.AudioStorageURL,
                     ChapterId = l.ChapterId,
                     ChapterName = l.Chapter.Name,
+                    CourseName=l.Chapter.Course.Name,
                     Name = l.Name,
                     Details = l.Details,
                     ScriptText = l.ScriptText,
@@ -39,10 +41,18 @@ namespace CoursesManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            ViewBag.Chapters = await unitOfWork.ChapterRepository.GetAllAsync(c => !c.IsDeleted);
+            ViewBag.Chapters = await unitOfWork.ChapterRepository.GetAllQuery(c => !c.IsDeleted)
+                 .Select(l => new SelectListItem
+                 {
+                     Value = l.ID.ToString(),
+                     Text = $"{l.Name} : {l.Course.Name}"
+                 })
+                 .ToListAsync();
+
             return View();
 
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(LessonVM LessonVM)
@@ -57,8 +67,13 @@ namespace CoursesManagementSystem.Controllers
                     ModelState.AddModelError("Name", "There is already a Lesson for this Chapter with The same Name");
 
                     //refill selects
-                    ViewBag.Chapters = await unitOfWork.ChapterRepository.GetAllAsync(c => !c.IsDeleted);
-
+                    ViewBag.Chapters = await unitOfWork.ChapterRepository.GetAllQuery(c => !c.IsDeleted)
+                    .Select(l => new SelectListItem
+                     {
+                     Value = l.ID.ToString(),
+                     Text = $"{l.Name} : {l.Course.Name}"
+                     })
+                      .ToListAsync();
                     return View(LessonVM);
                 }
                 //check if Lesson is marked deleted -->mark undeleted
@@ -89,8 +104,13 @@ namespace CoursesManagementSystem.Controllers
 
             }
             //refill selects
-            ViewBag.Chapters = await unitOfWork.ChapterRepository.GetAllAsync(c => !c.IsDeleted);
-            return View(LessonVM);
+            ViewBag.Chapters = await unitOfWork.ChapterRepository.GetAllQuery(c => !c.IsDeleted)
+                 .Select(l => new SelectListItem
+                 {
+                     Value = l.ID.ToString(),
+                     Text = $"{l.Name} : {l.Course.Name}"
+                 })
+                 .ToListAsync(); return View(LessonVM);
 
         }
 
@@ -105,7 +125,13 @@ namespace CoursesManagementSystem.Controllers
             }
             LessonVM res = mapper.Map<LessonVM>(Lesson);
 
-            ViewBag.Chapters = await unitOfWork.ChapterRepository.GetAllAsync(c => !c.IsDeleted);
+            ViewBag.Chapters = await unitOfWork.ChapterRepository.GetAllQuery(c => !c.IsDeleted)
+                  .Select(l => new SelectListItem
+                  {
+                      Value = l.ID.ToString(),
+                      Text = $"{l.Name} : {l.Course.Name}"
+                  })
+                  .ToListAsync();
             return View(res);
         }
 
@@ -166,7 +192,13 @@ namespace CoursesManagementSystem.Controllers
                 return RedirectToAction("Index");
 
             }
-            ViewBag.Chapters = await unitOfWork.ChapterRepository.GetAllAsync(c => !c.IsDeleted);
+            ViewBag.Chapters = await unitOfWork.ChapterRepository.GetAllQuery(c => !c.IsDeleted)
+                 .Select(l => new SelectListItem
+                 {
+                     Value = l.ID.ToString(),
+                     Text = $"{l.Name} : {l.Course.Name}"
+                 })
+                 .ToListAsync();
 
             return View(LessonVM);
 
@@ -182,6 +214,7 @@ namespace CoursesManagementSystem.Controllers
                 AudioStorageURL = l.AudioStorageURL,
                 ChapterId = l.ChapterId,
                 ChapterName = l.Chapter.Name,
+                CourseName=l.Chapter.Course.Name,
                 Name = l.Name,
                 Details = l.Details,
                 ScriptText = l.ScriptText,

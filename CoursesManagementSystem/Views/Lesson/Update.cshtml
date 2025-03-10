@@ -3,10 +3,12 @@
 @{
     ViewData["Title"] = "Edit Lesson";
 }
-@{
+
+@*  
+    @{
     SelectList ChapterOptions = new SelectList(ViewBag.Chapters, "ID", "Name");
 
-}
+}  *@
 <div class="container mt-5">
     <div class="card shadow-lg p-4">
         <h3 class="text-warning mb-4">
@@ -33,7 +35,7 @@
                     <!-- Chapter Lesson -->
                     <div class="mb-3">
                         <label asp-for="ChapterId" class="form-label fw-bold"></label>
-                        <select asp-for="ChapterId" asp-items="ChapterOptions" class="form-control">
+                        <select asp-for="ChapterId" asp-items="ViewBag.Chapters" class="form-control">
                             <option disabled selected>--Select Chapter--</option>
                         </select>
                         <span asp-validation-for="ChapterId" class="text-danger"></span>

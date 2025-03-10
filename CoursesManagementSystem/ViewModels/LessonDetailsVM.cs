@@ -31,6 +31,7 @@ namespace CoursesManagementSystem.ViewModels
 
         //for select loading
         public string ChapterName { get; set; }
+        public string CourseName { get; set; }
 
         //
         public DateTime CreatedAt { get; set; }

@@ -16,19 +16,20 @@
         <div class="card-body">
             <p class="card-title"><strong>Lesson Name:</strong> @Model.Name</p>
             <p class="card-title"><strong>Lesson Details:</strong> @Model.Details</p>
+            <p class="card-title"><strong>Lesson of Course:</strong> @Model.CourseName</p>
             <p class="card-title"><strong>Lesson of Chapter:</strong> @Model.ChapterName</p>
             <p class="card-title"><strong>Lesson Order:</strong> @Model.Sort</p>
             <p class="card-title"><strong>Script:</strong> @Model.ScriptText</p>
+             <p class="card-title"><strong>Created By:</strong>@Model.CreatedBy</p>
+            <p class="card-title"><strong>Created At</strong> @Model.CreatedAt.ToString("t")</p>
+            <p class="card-title"><strong>Last Modified At:</strong> @Model.LastModifiedAt</p>
+            <p class="card-title"><strong>Last Modified By:</strong> @Model.LastModifiedBy</p>
             <p>
                 <strong>Audio Url :</strong><a href="@Model.AudioStorageURL" class="card-title" target="_blank">@Model.AudioStorageURL</a>
             </p>
             <p>
                 <strong>Video Url :</strong><a href="@Model.VideoStorageURL" class="card-title" target="_blank">@Model.VideoStorageURL</a>
             </p>
-             <p class="card-title"><strong>Created By:</strong>@Model.CreatedBy</p>
-            <p class="card-title"><strong>Created At</strong> @Model.CreatedAt.ToString("t")</p>
-            <p class="card-title"><strong>Last Modified At:</strong> @Model.LastModifiedAt</p>
-            <p class="card-title"><strong>Last Modified By:</strong> @Model.LastModifiedBy</p>
             <div class="d-flex justify-content-center">
                 <a asp-action="Update" asp-controller="Lesson" asp-route-id="@Model.Id" class="btn btn-primary mx-2">Update Lesson</a>
                 <a asp-action="ConfirmDelete" asp-controller="Lesson" asp-route-id="@Model.Id" class="btn btn-danger">Delete Lesson</a>
