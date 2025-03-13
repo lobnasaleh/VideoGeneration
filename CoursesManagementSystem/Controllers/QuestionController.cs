@@ -422,24 +422,10 @@ namespace CoursesManagementSystem.Controllers
         }
 
 
-        [HttpGet]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var question = await unitOfWork.QuestionRepository
-                .GetAsync(q => !q.IsDeleted && q.ID == id, new[] { "Lesson", "QuestionLevel" });
-
-            if (question == null)
-            {
-                TempData["Error"] = "No Question found with the provided ID.";
-                return RedirectToAction(nameof(GetAll));
-            }
-
-            return View(question);
-        }
-
+      
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var question = await unitOfWork.QuestionRepository
                 .GetAsync(q => q.ID == id);
@@ -447,7 +433,7 @@ namespace CoursesManagementSystem.Controllers
             if (question == null || question.IsDeleted)
             {
                 TempData["Error"] = "Question not found or already deleted.";
-                return RedirectToAction(nameof(GetAll));
+                return Json(new { success =false });
             }
 
             question.IsDeleted = true;
@@ -455,7 +441,7 @@ namespace CoursesManagementSystem.Controllers
             await unitOfWork.CompleteAsync();
 
             TempData["Success"] = "Question deleted successfully.";
-            return RedirectToAction(nameof(GetAll));
+            return Json(new { success = true });
         }
 
 

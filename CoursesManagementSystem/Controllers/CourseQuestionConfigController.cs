@@ -129,24 +129,10 @@ namespace CoursesManagementSystem.Controllers
             return RedirectToAction(nameof(GetAll));
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var courseQuestionConfig = await unitOfWork.CourseQuestionConfigRepository
-                .GetAsync(q => !q.IsDeleted && q.ID == id, new[] { "Course", "QuestionLevel" });
-
-            if (courseQuestionConfig == null)
-            {
-                TempData["Error"] = "No Course Question Configurations found with the provided ID.";
-                return RedirectToAction(nameof(GetAll));
-            }
-
-            return View(courseQuestionConfig);
-        }
-
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var courseQuestionConfig = await unitOfWork.CourseQuestionConfigRepository
                 .GetAsync(q => q.ID == id);
@@ -154,14 +140,14 @@ namespace CoursesManagementSystem.Controllers
             if (courseQuestionConfig == null || courseQuestionConfig.IsDeleted)
             {
                 TempData["Error"] = "Course Question Configuration not found or already deleted.";
-                return RedirectToAction(nameof(GetAll));
+                return Json(new { success = false });
             }
 
             courseQuestionConfig.IsDeleted = true;
             await unitOfWork.CompleteAsync();
 
             TempData["Success"] = "Course Question Configuration deleted successfully.";
-            return RedirectToAction(nameof(GetAll));
+            return Json(new { success = true });
         }
 
 

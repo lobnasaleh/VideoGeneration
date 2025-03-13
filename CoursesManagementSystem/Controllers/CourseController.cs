@@ -207,19 +207,7 @@ namespace CoursesManagementSystem.Controllers
             }
             return View(l);
         }
-        [HttpGet]
-        public async Task<IActionResult> ConfirmDelete(int id)
-        {
-            Course l = await unitOfWork.CourseRepository.GetAsync(l => !l.IsDeleted && l.ID == id);
-            if (l == null)
-            {
-                //return NotFound();
-
-                TempData["Error"] = "No Course with this Id is Found";
-                return RedirectToAction("Index");
-            }
-            return View(l);
-        }
+     
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
@@ -230,7 +218,7 @@ namespace CoursesManagementSystem.Controllers
                 //return NotFound();
 
                 TempData["Error"] = "No Course with this Id is Found";
-                return RedirectToAction("Index");
+                return Json(new { success = false });
             }
             //check if Course is not assigned to a courseconfig,coursequestionconfig,chapter
             var coursewithChapterfound = await unitOfWork.ChapterRepository.GetAsync(c => !c.IsDeleted && c.CourseId == id);
@@ -241,17 +229,18 @@ namespace CoursesManagementSystem.Controllers
             {
                 //return BadRequest();
                 TempData["Error"] = "Can not delete a Course that is assigned to a Chapter";
-                return RedirectToAction("Index");
+                return Json(new { success = false });
             }
             if (coursewithCourseConfigfound != null || coursewithCourseQuestionConfigfound != null)
             {
                 //return BadRequest();
                 TempData["Error"] = "Can not delete a Course that has Configurations";
-                return RedirectToAction("Index");
+                return Json(new { success = false });
             }
             l.IsDeleted = true;
             await unitOfWork.CompleteAsync();
-            return RedirectToAction("Index");
+            TempData["Success"] = "Course Deleted Successfully";
+            return Json(new { success = true });
 
 
         }

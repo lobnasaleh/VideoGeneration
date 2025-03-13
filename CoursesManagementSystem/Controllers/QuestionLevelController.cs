@@ -122,7 +122,8 @@ namespace CoursesManagementSystem.Controllers
             return RedirectToAction(nameof(GetAll));
         }
 
-        [HttpGet]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             var questionLevel = await unitOfWork.QuestionLevelRepository
@@ -131,23 +132,7 @@ namespace CoursesManagementSystem.Controllers
             if (questionLevel == null)
             {
                 TempData["Error"] = "No Question Level found with the provided ID.";
-                return RedirectToAction(nameof(GetAll));
-            }
-
-            return View(questionLevel); 
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var questionLevel = await unitOfWork.QuestionLevelRepository
-                .GetAsync(q => !q.IsDeleted && q.ID == id);
-
-            if (questionLevel == null)
-            {
-                TempData["Error"] = "No Question Level found with the provided ID.";
-                return RedirectToAction(nameof(GetAll));
+                return Json(new { success = false });
             }
 
             var questionLevelwithQuestion = await unitOfWork.QuestionRepository.GetAsync(c => !c.IsDeleted && c.QuestionLevelId == id);
@@ -171,7 +156,7 @@ namespace CoursesManagementSystem.Controllers
             await unitOfWork.CompleteAsync();
 
             TempData["Success"] = "Question Level deleted successfully.";
-            return RedirectToAction(nameof(GetAll));
+            return Json(new { success = true });
         }
 
         [HttpGet]

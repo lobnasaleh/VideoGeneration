@@ -133,24 +133,10 @@ namespace CoursesManagementSystem.Controllers
             return RedirectToAction(nameof(GetAll));
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var courseConfig = await unitOfWork.CourseConfigRepository
-                .GetAsync(q => !q.IsDeleted && q.ID == id, new[] { "Course" });
-
-            if (courseConfig == null)
-            {
-                TempData["Error"] = "No Course Configurations found with the provided ID.";
-                return RedirectToAction(nameof(GetAll));
-            }
-
-            return View(courseConfig);
-        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var courseConfig = await unitOfWork.CourseConfigRepository
                 .GetAsync(q => q.ID == id); 
@@ -158,7 +144,7 @@ namespace CoursesManagementSystem.Controllers
             if (courseConfig == null || courseConfig.IsDeleted)
             {
                 TempData["Error"] = "Course Config not found or already deleted.";
-                return RedirectToAction(nameof(GetAll));
+                return Json(new { success = false });
             }
             
            /* var relatedCourse = await unitOfWork.CourseRepository
@@ -173,8 +159,8 @@ namespace CoursesManagementSystem.Controllers
             courseConfig.IsDeleted = true;
             await unitOfWork.CompleteAsync();
 
-            TempData["Success"] = "Course Config deleted successfully.";
-            return RedirectToAction(nameof(GetAll));
+            TempData["Success"] = "Course Config Deleted Successfully";
+            return Json(new { success = true });
         }
 
 

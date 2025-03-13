@@ -6,9 +6,16 @@
 {
     <div class="alert alert-danger">@TempData["Error"]</div>
 }
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-info">@TempData["Success"]</div>
+}
 
 <div class="container mt-5">
+
     <div class="d-flex justify-content-between align-items-center mb-4">
+        @Html.AntiForgeryToken()
+
         <h2 class="text-primary">Lessons</h2>
         <a class="btn btn-success btn-lg" asp-action="Create" asp-controller="Lesson">
             <i class="bi bi-plus-circle"></i> Add Lesson
@@ -57,23 +64,12 @@
                             <td>@Lesson.AudioStorageURL</td>
                             <td>@Lesson.VideoStorageURL</td>
 
-
-
-
-                            @*  <td>@Lesson.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
-                    <td>@Lesson.CreatedBy</td>
-                    <td>@Lesson.LastModifiedAt?.ToString("yyyy-MM-dd HH:mm")</td>
-                    <td>@Lesson.LastModifiedBy</td> *@
                             <td>
                                 <div class="d-flex justify-content-center">
                                     <a class="btn btn-warning btn-sm me-2" asp-controller="Lesson" asp-action="Update" asp-route-id="@Lesson.Id" title="Edit">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-
-                                    <a class="btn btn-danger btn-sm me-2" asp-controller="Lesson" asp-action="ConfirmDelete" asp-route-id="@Lesson.Id" title="Delete">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-
+                                    <button class="btn btn-danger btn-sm me-2 delete-btn" data-name="@Lesson.Name" data-id="@Lesson.Id" title="Delete"><i class="bi bi-trash"></i></button>
                                 </div>
                             </td>
                         </tr>
@@ -104,3 +100,59 @@
     }
 
 </style>
+
+<!-- Include the Delete Modal -->
+@await Html.PartialAsync("_DeleteModal")
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const deleteModal = new bootstrap.Modal(document.getElementById("deleteModal"));
+        let deleteUrl = "";
+        let rowToDelete = null;
+
+        $(".delete-btn").click(function () {
+            event.stopPropagation(); // Prevent row click from interfering
+
+            let lessonId = $(this).data("id");
+            let lessonName = $(this).data("name");
+            console.log("Clicked button's lessonId:", lessonId);
+            $("#modalItemName").text(lessonName);
+            deleteUrl = "/Lesson/Delete/" + lessonId;
+            rowToDelete = $(this).closest("tr");
+
+            console.log("Row to delete:", rowToDelete);
+            console.log("Row HTML:", rowToDelete.html()); // Check if it exists
+
+            deleteModal.show();
+        });
+
+        $("#confirmDelete").click(function () {
+             let token = $('input[name="__RequestVerificationToken"]').val(); // Get the token
+
+            if (!deleteUrl) return;
+
+            $.ajax({
+                url: deleteUrl,
+                type: "POST",
+                headers: { "RequestVerificationToken": token },
+                success: function (result) {
+                    if (result.success) {
+                        deleteModal.hide();
+                        rowToDelete.remove(); // Remove row from table
+                        location.reload();
+                    } 
+                    else {
+                        deleteModal.hide();
+                        location.reload();
+                       // alert("Error: Lesson could not be deleted.");
+                   }
+                },
+               error: function (error) {
+              console.log("Error Thrown:", error);       
+}
+            });
+        });
+    });
+</script>
