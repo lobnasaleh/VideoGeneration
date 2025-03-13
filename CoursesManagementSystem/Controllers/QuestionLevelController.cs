@@ -150,6 +150,23 @@ namespace CoursesManagementSystem.Controllers
                 return RedirectToAction(nameof(GetAll));
             }
 
+            var questionLevelwithQuestion = await unitOfWork.QuestionRepository.GetAsync(c => !c.IsDeleted && c.QuestionLevelId == id);
+
+            if (questionLevelwithQuestion != null)
+            {
+                //return BadRequest();
+                TempData["Error"] = "Can not delete a questionLevel that is assigned to a Question";
+                return RedirectToAction(nameof(GetAll));
+            }
+            var questionLevelwithCourseQuestionConfig = await unitOfWork.CourseQuestionConfigRepository.GetAsync(c => !c.IsDeleted && c.QuestionLevelId == id);
+
+            if (questionLevelwithQuestion != null)
+            {
+                //return BadRequest();
+                TempData["Error"] = "Can not delete a questionLevel that is assigned to a CourseQuestionConfig";
+                return RedirectToAction(nameof(GetAll));
+            }
+
             questionLevel.IsDeleted = true; 
             await unitOfWork.CompleteAsync();
 

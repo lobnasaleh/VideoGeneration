@@ -79,7 +79,6 @@ namespace CoursesManagementSystem.Controllers
         }
 
 
-
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -161,6 +160,15 @@ namespace CoursesManagementSystem.Controllers
                 TempData["Error"] = "Course Config not found or already deleted.";
                 return RedirectToAction(nameof(GetAll));
             }
+            
+           /* var relatedCourse = await unitOfWork.CourseRepository
+                .GetAsync(c => !c.IsDeleted && c.ID == courseConfig.CourseId);
+
+            if (relatedCourse != null)
+            {
+                TempData["Error"] = "Cannot delete Course Config because it is assigned to a Course.";
+                return RedirectToAction(nameof(GetAll));
+            }*/
 
             courseConfig.IsDeleted = true;
             await unitOfWork.CompleteAsync();

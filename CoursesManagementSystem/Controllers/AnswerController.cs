@@ -157,6 +157,7 @@ namespace CoursesManagementSystem.Controllers
                 TempData["Error"] = "Answer not found or already deleted.";
                 return RedirectToAction(nameof(GetAll));
             }
+            
 
             answer.IsDeleted = true;
             await unitOfWork.CompleteAsync();

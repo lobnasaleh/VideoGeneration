@@ -1,4 +1,6 @@
-﻿@model IEnumerable<CoursesManagementSystem.DB.Models.Question>
+﻿
+@model IEnumerable<CoursesManagementSystem.DB.Models.Question>
+
 
 @{
     ViewData["Title"] = "Questions";
@@ -34,6 +36,7 @@
                         <th scope="col">Instructions</th>
                         <th scope="col">Type</th>
                         <th scope="col">Lesson</th>
+                        <th scope="col">Course</th>
                         <th scope="col">Question Level</th>
                         <th scope="col" class="text-center">Actions</th>
                     </tr>
@@ -45,11 +48,12 @@
                             <td>@question.QuestionText</td>
                             <td>@question.QuestionInstructions</td>
                             <td>@question.QuestionType</td>
-                            <td>@question.Lesson?.Name</td>
+                            <td>@question.Lesson.Name</td>
+                            <td>@question.Lesson.Chapter.Course.Name</td>
                             <td>@question.QuestionLevel?.Name</td>
                             <td>
                                 <div class="d-flex justify-content-center">
-                                    
+
                                     <a class="btn btn-warning btn-sm me-2" asp-action="Edit" asp-route-id="@question.ID" title="Edit">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
@@ -83,3 +87,4 @@
         cursor: pointer;
     }
 </style>
+

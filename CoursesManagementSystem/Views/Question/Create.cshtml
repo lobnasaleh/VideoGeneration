@@ -28,7 +28,7 @@
             <!-- Question Type Dropdown -->
             <div class="mb-3">
                 <label asp-for="QuestionType" class="form-label fw-bold">Question Type</label>
-                <select asp-for="QuestionType" asp-items="ViewBag.QuestionTypes" class="form-control">
+                <select id="questionType" asp-for="QuestionType" asp-items="ViewBag.QuestionTypes" class="form-control">
                     <option value="">Select Type</option>
                 </select>
                 <span asp-validation-for="QuestionType" class="text-danger"></span>
@@ -42,6 +42,9 @@
                 </select>
                 <span asp-validation-for="LessonId" class="text-danger"></span>
             </div>
+
+            <!-- Answers Section -->
+            <div id="answersContainer"></div>
 
             <!-- Question Level Dropdown -->
             <div class="mb-3">
@@ -60,3 +63,37 @@
         </div>
     </div>
 </form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#questionType").change(function () {
+            var selectedType = $(this).val();
+            var answersContainer = $("#answersContainer");
+            answersContainer.empty(); // Clear previous answers
+
+            if (selectedType === "1") { // Multiple Choice
+                for (let i = 1; i <= 4; i++) {
+                    answersContainer.append(`
+                        <div class="mb-2 d-flex align-items-center">
+                            <input type="text" name="Answers" class="form-control" placeholder="Option ${i}" required>
+                            <input type="radio" name="CorrectAnswer" value="${i}" class="ms-2"> Correct
+                        </div>
+                    `);
+                }
+            } else if (selectedType === "2") { // True/False
+                answersContainer.append(`
+                    <div class="mb-2">
+                        <label class="me-2">
+                            <input type="radio" name="CorrectAnswer" value="true" required> True
+                        </label>
+                        <label class="ms-3">
+                            <input type="radio" name="CorrectAnswer" value="false" required> False
+                        </label>
+                    </div>
+                `);
+            }
+        });
+    });
+</script>
+
