@@ -21,10 +21,20 @@ namespace CoursesManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var res = await unitOfWork.LevelRepository.GetAllAsync(l => !l.IsDeleted);
-            IEnumerable<LevelVM> levelsmp = mapper.Map<IEnumerable<LevelVM>>(res);
+          
+            
+            var res=await unitOfWork.LevelRepository
+                .GetAllQuery(l=>!l.IsDeleted)
+                .Select(c=>new LevelsWithAssociatedCoursesVM
+                {
+                ID = c.ID,
+                Name = c.Name,
+                Sort = c.Sort,
+                AssociatedCourses = c.Courses.Count(c=>!c.IsDeleted)         
+                })
+                .ToListAsync();
 
-            return View(levelsmp);
+            return View(res);
         }
         [HttpGet]
         public async Task<IActionResult> Create()
