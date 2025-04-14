@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using CoursesManagementSystem.Constants;
 using CoursesManagementSystem.DB.Models;
 using CoursesManagementSystem.Interfaces;
 using CoursesManagementSystem.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoursesManagementSystem.Controllers
@@ -11,11 +13,20 @@ namespace CoursesManagementSystem.Controllers
     {
         private readonly IMapper mapper;
         private readonly IUnitOfWork unitOfWork;
-
-        public CourseController(IMapper _mapper, IUnitOfWork _unitOfWork)
+        private readonly IWebHostEnvironment webHostEnvironment;
+        private readonly string _BookPath;
+        public CourseController(IMapper _mapper, IUnitOfWork _unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             mapper = _mapper;
             unitOfWork = _unitOfWork;
+            this.webHostEnvironment = webHostEnvironment;
+            _BookPath = $"{webHostEnvironment.WebRootPath}{UploadsSettings.BooksPath}";
+
+            if (!Directory.Exists(_BookPath))
+            {
+                Directory.CreateDirectory(_BookPath);
+            }
+
         }
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -27,7 +38,7 @@ namespace CoursesManagementSystem.Controllers
                     Id = c.ID,
                     LevelName = c.Level.Name,
                     CategoryName = c.Category.Name,
-                    BookStorageURL = c.BookStorageURL,
+                    BookStorageURL = c.BookStorageURL,//--->>
                     Name = c.Name,
                     Details = c.Details,
                     LevelId = c.LevelId,
@@ -54,6 +65,7 @@ namespace CoursesManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CourseVM courseVM)
         {
+           
             if (ModelState.IsValid)
             {
                 //check if course name is unique
@@ -62,12 +74,12 @@ namespace CoursesManagementSystem.Controllers
                 if (coursefound != null)
                 {
                     ModelState.AddModelError("Name", "There is already a Course with This Name");
-                    
+
                     //refill selects
 
                     courseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted);
                     courseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted);
-                  
+
                     return View(courseVM);
                 }
                 //check if level is marked deleted -->mark undeleted
@@ -84,14 +96,34 @@ namespace CoursesManagementSystem.Controllers
                     return RedirectToAction("Index");
 
                 }
-                //new Course
-                Course cmp = mapper.Map<Course>(courseVM);
-                cmp.CreatedAt = DateTime.Now;
-                //cmp.CreatedBy = User.Identity.Name ?? "System";
-                await unitOfWork.CourseRepository.AddAsync(cmp);
-                await unitOfWork.CompleteAsync();
-                return RedirectToAction("Index");
+                if (courseVM.Book != null && courseVM.Book.Length > 0)
+                {
+                   
+                    var BookName = $"{Path.GetFileNameWithoutExtension(courseVM.Book.FileName)}_{Guid.NewGuid()}{Path.GetExtension(courseVM.Book.FileName)}";
 
+
+                    var path = Path.Combine(_BookPath, BookName);
+
+                    // Save the file to the server
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                       await courseVM.Book.CopyToAsync(stream);
+                    }
+
+                //new Course
+                     Course cmp = mapper.Map<Course>(courseVM);
+                     cmp.CreatedAt = DateTime.Now;
+                     cmp.BookStorageURL = $"{UploadsSettings.BooksPath}{"/"}{BookName}";// Store relative path
+                     await unitOfWork.CourseRepository.AddAsync(cmp);
+                     await unitOfWork.CompleteAsync();
+                     return RedirectToAction("Index");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "File upload failed.");
+                    return View(courseVM);
+                }
+              
             }
             //refill selects
 
@@ -110,18 +142,23 @@ namespace CoursesManagementSystem.Controllers
                 TempData["Error"] = "No Course with This Id is Found";
                 return RedirectToAction("Index");
             }
-            CourseVM res = mapper.Map<CourseVM>(Course);
+            UpdateCourseVM res = mapper.Map<UpdateCourseVM>(Course);
 
-            res.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted);
-                res.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted);
+            var Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted) ?? new List<Category>();
+            var Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted) ?? new List<Level>();
+            ViewBag.categorySelectList = GetCategorySelectList(Categories);
+            ViewBag.levelSelectList = GetLevelSelectList(Levels);
             return View(res);
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Update(int id, CourseVM CourseVM)
+        public async Task<IActionResult> Update(int id, UpdateCourseVM CourseVM)
         {
+            CourseVM ??= new UpdateCourseVM();
+            var Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted) ?? new List<Category>();
+            var Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted) ?? new List<Level>();
             if (ModelState.IsValid)
             {
 
@@ -138,9 +175,8 @@ namespace CoursesManagementSystem.Controllers
                 if (Course != null)
                 {
                     ModelState.AddModelError("Name", "Course Name already exists ");
-                    CourseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted);
-                    CourseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted);
-
+                    ViewBag.categorySelectList = GetCategorySelectList(Categories);
+                    ViewBag.levelSelectList = GetLevelSelectList(Levels);
                     return View(CourseVM);
                 }
 
@@ -154,27 +190,74 @@ namespace CoursesManagementSystem.Controllers
                     return RedirectToAction("Index");
 
                 }
+                if (CourseVM.Book != null && CourseVM.Book.Length > 0)
+                    {
+
+                        // Delete the old file if it exists
+                        if (!string.IsNullOrEmpty(lv.BookStorageURL))
+                        {
+                            var oldFilePath = Path.Combine(webHostEnvironment.WebRootPath, lv.BookStorageURL.TrimStart('/'));
+                            if (System.IO.File.Exists(oldFilePath))
+                            {
+                                System.IO.File.Delete(oldFilePath);
+                            }
+                        }
+
+                        var BookName = $"{Path.GetFileNameWithoutExtension(CourseVM.Book.FileName)}_{Guid.NewGuid()}{Path.GetExtension(CourseVM.Book.FileName)}";
+
+
+                        var path = Path.Combine(_BookPath, BookName);
+
+                        // Save the file to the server
+                        using (var stream = new FileStream(path, FileMode.Create))
+                        {
+                            await CourseVM.Book.CopyToAsync(stream);
+                        }
+
+                        // Update the file path
+                        lv.BookStorageURL = $"{UploadsSettings.BooksPath}{"/"}{BookName}";
+                }
+
                 lv.LastModifiedAt = DateTime.Now;
                 lv.Name = CourseVM.Name;
                 lv.Details = CourseVM.Details;
                 lv.CategoryId = CourseVM.CategoryId;
                 lv.LevelId = CourseVM.LevelId;
-                lv.BookStorageURL = CourseVM.BookStorageURL;
-
-
-
 
                 //lv.LastModifiedBy = User.Identity.Name ?? "System";
                 await unitOfWork.CompleteAsync();
                 return RedirectToAction("Index");
 
             }
-            CourseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted);
-            CourseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted);
+               
+
+            ViewBag.categorySelectList = GetCategorySelectList(Categories);
+            ViewBag.levelSelectList = GetLevelSelectList(Levels);
+
 
             return View(CourseVM);
 
         }
+        private List<SelectListItem> GetCategorySelectList(IEnumerable<Category> categories)
+        {
+            return categories.Select(c => new SelectListItem
+            {
+                Value = c.ID.ToString(), 
+                Text = c.Name
+            }).ToList();
+        }
+
+        private List<SelectListItem> GetLevelSelectList(IEnumerable<Level> levels)
+        {
+            return levels.Select(l => new SelectListItem
+            {
+                Value = l.ID.ToString(),
+                Text = l.Name
+            }).ToList();
+        }
+
+
+
         [HttpGet]
         public async Task<IActionResult> getById(int id)
         {
@@ -237,6 +320,16 @@ namespace CoursesManagementSystem.Controllers
                 TempData["Error"] = "Can not delete a Course that has Configurations";
                 return Json(new { success = false });
             }
+            // Delete the file if it exists
+            if (!string.IsNullOrEmpty(l.BookStorageURL))
+            {
+                var oldFilePath = Path.Combine(webHostEnvironment.WebRootPath, l.BookStorageURL.TrimStart('/'));
+                if (System.IO.File.Exists(oldFilePath))
+                {
+                    System.IO.File.Delete(oldFilePath);
+                }
+            }
+
             l.IsDeleted = true;
             await unitOfWork.CompleteAsync();
             TempData["Success"] = "Course Deleted Successfully";
