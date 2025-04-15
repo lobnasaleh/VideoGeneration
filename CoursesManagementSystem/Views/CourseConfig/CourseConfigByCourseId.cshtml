@@ -15,7 +15,7 @@
     @Html.AntiForgeryToken()
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="text-primary">Course Configurations</h2>
-        <a class="btn btn-success btn-lg" asp-action="Create">
+        <a class="btn btn-success btn-lg" asp-action="Create" asp-route-Courseid="@ViewBag.CourseId">
             <i class="bi bi-plus-circle"></i> Add Course Configurations
         </a>
     </div>
@@ -71,12 +71,14 @@
 
                         </tbody>
                     </table>
-                    <a class="btn btn-secondary " asp-controller="Course" asp-action="Index">
-                <i class="bi bi-backspace"></i> Back </a>
-    
+                   
         </div>
 
     }
+    <a class="btn btn-secondary " asp-controller="Course" asp-action="Index">
+        <i class="bi bi-backspace"></i> Back
+    </a>
+
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
