@@ -25,10 +25,10 @@
             <p class="card-title"><strong>Last Modified At:</strong> @Model.LastModifiedAt</p>
             <p class="card-title"><strong>Last Modified By:</strong> @Model.LastModifiedBy</p>
             <p>
-                <strong>Audio Url :</strong><a href="@Model.AudioStorageURL" class="card-title" target="_blank">@Model.AudioStorageURL</a>
+                <strong>Audio :</strong><a href="@Model.AudioStorageURL" class="card-title" target="_blank">@Model.Name</a>
             </p>
             <p>
-                <strong>Video Url :</strong><a href="@Model.VideoStorageURL" class="card-title" target="_blank">@Model.VideoStorageURL</a>
+                <strong>Video :</strong><a href="@Model.VideoStorageURL" class="card-title" target="_blank">@Model.Name</a>
             </p>
             <div class="d-flex justify-content-center">
                 <a asp-action="Update" asp-controller="Lesson" asp-route-id="@Model.Id" class="btn btn-outline-warning mx-2">Update Lesson</a>

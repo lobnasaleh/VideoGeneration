@@ -91,7 +91,7 @@ namespace CoursesManagementSystem.Controllers
             }
 
             PopulateDropdowns();
-            ViewBag.Courses = new SelectList(await unitOfWork.CourseRepository.GetAllAsync(), "ID", "Name", courseConfig.CourseId);
+            ViewBag.Courses = new SelectList(await unitOfWork.CourseRepository.GetAllAsync(c=>!c.IsDeleted), "ID", "Name", courseConfig.CourseId);
 
             return View(courseConfig);
         }
@@ -107,7 +107,7 @@ namespace CoursesManagementSystem.Controllers
 
             if (!ModelState.IsValid)
             {
-                ViewBag.Courses = new SelectList(await unitOfWork.CourseRepository.GetAllAsync(), "ID", "Name", courseConfig.CourseId);
+                ViewBag.Courses = new SelectList(await unitOfWork.CourseRepository.GetAllAsync(c => !c.IsDeleted), "ID", "Name", courseConfig.CourseId);
                 return View(courseConfig);
             }
 
@@ -180,12 +180,20 @@ namespace CoursesManagementSystem.Controllers
         }
 
 
+        [HttpGet]
+        public async Task<IActionResult> CourseConfigByCourseId(int id)
+        {
+            var courseConfig = await unitOfWork.CourseConfigRepository
+                .GetAsync(q => !q.IsDeleted && q.CourseId == id, new[] { "Course" });
 
+            if (courseConfig == null)
+            {
+                TempData["Error"] = "No Course Configs found with the provided Course ID.";
+                return RedirectToAction(nameof(GetAll));
+            }
 
-
-
-
-
+            return View(courseConfig);
+        }
 
 
 
@@ -207,7 +215,7 @@ namespace CoursesManagementSystem.Controllers
                                        Text = e.ToString()
                                    });
 
-            ViewBag.Courses = new SelectList(unitOfWork.CourseRepository.GetAllAsync().Result, "ID", "Name");
+            ViewBag.Courses = new SelectList(unitOfWork.CourseRepository.GetAllAsync(c => !c.IsDeleted).Result, "ID", "Name");
         }
 
 

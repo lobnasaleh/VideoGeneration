@@ -121,6 +121,10 @@ namespace CoursesManagementSystem.Controllers
                 else
                 {
                     ModelState.AddModelError("", "File upload failed.");
+
+                    courseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted);
+                    courseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted);
+
                     return View(courseVM);
                 }
               

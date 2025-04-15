@@ -1,10 +1,8 @@
-﻿using CoursesManagementSystem.DB.Models;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace CoursesManagementSystem.ViewModels
 {
-    public class LessonVM
+    public class UpdateLessonVM
     {
         public int Id { get; set; }
 
@@ -20,20 +18,21 @@ namespace CoursesManagementSystem.ViewModels
         public string ScriptText { get; set; }
 
         //  [Url(ErrorMessage = "Invalid URL format")]
-        [Required(ErrorMessage = "Video is required")]
-        public IFormFile Video { get; set; }
+       // [Required(ErrorMessage = "Video is required")]
+        public IFormFile? Video { get; set; }
         // [Url(ErrorMessage = "Invalid URL format")]
-         [Required(ErrorMessage = "Audio is required")]
-        public IFormFile Audio { get; set; }
+        // [Required(ErrorMessage = "Audio is required")]
+        public IFormFile? Audio { get; set; }
 
         public string VideoStorageURL { get; set; }//3shan el edit a3raf abayen feeha esm el file ely ma3mlo upload
         public string AudioStorageURL { get; set; }//3shan el edit a3raf abayen feeha esm el file ely ma3mlo upload
+
 
         [Range(1, int.MaxValue, ErrorMessage = "Sort order must be at least 1")]
         [Display(Name = "Lesson Order")]
         public int Sort { get; set; }
         [Required(ErrorMessage = "Chapter is required")]
-        [Display (Name="Chapter")]
+        [Display(Name = "Chapter")]
         public int ChapterId { get; set; }
 
         //for select loading
