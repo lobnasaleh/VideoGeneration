@@ -64,7 +64,7 @@
 
             <!-- Buttons -->
             <div class="d-flex justify-content-between mt-4">
-                <a class="btn btn-secondary" asp-action="GetAll">Cancel</a>
+                <a class="btn btn-secondary" asp-controller="CourseConfig" asp-action="CourseConfigByCourseId" asp-route-Courseid="@ViewBag.CourseId">Cancel</a>
                 <button type="submit" class="btn btn-primary">Create</button>
             </div>
         </div>
