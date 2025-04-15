@@ -1,4 +1,4 @@
-﻿@model CourseConfig
+﻿@model IEnumerable<CourseConfig>
 
 @{
     ViewData["Title"] = "Course Configurations";
@@ -20,16 +20,17 @@
         </a>
     </div>
 
-    @if (Model is null)
+    @if (!Model.Any())
     {
         <div class="alert alert-warning text-center py-4">
-            <h4 class="alert-heading">No Course Configurations Found!</h4>
-            <p class="mb-0">Start by adding a new Course Configurations .</p>
+            <h4 class="alert-heading">No Configurations for This Course Found!</h4>
+            <p class="mb-0">Start by adding Configurations for This Course .</p>
         </div>
     }
     else
     {
 
+        
                 <div class="table-responsive">
                     <table class="table table-hover table-bordered shadow-sm rounded">
                         <thead>
@@ -44,33 +45,36 @@
                             </tr>
                         </thead>
                         <tbody>
-                           
-                                <tr class="align-middle text-center clickable-row" data-id="@Model.ID">
-                                <td>@Model.ChaptersCount</td>
-                                <td>@Model.LessonsCountPerChapter</td>
-                                <td>@Model.VideoDurationInMin</td>
-                                <td>@Model.Language</td>
-                                <td>@Model.Persona</td>
-                                <td>@Model.Course?.Name</td>
+                            @foreach (var courseConfig in Model)
+                            {
+                                <tr class="align-middle text-center clickable-row" data-id="@courseConfig.ID">
+                                    <td>@courseConfig.ChaptersCount</td>
+                                    <td>@courseConfig.LessonsCountPerChapter</td>
+                                    <td>@courseConfig.VideoDurationInMin</td>
+                                    <td>@courseConfig.Language</td>
+                                    <td>@courseConfig.Persona</td>
+                                    <td>@courseConfig.Course?.Name</td>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                        <a class="btn btn-warning btn-sm me-2" asp-action="Edit" asp-route-id="@Model.ID" title="Edit">
+                                            <a class="btn btn-warning btn-sm me-2" asp-action="Edit" asp-route-id="@courseConfig.ID" asp-route-Courseid="@courseConfig.Course.ID" title="Edit">
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>
 
-                                        <button class="btn btn-danger btn-sm me-2 delete-btn" @* data-name="@courseConfig." *@ data-id="@Model.ID" title="Delete"><i class="bi bi-trash"></i></button>
-                                        <a asp-action="Index" asp-controller="Course" class="btn btn-outline-primary">Back</a>
+
+                                            <button class="btn btn-danger btn-sm me-2 delete-btn" @* data-name="@courseConfig." *@ data-id="@courseConfig.ID" title="Delete"><i class="bi bi-trash"></i></button>
 
 
                                         </div>
                                     </td>
                                 </tr>
-                            
+                            }
 
                         </tbody>
                     </table>
-                </div>
-           
+                    <a class="btn btn-secondary " asp-controller="Course" asp-action="Index">
+                <i class="bi bi-backspace"></i> Back </a>
+    
+        </div>
 
     }
 </div>

@@ -40,16 +40,10 @@
         <span asp-validation-for="Persona" class="text-danger"></span>
     </div>
 
-    <div class="mb-3">
-        <label asp-for="CourseId" class="form-label fw-bold">Course <span class="text-danger">*</span></label>
-        <select asp-for="CourseId" asp-items="ViewBag.Courses" class="form-control" required>
-            <option value="">-- Select a Course --</option>
-        </select>
-        <span asp-validation-for="CourseId" class="text-danger"></span>
-    </div>
+    <input type="hidden" name="CourseId" value="@ViewBag.CourseId" />
 
     <div class="d-flex justify-content-between mt-4">
-        <a class="btn btn-secondary" asp-action="GetAll">Cancel</a>
+        <a class="btn btn-secondary" asp-controller="CourseConfig" asp-action="CourseConfigByCourseId" asp-route-Courseid="@ViewBag.CourseId">Cancel</a>
         <button type="submit" class="btn btn-primary">Save Changes</button>
     </div>
 </form>

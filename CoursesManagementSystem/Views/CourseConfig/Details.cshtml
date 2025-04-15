@@ -25,8 +25,8 @@
             <p class="card-title"><strong>Last Modified At:</strong> @Model.LastModifiedAt</p>
             <p class="card-title"><strong>Last Modified By:</strong> @Model.LastModifiedBy</p>
             <div class="d-flex justify-content-center">
-                <a asp-action="Edit" asp-controller="CourseConfig" asp-route-id="@Model.ID" class="btn btn-outline-warning mx-2">Update Course Config </a>
-                <a asp-action="GetAll" asp-controller="CourseConfig" class="btn btn-outline-primary">Back</a>
+                <a asp-action="Edit" asp-controller="CourseConfig" asp-route-id="@Model.ID" asp-route-Courseid="@Model.Course.ID" class="btn btn-outline-warning mx-2">Update Course Config </a>
+                <a asp-action="CourseConfigByCourseId" asp-controller="CourseConfig" asp-route-Courseid="@Model.Course.ID" class="btn btn-outline-primary">Back</a>
 
             </div>
         </div>
