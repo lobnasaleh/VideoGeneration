@@ -70,7 +70,7 @@ namespace CoursesManagementSystem.Controllers
                     return RedirectToAction("CourseConfigByCourseId", new { Courseid = courseConfig.CourseId });
 
                 }
-                ModelState.AddModelError("CourseId", "A configuration already exists for this course.");
+                ModelState.AddModelError("Persona", "A configuration already exists for this course.");
                 PopulateDropdowns();
                 ViewBag.CourseId = courseConfig.CourseId;
                 return View(courseConfig);
