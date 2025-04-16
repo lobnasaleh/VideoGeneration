@@ -51,17 +51,20 @@
             </div>
 
             <!-- Course Dropdown -->
-            <div class="mb-3">
+
+            <input type="hidden" name="CourseId" value="@ViewBag.CourseId" />
+
+           @*  <div class="mb-3">
                 <label asp-for="CourseId" class="form-label fw-bold">Course</label>
                 <select asp-for="CourseId" asp-items="ViewBag.Courses" class="form-control">
                     <option value="">Select Course</option>
                 </select>
                 <span asp-validation-for="CourseId" class="text-danger"></span>
-            </div>
+            </div> *@
 
             <!-- Buttons -->
             <div class="d-flex justify-content-between mt-4">
-                <a class="btn btn-secondary" asp-action="GetAll">Cancel</a>
+                <a class="btn btn-secondary" asp-controller="CourseConfig" asp-action="CourseConfigByCourseId" asp-route-Courseid="@ViewBag.CourseId">Cancel</a>
                 <button type="submit" class="btn btn-primary">Create</button>
             </div>
         </div>

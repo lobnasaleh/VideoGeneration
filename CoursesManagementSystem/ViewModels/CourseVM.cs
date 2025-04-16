@@ -1,6 +1,8 @@
 ﻿using CoursesManagementSystem.DB.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using CoursesManagementSystem.Validations;
+using CoursesManagementSystem.Constants;
 
 namespace CoursesManagementSystem.ViewModels
 {
@@ -19,10 +21,16 @@ namespace CoursesManagementSystem.ViewModels
         public string Details { get; set; }
 
 
-        [Url(ErrorMessage = "Invalid URL format")]
-        [Required(ErrorMessage = "Book URL is required")]
-        [DataType(DataType.Url)]
-        public string BookStorageURL { get; set; }
+        //[Url(ErrorMessage = "Invalid URL format")]
+        [Required(ErrorMessage = "Book is required")]
+        /*[AllowedExtensions(UploadsSettings.AllowedExtensions),
+         MaxFileSize(UploadsSettings.MaxFileSizeInBytes) ]*/
+        public IFormFile Book { get; set; }
+
+        public string BookStorageURL { get; set; }//3shan el edit a3raf abayen feeha esm el file ely ma3mlo upload
+
+
+
 
         [Required(ErrorMessage = "Category is required")]
         [Display(Name = "Category")]
@@ -40,9 +48,10 @@ namespace CoursesManagementSystem.ViewModels
 
         public string LevelName { get; set; }
 
-       //to show them in selects
-        public IEnumerable<Category> Categories { get; set; } = new List<Category>();
-        public IEnumerable<Level> Levels { get; set; } = new List<Level>();
+        //to show them in selects
+        public IEnumerable<Category> Categories { get; set; } = new List<Category>();//
+        public IEnumerable<Level> Levels { get; set; } =new List<Level>();
+
 
     }
 }

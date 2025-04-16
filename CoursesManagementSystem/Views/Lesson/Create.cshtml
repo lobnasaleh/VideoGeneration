@@ -15,7 +15,7 @@
             <i class="bi bi-plus-circle-dotted"></i> Create a New Lesson
         </h3>
 
-        <form asp-controller="Lesson" asp-action="Create" method="post">
+        <form asp-controller="Lesson" asp-action="Create" enctype="multipart/form-data" method="post">
             <div class="row">
                 <div class="col-md-8">
                     <!-- Lesson Name -->
@@ -55,20 +55,20 @@
                     </div>
 
 
-                    <!-- Audio storage URl -->
+                    <!-- Video -->
                     <div class="mb-3">
-                        <label asp-for="AudioStorageURL" class="form-label fw-bold"></label>
-                        <input class="form-control" asp-for="AudioStorageURL" placeholder="Enter Audio URL">
-                        <span asp-validation-for="AudioStorageURL" class="text-danger"></span>
-
+                        <label class="form-label fw-bold" asp-for="Video">Upload Video:</label>
+                        <input class="form-control" type="file" asp-for="Video" placeholder="Enter Video URL" />
+                        <span asp-validation-for="Video" class="text-danger"></span>
                     </div>
 
-                    <!-- Video Storage URL -->
+                       <!--Audio-->
                     <div class="mb-3">
-                        <label asp-for="VideoStorageURL" class="form-label fw-bold"></label>
-                        <input class="form-control" asp-for="VideoStorageURL" placeholder="Enter Video URL">
-                        <span asp-validation-for="VideoStorageURL" class="text-danger"></span>
+                        <label class="form-label fw-bold" asp-for="Audio">Upload Audio:</label>
+                        <input class="form-control" type="file" asp-for="Audio" placeholder="Enter Audio URL" />
+                        <span asp-validation-for="Audio" class="text-danger"></span>
                     </div>
+
 
                
                     <!-- Buttons -->

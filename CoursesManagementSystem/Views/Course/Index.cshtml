@@ -37,7 +37,7 @@
                         <th scope="col">Details</th>
                         <th scope="col">Course Category</th>
                         <th scope="col">Course Level</th>
-                        <th scope="col">Book Url</th>
+                       @*  <th scope="col">Book Url</th> *@
                        @*  <th scope="col">Created At</th>
                         <th scope="col">Created By</th>
                         <th scope="col">Last Modified At</th>
@@ -53,9 +53,9 @@
                             <td>@Course.Details</td>
                             <td>@Course.CategoryName</td>
                             <td>@Course.LevelName</td>
-                            <td>
-                                <a href="@Course.BookStorageURL" target="_blank">@Course.BookStorageURL</a>
-                            </td>
+                           @*  <td>
+                                <a href="@Course.Book" target="_blank">View Book</a>
+                            </td> *@
            
 
 
@@ -72,6 +72,15 @@
                                     <button class="btn btn-danger btn-sm me-2 delete-btn" data-name="@Course.Name" data-id="@Course.Id" title="Delete"><i class="bi bi-trash"></i></button>
 
 
+                                    <a class="btn btn-primary btn-sm me-2" asp-controller="CourseConfig" asp-action="CourseConfigByCourseId" asp-route-Courseid="@Course.Id" title="Config">
+                                     Configurations <i class="bi bi-gear-fill"></i>
+                                    </a>
+
+
+                                    @* <a class="btn btn-info btn-sm me-2" asp-controller="Course" asp-action="getById" asp-route-id="@Course.Id" title="View">
+                                        <i class="bi bi-eye"></i>
+                                    </a> *@
+                                   
                                 </div>
                             </td>
                         </tr>

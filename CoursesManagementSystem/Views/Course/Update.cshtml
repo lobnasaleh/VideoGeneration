@@ -1,22 +1,32 @@
-﻿@model CourseVM
+﻿@model UpdateCourseVM
 
 @{
     ViewData["Title"] = "Edit Course";
 }
 @{
-    SelectList CategoryOptions = new SelectList(Model.Categories, "ID", "Name");
-    SelectList LevelOptions = new SelectList(Model.Levels, "ID", "Name");
+   
+    // SelectList CategoryOptions = new SelectList(Model.Categories, "ID", "Name");
+    // SelectList LevelOptions = new SelectList(Model.Levels, "ID", "Name");
+    // SelectList LevelOptions = new SelectList(Model.Levels.Select(s=>new
+    //  {
+
+    //  Id = s.ID,
+    //  DisplayText = s.Name
+    // }), "ID", "Name");
+   
 }
+
+
 <div class="container mt-5">
     <div class="card shadow-lg p-4">
         <h3 class="text-warning mb-4">
             <i class="bi bi-pencil-square"></i> Update Course
         </h3>
 
-        <form asp-controller="Course" asp-action="Update" method="post">
+        <form asp-controller="Course" asp-action="Update" enctype="multipart/form-data" method="post">
             <div class="row">
                 <div class="col-md-8">
-                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="ID" />
                     <div class="mb-3">
                         <label asp-for="Name" class="form-label fw-bold">Course Name</label>
                         <input class="form-control" asp-for="Name">
@@ -32,7 +42,7 @@
                     <!-- Course Category -->
                     <div class="mb-3">
                         <label asp-for="CategoryId" class="form-label fw-bold"></label>
-                        <select asp-for="CategoryId" asp-items="CategoryOptions" class="form-control">
+                        <select asp-for="CategoryId" asp-items="@ViewBag.categorySelectList" class="form-control">
                             <option disabled selected>--Select Course Category--</option>
                         </select>
                         <span asp-validation-for="CategoryId" class="text-danger"></span>
@@ -41,7 +51,7 @@
                     <!-- Course Level -->
                     <div class="mb-3">
                         <label asp-for="LevelId" class="form-label fw-bold"></label>
-                        <select asp-for="LevelId" asp-items="LevelOptions" class="form-control">
+                        <select asp-for="LevelId" asp-items="@ViewBag.levelSelectList" class="form-control">
                             <option disabled selected>--Select Course Level--</option>
                         </select>
                         <span asp-validation-for="LevelId" class="text-danger"></span>
@@ -49,9 +59,10 @@
 
                     <!-- Book Storage url -->
                     <div class="mb-3">
-                        <label asp-for="BookStorageURL" class="form-label fw-bold"></label>
-                        <input class="form-control" asp-for="BookStorageURL" placeholder="Enter Book URL">
-                        <span asp-validation-for="BookStorageURL" class="text-danger"></span>
+                        <label class="form-label fw-bold" asp-for="Book">Upload Book (PDF):</label>
+                        <p><strong>Current File is in:</strong> @Model.BookStorageURL.Split("_")[0]</p>
+                        <input class="form-control" type="file" asp-for="Book" placeholder="Enter Book URL" />
+                        <span asp-validation-for="Book" class="text-danger"></span>
                     </div>
 
                     <div class="d-flex justify-content-between mt-4">

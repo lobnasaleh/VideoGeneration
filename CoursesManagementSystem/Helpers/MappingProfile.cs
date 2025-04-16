@@ -17,12 +17,21 @@ namespace CoursesManagementSystem.Helpers
                  .ForMember(dest => dest.Category, opt => opt.Ignore())
                  .ForMember(dest => dest.Level, opt => opt.Ignore());
 
+            CreateMap<Course, UpdateCourseVM>()
+                .ReverseMap()
+                .ForMember(dest => dest.Category, opt => opt.Ignore())
+                .ForMember(dest => dest.Level, opt => opt.Ignore());
+
+            
             CreateMap<Chapter, ChapterVM>().ReverseMap()
                .ForMember(dest => dest.Course, opt => opt.Ignore());
 
             CreateMap<Lesson, LessonVM>().ReverseMap()
               .ForMember(dest => dest.Chapter, opt => opt.Ignore());
 
+            CreateMap<Lesson, UpdateLessonVM>()
+            .ReverseMap()
+         .ForMember(dest => dest.Chapter, opt => opt.Ignore());
 
 
         }

@@ -1,4 +1,4 @@
-﻿@model LessonVM
+﻿@model UpdateLessonVM
 
 @{
     ViewData["Title"] = "Edit Lesson";
@@ -15,7 +15,7 @@
             <i class="bi bi-pencil-square"></i> Update Lesson
         </h3>
 
-        <form asp-controller="Lesson" asp-action="Update" method="post">
+        <form asp-controller="Lesson" asp-action="Update" enctype="multipart/form-data" method="post">
             <div class="row">
                 <div class="col-md-8">
                     <input type="hidden" asp-for="Id" />
@@ -56,20 +56,22 @@
                     </div>
 
 
-                    <!-- Audio storage URl -->
+                    <!-- Video -->
                     <div class="mb-3">
-                        <label asp-for="AudioStorageURL" class="form-label fw-bold"></label>
-                        <input class="form-control" asp-for="AudioStorageURL" placeholder="Enter Audio URL">
-                        <span asp-validation-for="AudioStorageURL" class="text-danger"></span>
-
+                        <label class="form-label fw-bold" asp-for="Video">Upload Video:</label>
+                        <input class="form-control" type="file" asp-for="Video" placeholder="Enter Video URL" />
+                        <p><strong>Current File is in:</strong> @Model.VideoStorageURL.Split("_")[0]</p>
+                        <span asp-validation-for="Video" class="text-danger"></span>
                     </div>
 
-                    <!-- Video Storage URL -->
+                    <!--Audio-->
                     <div class="mb-3">
-                        <label asp-for="VideoStorageURL" class="form-label fw-bold"></label>
-                        <input class="form-control" asp-for="VideoStorageURL" placeholder="Enter Video URL">
-                        <span asp-validation-for="VideoStorageURL" class="text-danger"></span>
+                        <label class="form-label fw-bold" asp-for="Audio">Upload Book (PDF):</label>
+                        <input class="form-control" type="file" asp-for="Audio" placeholder="Enter Audio URL" />
+                        <p><strong>Current File is in:</strong> @Model.AudioStorageURL.Split("_")[0]</p>
+                        <span asp-validation-for="Audio" class="text-danger"></span>
                     </div>
+
                     <div class="d-flex justify-content-between mt-4">
                         <a class="btn btn-secondary" asp-action="Index">Cancel</a>
                         <button type="submit" class="btn btn-primary">Save Changes</button>

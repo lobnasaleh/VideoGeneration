@@ -1,4 +1,4 @@
-﻿@model IEnumerable<LevelVM>
+﻿@model IEnumerable<LevelsWithAssociatedCoursesVM>
 @{
     ViewData["Title"] = "Levels";
 }
@@ -36,6 +36,8 @@
                     <tr class="text-center">
                         <th scope="col">Name</th>
                         <th scope="col">Difficulty Level</th>
+                        <th scope="col">Number Of Associated Courses</th>
+
                        
                         <th scope="col" class="text-center">Actions</th>
                     </tr>
@@ -46,6 +48,7 @@
                         <tr class="align-middle text-center clickable-row" data-id="@level.ID">
                             <td>@level.Name</td>
                             <td>@level.Sort</td>
+                            <td>@level.AssociatedCourses</td>
                            
                             <td>
                                 <div class="d-flex justify-content-center">

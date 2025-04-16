@@ -18,12 +18,17 @@ namespace CoursesManagementSystem.ViewModels
         [Required(ErrorMessage = "Script is required")]
         [DataType(DataType.MultilineText)]
         public string ScriptText { get; set; }
-        [Url(ErrorMessage = "Invalid URL format")]
-        [Required(ErrorMessage = "Video URL is required")]
-        public string VideoStorageURL { get; set; }
-        [Url(ErrorMessage = "Invalid URL format")]
-        [Required(ErrorMessage = "Audio URL is required")]
-        public string AudioStorageURL { get; set; }
+
+        //  [Url(ErrorMessage = "Invalid URL format")]
+        [Required(ErrorMessage = "Video is required")]
+        public IFormFile Video { get; set; }
+        // [Url(ErrorMessage = "Invalid URL format")]
+         [Required(ErrorMessage = "Audio is required")]
+        public IFormFile Audio { get; set; }
+
+        public string VideoStorageURL { get; set; }//3shan el edit a3raf abayen feeha esm el file ely ma3mlo upload
+        public string AudioStorageURL { get; set; }//3shan el edit a3raf abayen feeha esm el file ely ma3mlo upload
+
         [Range(1, int.MaxValue, ErrorMessage = "Sort order must be at least 1")]
         [Display(Name = "Lesson Order")]
         public int Sort { get; set; }
