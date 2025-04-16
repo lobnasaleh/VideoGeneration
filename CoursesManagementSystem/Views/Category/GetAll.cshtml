@@ -34,6 +34,7 @@
             <table class="table table-hover table-bordered shadow-sm rounded">
                 <thead class="table-light">
                     <tr class="text-center">
+                        <th scope="col">#</th> <!-- Index column -->
                         <th scope="col">Name</th>
                         @* <th scope="col">Created At</th>
                         <th scope="col">Created By</th>
@@ -43,9 +44,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var category in Model)
+                    @foreach (var (category, index) in Model.Select((value, i) => (value, i)))
                     {
                         <tr class="align-middle text-center clickable-row" data-id="@category.ID">
+                            <td>@(index + 1)</td> <!-- Displaying the index -->
                             <td>@category.Name</td>
                             <td>
                                 <div class="d-flex justify-content-center">
@@ -54,8 +56,6 @@
                                     </a>
 
                                     <button class="btn btn-danger btn-sm me-2 delete-btn" data-name="@category.Name" data-id="@category.ID" title="Delete"><i class="bi bi-trash"></i></button>
-
-                                   
                                 </div>
                             </td>
                         </tr>
@@ -66,26 +66,22 @@
     }
 </div>
 
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
         const rows = document.querySelectorAll('.clickable-row');
-            rows.forEach(row => {
-                row.addEventListener('click', function () {
-                    const id = this.getAttribute('data-id');
-                    window.location.href = `@Url.Action("getById", "Category")/${id}`;
-                });
+        rows.forEach(row => {
+            row.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                window.location.href = `@Url.Action("getById", "Category")/${id}`;
             });
         });
-    </script>
-
+    });
+</script>
 
 <style>
     .clickable-row {
         cursor: pointer;
     }
-
-       
 </style>
 
 <!-- Include the Delete Modal -->

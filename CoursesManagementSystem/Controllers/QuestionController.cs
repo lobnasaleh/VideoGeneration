@@ -125,58 +125,73 @@ namespace CoursesManagementSystem.Controllers
 
 
         [HttpGet]
-            public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(int id)
+        {
+            var question = await unitOfWork.QuestionRepository.GetAsync(
+                q => q.ID == id,
+                new[] { "Lesson", "QuestionLevel", "Answers" } // include Answers here
+            );
+
+            if (question == null)
             {
-                var question = await unitOfWork.QuestionRepository.GetAsync(q => q.ID == id, new[] { "Lesson", "QuestionLevel" });
+                TempData["Error"] = "Question not found!";
+                return RedirectToAction(nameof(GetAll));
+            }
 
-                if (question == null)
-                {
-                    TempData["Error"] = "Question not found!";
-                    return RedirectToAction(nameof(GetAll));
-                }
+            await PopulateDropdowns();
+            return View(question);
+        }
 
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, Question question, List<Answer> Answers, int CorrectAnswerIndex)
+        {
+            if (id != question.ID)
+                return BadRequest();
+
+            if (!ModelState.IsValid)
+            {
                 await PopulateDropdowns();
                 return View(question);
             }
 
-            [HttpPost]
-            [ValidateAntiForgeryToken]
-            public async Task<IActionResult> Edit(int id, Question question)
+            var existingQuestion = await unitOfWork.QuestionRepository.GetAsync(q => q.ID == id, new[] { "Answers", "Lesson", "QuestionLevel" });
+            if (existingQuestion == null)
             {
-                if (id != question.ID)
-                {
-                    return BadRequest();
-                }
-
-                if (!ModelState.IsValid)
-                {
-                    await PopulateDropdowns();
-                    return View(question);
-                }
-
-                var existingQuestion = await unitOfWork.QuestionRepository.GetAsync(q => q.ID == id);
-                if (existingQuestion == null)
-                {
-                    TempData["Error"] = "Question not found!";
-                    return RedirectToAction(nameof(GetAll));
-                }
-
-                existingQuestion.QuestionText = question.QuestionText;
-                existingQuestion.QuestionInstructions = question.QuestionInstructions;
-                existingQuestion.LessonId = question.LessonId;
-                existingQuestion.QuestionLevelId = question.QuestionLevelId;
-                existingQuestion.QuestionType = question.QuestionType;
-                existingQuestion.LastModifiedAt = DateTime.UtcNow;
-                existingQuestion.LastModifiedBy = User.Identity?.Name ?? "System";
-
-                unitOfWork.QuestionRepository.Update(existingQuestion);
-                await unitOfWork.CompleteAsync();
-
-                TempData["Success"] = "Question updated successfully!";
+                TempData["Error"] = "Question not found!";
                 return RedirectToAction(nameof(GetAll));
             }
 
-            [HttpGet]
+            // Update basic question fields
+            existingQuestion.QuestionText = question.QuestionText;
+            existingQuestion.QuestionInstructions = question.QuestionInstructions;
+            existingQuestion.LessonId = question.LessonId;
+            existingQuestion.QuestionLevelId = question.QuestionLevelId;
+            existingQuestion.QuestionType = question.QuestionType;
+            existingQuestion.LastModifiedAt = DateTime.UtcNow;
+            existingQuestion.LastModifiedBy = User.Identity?.Name ?? "System";
+
+            // Remove old answers and add new ones
+            existingQuestion.Answers.Clear();
+            for (int i = 0; i < Answers.Count; i++)
+            {
+                var answer = Answers[i];
+                answer.IsCorrect = i == CorrectAnswerIndex;
+                existingQuestion.Answers.Add(answer);
+            }
+
+            unitOfWork.QuestionRepository.Update(existingQuestion);
+            await unitOfWork.CompleteAsync();
+
+            TempData["Success"] = "Question updated successfully!";
+            return RedirectToAction(nameof(GetAll));
+        }
+
+
+
+
+        [HttpGet]
             public async Task<IActionResult> Delete(int id)
             {
                 var question = await unitOfWork.QuestionRepository

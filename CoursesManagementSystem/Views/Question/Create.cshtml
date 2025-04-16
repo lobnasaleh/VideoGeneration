@@ -34,6 +34,9 @@
                 <span asp-validation-for="QuestionType" class="text-danger"></span>
             </div>
 
+            <!-- Answers Section -->
+            <div id="answersContainer"></div>
+
             <!-- Lesson Dropdown -->
             <div class="mb-3">
                 <label asp-for="LessonId" class="form-label fw-bold">Lesson</label>
@@ -42,9 +45,6 @@
                 </select>
                 <span asp-validation-for="LessonId" class="text-danger"></span>
             </div>
-
-            <!-- Answers Section -->
-            <div id="answersContainer"></div>
 
             <!-- Question Level Dropdown -->
             <div class="mb-3">
@@ -63,7 +63,6 @@
         </div>
     </div>
 </form>
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
@@ -82,18 +81,17 @@
                     `);
                 }
             } else if (selectedType === "2") { // True/False
-                answersContainer.append(`
-                    <div class="mb-2">
-                        <label class="me-2">
-                            <input type="radio" name="CorrectAnswer" value="true" required> True
-                        </label>
-                        <label class="ms-3">
-                            <input type="radio" name="CorrectAnswer" value="false" required> False
-                        </label>
-                    </div>
-                `);
-            }
-        });
+                for (let i = 0; i < 2; i++) {
+                     answersContainer.append(`
+                         <div class="mb-2 d-flex align-items-center">
+                             <input type="text" name="Answers" class="form-control" placeholder="Enter option ${i + 1}" required>
+                              <input type="radio" name="CorrectAnswer" value="${i}" class="ms-2"> Correct
+                         </div>
+                    `);
+                 }
+             }
+             });
+
     });
 </script>
 

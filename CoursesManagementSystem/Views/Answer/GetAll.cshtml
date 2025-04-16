@@ -13,7 +13,6 @@
     <div class="alert alert-info">@TempData["Success"]</div>
 }
 
-
 <div class="container mt-5">
     @Html.AntiForgeryToken()
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -36,6 +35,7 @@
             <table class="table table-hover table-bordered shadow-sm rounded">
                 <thead class="table-light">
                     <tr class="text-center">
+                        <th scope="col">#</th> <!-- Index column -->
                         <th scope="col">Answer Text</th>
                         <th scope="col">Is Correct</th>
                         <th scope="col">Question</th>
@@ -43,9 +43,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var answer in Model)
+                    @foreach (var (answer, index) in Model.Select((value, i) => (value, i)))
                     {
                         <tr class="align-middle text-center clickable-row" data-id="@answer.ID">
+                            <td>@(index + 1)</td> <!-- Displaying the index -->
                             <td>@answer.AnswerText</td>
                             <td>
                                 @if (answer.IsCorrect)
@@ -64,7 +65,6 @@
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
                                     <button class="btn btn-danger btn-sm me-2 delete-btn" data-name="@answer.AnswerText" data-id="@answer.ID" title="Delete"><i class="bi bi-trash"></i></button>
-
                                 </div>
                             </td>
                         </tr>

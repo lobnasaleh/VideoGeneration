@@ -34,6 +34,7 @@
             <table class="table table-hover table-bordered shadow-sm rounded">
                 <thead class="table-light">
                     <tr class="text-center">
+                        <th scope="col">#</th> <!-- Index column -->
                         <th scope="col">Course</th>
                         <th scope="col">Questions Per Lesson</th>
                         <th scope="col">Question Level</th>
@@ -41,9 +42,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var config in Model)
+                    @foreach (var (config, index) in Model.Select((value, i) => (value, i)))
                     {
                         <tr class="align-middle text-center clickable-row" data-id="@config.ID">
+                            <td>@(index + 1)</td> <!-- Displaying the index -->
                             <td>@config.Course?.Name</td>
                             <td>@config.QuestionsCountPerLesson</td>
                             <td>@config.QuestionLevel?.Name</td>
@@ -53,7 +55,7 @@
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
 
-                                    <button class="btn btn-danger btn-sm me-2 delete-btn" @* data-name="@config." *@ data-id="@config.ID" title="Delete"><i class="bi bi-trash"></i></button>
+                                    <button class="btn btn-danger btn-sm me-2 delete-btn" data-id="@config.ID" title="Delete"><i class="bi bi-trash"></i></button>
 
                                 </div>
                             </td>
@@ -82,6 +84,7 @@
         cursor: pointer;
     }
 </style>
+
 <!-- Include the Delete Modal -->
 @await Html.PartialAsync("_DeleteModal")
 
@@ -127,7 +130,6 @@
                     else {
                         deleteModal.hide();
                         location.reload();
-                        // alert("Error: CourseQuestionConfig could not be deleted.");
                     }
                 },
                 error: function (error) {

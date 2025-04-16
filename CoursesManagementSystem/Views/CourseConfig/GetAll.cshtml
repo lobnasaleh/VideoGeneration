@@ -13,70 +13,69 @@
 }
 <div class="container mt-5">
     @Html.AntiForgeryToken()
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="text-primary">Course Configurations</h2>
-    <a class="btn btn-success btn-lg" asp-action="Create">
-        <i class="bi bi-plus-circle"></i> Add Course Configurations 
-    </a>
-</div>
-
-@if (!Model.Any())
-{
-    <div class="alert alert-warning text-center py-4">
-        <h4 class="alert-heading">No Course Configurations Found!</h4>
-        <p class="mb-0">Start by adding a new Course Configurations .</p>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary">Course Configurations</h2>
+        <a class="btn btn-success btn-lg" asp-action="Create">
+            <i class="bi bi-plus-circle"></i> Add Course Configurations
+        </a>
     </div>
-}
-else
-{
 
-    <div class="col-12">
-        <div class="bg-light rounded h-100 p-4">
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered shadow-sm rounded">
-                    <thead>
-                        <tr>
-                            <th scope="col">ChaptersCount</th>
-                            <th scope="col">LessonsCountPerChapter</th>
-                            <th scope="col">VideoDurationInMin</th>
-                            <th scope="col">Language</th>
-                            <th scope="col">Persona</th>
-                            <th scope="col">Course Name</th>
-                            <th scope="col" class="text-center">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var courseConfig in Model)
-                        {
-                            <tr class="align-middle text-center clickable-row" data-id="@courseConfig.ID">
-                                <td>@courseConfig.ChaptersCount</td>
-                                <td>@courseConfig.LessonsCountPerChapter</td>
-                                <td>@courseConfig.VideoDurationInMin</td>
-                                <td>@courseConfig.Language</td>
-                                <td>@courseConfig.Persona</td>
-                                <td>@courseConfig.Course?.Name</td>
-                                <td>
-                                    <div class="d-flex justify-content-center">
-                                        <a class="btn btn-warning btn-sm me-2" asp-action="Edit" asp-route-id="@courseConfig.ID" title="Edit">
-                                            <i class="bi bi-pencil-square"></i>
-                                        </a>
-
-                                            <button class="btn btn-danger btn-sm me-2 delete-btn" @* data-name="@courseConfig." *@ data-id="@courseConfig.ID" title="Delete"><i class="bi bi-trash"></i></button>
-
-
-                                    </div>
-                                </td>
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning text-center py-4">
+            <h4 class="alert-heading">No Course Configurations Found!</h4>
+            <p class="mb-0">Start by adding a new Course Configurations.</p>
+        </div>
+    }
+    else
+    {
+        <div class="col-12">
+            <div class="bg-light rounded h-100 p-4">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered shadow-sm rounded">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th> <!-- Index column -->
+                                <th scope="col">ChaptersCount</th>
+                                <th scope="col">LessonsCountPerChapter</th>
+                                <th scope="col">VideoDurationInMin</th>
+                                <th scope="col">Language</th>
+                                <th scope="col">Persona</th>
+                                <th scope="col">Course Name</th>
+                                <th scope="col" class="text-center">Actions</th>
                             </tr>
-                        }
+                        </thead>
+                        <tbody>
+                            @foreach (var (courseConfig, index) in Model.Select((value, i) => (value, i)))
+                            {
+                                <tr class="align-middle text-center clickable-row" data-id="@courseConfig.ID">
+                                    <td>@(index + 1)</td> <!-- Displaying the index -->
+                                    <td>@courseConfig.ChaptersCount</td>
+                                    <td>@courseConfig.LessonsCountPerChapter</td>
+                                    <td>@courseConfig.VideoDurationInMin</td>
+                                    <td>@courseConfig.Language</td>
+                                    <td>@courseConfig.Persona</td>
+                                    <td>@courseConfig.Course?.Name</td>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <a class="btn btn-warning btn-sm me-2" asp-action="Edit" asp-route-id="@courseConfig.ID" title="Edit">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
 
-                    </tbody>
-                </table>
+                                            <button class="btn btn-danger btn-sm me-2 delete-btn" data-id="@courseConfig.ID" title="Delete"><i class="bi bi-trash"></i></button>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
-
-}
+    }
 </div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
     const rows = document.querySelectorAll('.clickable-row');
@@ -93,9 +92,7 @@ else
     .clickable-row {
         cursor: pointer;
     }
-
 </style>
-
 
 <!-- Include the Delete Modal -->
 @await Html.PartialAsync("_DeleteModal")
@@ -112,14 +109,9 @@ else
             event.stopPropagation(); // Prevent row click from interfering
 
             let CourseConfigId = $(this).data("id");
-            let CourseConfigName = $(this).data("name");
             console.log("Clicked button's CourseConfigId:", CourseConfigId);
-            $("#modalItemName").text(CourseConfigName);
             deleteUrl = "/CourseConfig/Delete/" + CourseConfigId;
             rowToDelete = $(this).closest("tr");
-
-            console.log("Row to delete:", rowToDelete);
-            console.log("Row HTML:", rowToDelete.html()); // Check if it exists
 
             deleteModal.show();
         });
@@ -142,7 +134,6 @@ else
                     else {
                         deleteModal.hide();
                         location.reload();
-                        // alert("Error: CourseConfig could not be deleted.");
                     }
                 },
                 error: function (error) {
