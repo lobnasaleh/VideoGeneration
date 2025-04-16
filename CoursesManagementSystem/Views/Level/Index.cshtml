@@ -34,6 +34,7 @@
             <table class="table table-hover table-bordered shadow-sm rounded">
                 <thead class="table-light">
                     <tr class="text-center">
+                        <th scope="col">#</th>
                         <th scope="col">Name</th>
                         <th scope="col">Difficulty Level</th>
                         <th scope="col">Number Of Associated Courses</th>
@@ -43,9 +44,13 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @{
+                        var index = 1;
+                    }
                     @foreach (var level in Model)
                     {
                         <tr class="align-middle text-center clickable-row" data-id="@level.ID">
+                            <td>@index</td>
                             <td>@level.Name</td>
                             <td>@level.Sort</td>
                             <td>@level.AssociatedCourses</td>
@@ -61,6 +66,7 @@
                                 </div>
                             </td>
                         </tr>
+                        index++;
                     }
                 </tbody>
             </table>

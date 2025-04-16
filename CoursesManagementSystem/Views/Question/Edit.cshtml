@@ -1,4 +1,6 @@
 ﻿@model CoursesManagementSystem.DB.Models.Question
+@using System.Text.Encodings.Web
+
 
 @{
     ViewData["Title"] = "Edit Question";
@@ -55,11 +57,14 @@
     <!-- Question Type Dropdown -->
     <div class="mb-3">
         <label asp-for="QuestionType" class="form-label fw-bold">Question Type</label>
-        <select asp-for="QuestionType" asp-items="ViewBag.QuestionTypes" class="form-control" required>
+        <select id="questionType" asp-for="QuestionType" asp-items="ViewBag.QuestionTypes" class="form-control" required>
             <option value="">-- Select a Question Type --</option>
         </select>
         <span asp-validation-for="QuestionType" class="text-danger"></span>
     </div>
+
+    <!-- Answer Section -->
+    <div id="answersContainer" class="mb-3"></div>
 
     <!-- Buttons -->
     <div class="d-flex justify-content-between mt-4">
@@ -67,3 +72,71 @@
         <button type="submit" class="btn btn-primary">Save Changes</button>
     </div>
 </form>
+
+
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        let existingAnswers = [];
+
+        @if (Model.Answers != null && Model.Answers.Any())
+        {
+            var index = 0;
+            foreach (var answer in Model.Answers)
+            {
+                <text>
+                    existingAnswers.push({
+                    id: @answer.ID,
+                    questionId: @answer.QuestionId,
+                    answerText: "@JavaScriptEncoder.Default.Encode(answer.AnswerText)",
+                    isCorrect: @(answer.IsCorrect.ToString().ToLower())
+                });
+                </text>
+                index++;
+            }
+        }
+
+        let selectedType = $("#questionType").val();
+        let answersContainer = $("#answersContainer");
+
+        function renderAnswers(type, answers) {
+            answersContainer.empty();
+            if (type === "1") { // Multiple Choice
+                for (let i = 0; i < 4; i++) {
+                    let answer = answers[i] || {};
+                    answersContainer.append(`
+                        <div class="mb-2 d-flex align-items-center">
+                            <input type="text" name="Answers[${i}].AnswerText" class="form-control" value="${answer.answerText || ''}" placeholder="Option ${i + 1}" required>
+                            <input type="hidden" name="Answers[${i}].ID" value="${answer.id || 0}" />
+                            <input type="hidden" name="Answers[${i}].QuestionId" value="${answer.questionId || 0}" />
+                            <input type="radio" name="CorrectAnswerIndex" value="${i}" class="ms-2" ${answer.isCorrect ? 'checked' : ''}> Correct
+                        </div>
+                    `);
+                }
+            } else if (type === "2") { // True/False
+                for (let i = 0; i < 2; i++) {
+                    let answer = answers[i] || {};
+                    answersContainer.append(`
+                        <div class="mb-2 d-flex align-items-center">
+                            <input type="text" name="Answers[${i}].AnswerText" class="form-control" value="${answer.answerText || ''}" placeholder="Option ${i + 1}" required>
+                            <input type="hidden" name="Answers[${i}].ID" value="${answer.id || 0}" />
+                            <input type="hidden" name="Answers[${i}].QuestionId" value="${answer.questionId || 0}" />
+                            <input type="radio" name="CorrectAnswerIndex" value="${i}" class="ms-2" ${answer.isCorrect ? 'checked' : ''}> Correct
+                        </div>
+                    `);
+                }
+            }
+        }
+
+        $("#questionType").change(function () {
+            selectedType = $(this).val();
+            renderAnswers(selectedType, []);
+        });
+
+        $(document).ready(function () {
+            renderAnswers(selectedType, existingAnswers);
+        });
+    </script>
+}
+

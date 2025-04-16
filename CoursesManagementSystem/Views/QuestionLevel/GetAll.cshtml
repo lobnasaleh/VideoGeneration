@@ -15,27 +15,29 @@
 <div class="container mt-5">
     @Html.AntiForgeryToken()
     <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="text-primary">Question Levels</h2>
+        <h2 class="text-primary">Question Levels</h2>
         <a class="btn btn-success btn-lg" asp-action="Create">
-        <i class="bi bi-plus-circle"></i> Add A QuestionLevel
+            <i class="bi bi-plus-circle"></i> Add A QuestionLevel
         </a>
     </div>
 
-@if (!Model.Any())
-{
-    <div class="alert alert-warning text-center py-4">
-        <h4 class="alert-heading">No Question Levels Found!</h4>
-        <p class="mb-0">Start by adding a new Question Level.</p>
-    </div>
-}
-else{
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning text-center py-4">
+            <h4 class="alert-heading">No Question Levels Found!</h4>
+            <p class="mb-0">Start by adding a new Question Level.</p>
+        </div>
+    }
+    else
+    {
 
-    <div class="col-12">
-       
+        <div class="col-12">
+
             <div class="table-responsive">
                 <table class="table table-hover table-bordered shadow-sm rounded">
                     <thead>
                         <tr>
+                            <th scope="col">#</th> <!-- Index column -->
                             <th scope="col">Name</th>
                             <th scope="col">DifficultyScore</th>
                             <th scope="col">Created At</th>
@@ -46,9 +48,10 @@ else{
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach(var questionLevel in Model)
-                    {
+                        @foreach (var (questionLevel, index) in Model.Select((value, i) => (value, i)))
+                        {
                             <tr class="align-middle text-center clickable-row" data-id="@questionLevel.ID">
+                                <td>@(index + 1)</td> <!-- Displaying the index -->
                                 <td>@questionLevel.Name</td>
                                 <td>@questionLevel.DifficultyScore</td>
                                 <td>@questionLevel.CreatedAt</td>
@@ -61,21 +64,20 @@ else{
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
 
-
                                         <button class="btn btn-danger btn-sm me-2 delete-btn" data-name="@questionLevel.Name" data-id="@questionLevel.ID" title="Delete"><i class="bi bi-trash"></i></button>
 
                                     </div>
                                 </td>
                             </tr>
-                    }
-                    
+                        }
+
                     </tbody>
                 </table>
             </div>
-     
-    </div>
 
-}
+        </div>
+
+    }
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', function () {

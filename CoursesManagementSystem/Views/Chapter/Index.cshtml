@@ -35,6 +35,7 @@
             <table class="table table-hover table-bordered shadow-sm rounded">
                 <thead class="table-light">
                     <tr class="text-center">
+                        <th scope="col">#</th>
                         <th scope="col">Name</th>
                         <th scope="col">Details</th>
                         <th scope="col">Course</th>
@@ -48,9 +49,13 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @{
+                        var index = 1;
+                    }
                     @foreach (var Chapter in Model)
                     {
                         <tr class="align-middle text-center clickable-row" data-id="@Chapter.Id">
+                            <td>@index</td>
                             <td>@Chapter.Name</td>
                             <td>@Chapter.Details</td>
                             <td>@Chapter.CourseName</td>
@@ -67,6 +72,7 @@
                                 </div>
                             </td>
                         </tr>
+                        index++;
                     }
                 </tbody>
             </table>
