@@ -1,5 +1,6 @@
 ﻿using CoursesManagementSystem.DB.Models;
 using CoursesManagementSystem.Interfaces;
+using CoursesManagementSystem.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
@@ -26,6 +27,7 @@ namespace CoursesManagementSystem.Controllers
             return View(courseQuestionConfigs);
         }
 
+        
         [HttpGet]
         public async Task<IActionResult> Create()
         {

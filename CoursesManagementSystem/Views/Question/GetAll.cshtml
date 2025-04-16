@@ -62,6 +62,7 @@
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
                                     <button class="btn btn-danger btn-sm me-2 delete-btn" data-name="@question.QuestionText" data-id="@question.ID" title="Delete"><i class="bi bi-trash"></i></button>
+                                    <a asp-action="QuestionCourseConfig" asp-route-id="@question.Id" class="btn btn-sm btn-info">Question Config</a>
                                 </div>
                             </td>
                         </tr>
