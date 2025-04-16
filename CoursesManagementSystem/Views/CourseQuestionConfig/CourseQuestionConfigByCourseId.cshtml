@@ -1,0 +1,142 @@
+﻿@model IEnumerable<CourseQuestionConfig>
+
+@{
+    ViewData["Title"] = "CourseQuestionConfigs";
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-info">@TempData["Success"]</div>
+}
+<div class="container mt-5">
+    @Html.AntiForgeryToken()
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary">Course Question Configurations</h2>
+        <a class="btn btn-success btn-lg" asp-action="Create" asp-route-Courseid="@ViewBag.CourseId">
+            <i class="bi bi-plus-circle"></i> Add Configuration
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning text-center py-4">
+            <h4 class="alert-heading">No Configurations Found!</h4>
+            <p class="mb-0">Start by adding a new configuration.</p>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered shadow-sm rounded">
+                <thead class="table-light">
+                    <tr class="text-center">
+                        <th scope="col">Course</th>
+                        <th scope="col">Questions Per Lesson</th>
+                        <th scope="col">Question Level</th>
+                        <th scope="col" class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var config in Model)
+                    {
+                        <tr class="align-middle text-center clickable-row" data-id="@config.ID">
+                            <td>@config.Course?.Name</td>
+                            <td>@config.QuestionsCountPerLesson</td>
+                            <td>@config.QuestionLevel?.Name</td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <a class="btn btn-warning btn-sm me-2" asp-action="Edit" asp-route-id="@config.ID" asp-route-Courseid="@config.Course.ID" title="Edit">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+
+                                    <button class="btn btn-danger btn-sm me-2 delete-btn" @* data-name="@config." *@ data-id="@config.ID" title="Delete"><i class="bi bi-trash"></i></button>
+
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    <a class="btn btn-secondary " asp-controller="Course" asp-action="Index">
+        <i class="bi bi-backspace"></i> Back
+    </a>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const rows = document.querySelectorAll('.clickable-row');
+        rows.forEach(row => {
+            row.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                window.location.href = `@Url.Action("Details", "CourseQuestionConfig")/${id}`;
+            });
+        });
+    });
+</script>
+
+<style>
+    .clickable-row {
+        cursor: pointer;
+    }
+</style>
+<!-- Include the Delete Modal -->
+@await Html.PartialAsync("_DeleteModal")
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const deleteModal = new bootstrap.Modal(document.getElementById("deleteModal"));
+        let deleteUrl = "";
+        let rowToDelete = null;
+
+        $(".delete-btn").click(function () {
+            event.stopPropagation(); // Prevent row click from interfering
+
+            let CourseQuestionConfigId = $(this).data("id");
+            let CourseQuestionConfigName = $(this).data("name");
+            console.log("Clicked button's CourseQuestionConfigId:", CourseQuestionConfigId);
+            $("#modalItemName").text(CourseQuestionConfigName);
+            deleteUrl = "/CourseQuestionConfig/Delete/" + CourseQuestionConfigId;
+            rowToDelete = $(this).closest("tr");
+
+            console.log("Row to delete:", rowToDelete);
+            console.log("Row HTML:", rowToDelete.html()); // Check if it exists
+
+            deleteModal.show();
+        });
+
+        $("#confirmDelete").click(function () {
+            let token = $('input[name="__RequestVerificationToken"]').val(); // Get the token
+
+            if (!deleteUrl) return;
+
+            $.ajax({
+                url: deleteUrl,
+                type: "POST",
+                headers: { "RequestVerificationToken": token },
+                success: function (result) {
+                    if (result.success) {
+                        deleteModal.hide();
+                        rowToDelete.remove(); // Remove row from table
+                        location.reload();
+                    }
+                    else {
+                        deleteModal.hide();
+                        location.reload();
+                        // alert("Error: CourseQuestionConfig could not be deleted.");
+                    }
+                },
+                error: function (error) {
+                    console.log("Error Thrown:", error);
+                }
+            });
+        });
+    });
+</script>

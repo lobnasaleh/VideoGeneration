@@ -18,13 +18,15 @@
         <span asp-validation-for="QuestionsCountPerLesson" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
+  @*   <div class="form-group">
         <label asp-for="CourseId" class="control-label"></label>
         <select asp-for="CourseId" class="form-control" asp-items="ViewBag.Courses">
             <option value="">-- Select Course --</option>
         </select>
         <span asp-validation-for="CourseId" class="text-danger"></span>
-    </div>
+    </div> *@
+            <input type="hidden" name="CourseId" value="@ViewBag.CourseId" />
+
 
     <div class="form-group">
         <label asp-for="QuestionLevelId" class="control-label"></label>
@@ -36,7 +38,7 @@
 
     <div class="form-group mt-3">
         <button type="submit" class="btn btn-primary">Create</button>
-        <a asp-action="GetAll" class="btn btn-secondary">Cancel</a>
+                <a asp-controller="CourseQuestionConfig" asp-action="CourseQuestionConfigByCourseId" asp-route-Courseid="@ViewBag.CourseId" class="btn btn-secondary">Cancel</a>
     </div>
 </form>
 </div>
