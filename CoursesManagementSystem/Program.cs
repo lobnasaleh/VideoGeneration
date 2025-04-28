@@ -25,6 +25,8 @@ namespace CoursesManagementSystem
             builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 
+
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -38,7 +40,10 @@ namespace CoursesManagementSystem
 
             app.UseAuthorization();
 
-            app.MapControllerRoute(
+         
+
+
+                app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 

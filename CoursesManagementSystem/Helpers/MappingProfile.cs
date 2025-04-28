@@ -2,7 +2,9 @@
 using CoursesManagementSystem.DB.Models;
 using CoursesManagementSystem.Enums;
 using CoursesManagementSystem.ViewModels;
+using CoursesManagementSystem.DTOs;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using static CoursesManagementSystem.DTOs.CourseDTO;
 
 namespace CoursesManagementSystem.Helpers
 {
@@ -32,6 +34,45 @@ namespace CoursesManagementSystem.Helpers
             CreateMap<Lesson, UpdateLessonVM>()
             .ReverseMap()
          .ForMember(dest => dest.Chapter, opt => opt.Ignore());
+
+
+            CreateMap<Course, CourseDTO>()
+    .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
+    .ForMember(dest => dest.LevelName, opt => opt.MapFrom(src => src.Level.Name));
+
+
+            CreateMap<Chapter, ChapterDTO>();
+
+            CreateMap<Course, CourseDetailsDTO>()
+            .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
+            .ForMember(dest => dest.LevelName, opt => opt.MapFrom(src => src.Level.Name))
+            .ForMember(dest => dest.CourseConfig, opt => opt.MapFrom(src => src.CourseConfig))
+            .ForMember(dest => dest.CourseQuestionsConfig, opt => opt.MapFrom(src => src.CourseQuestionsConfig));
+
+            CreateMap<CourseConfig, CourseConfigDTO>()
+                .ForMember(dest => dest.Language, opt => opt.MapFrom(src => src.Language.ToString()))
+                .ForMember(dest => dest.Persona, opt => opt.MapFrom(src => src.Persona.ToString()));
+
+            CreateMap<CourseQuestionConfig, CourseQuestionConfigDTO>()
+                .ForMember(dest => dest.QuestionLevelName, opt => opt.MapFrom(src => src.QuestionLevel.Name));
+
+            CreateMap<PhaseOneCreateDTO, Chapter>()
+            .ForMember(dest => dest.Course, opt => opt.MapFrom(src => src.CourseId));
+
+            CreateMap<LessonCreateDTO, Lesson>()
+                .ForMember(dest => dest.Questions, opt => opt.MapFrom(src => src.Questions));
+
+            CreateMap<QuestionCreateDTO, Question>()
+                .ForMember(dest => dest.Answers, opt => opt.MapFrom(src => src.Answers));
+
+            CreateMap<PhaseOneCreateDTO, Course>(); // optional
+            CreateMap<ChapterCreateDTO, Chapter>();
+            CreateMap<LessonCreateDTO, Lesson>();
+            CreateMap<QuestionCreateDTO, Question>();
+            CreateMap<AnswerCreateDTO, Answer>();
+            CreateMap<CreateFullCourseDTO, Course>();
+
+
 
 
         }
