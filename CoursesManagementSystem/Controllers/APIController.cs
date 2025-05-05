@@ -27,7 +27,7 @@ namespace CoursesManagementSystem.Controllers
             this._mapper = _mapper;
             this.response = new APIResponse();
         }
-
+        //http://localhost:5168/api/API/Content-generated/Phase2
         [HttpPost("Content-generated/Phase2")]
         public async Task<ActionResult<APIResponse>> ContentGeneratedPhase2([FromBody] PhaseTwoGeneratedContentDTO content)
         {
@@ -78,7 +78,7 @@ namespace CoursesManagementSystem.Controllers
                     }
                 }
                 response.IsSuccess = true;
-                response.StatusCode = HttpStatusCode.OK;
+                response.StatusCode = HttpStatusCode.Created;
                 response.Result = "Video URL Saved Successfully";
                 return Ok(response);
 
@@ -99,6 +99,7 @@ namespace CoursesManagementSystem.Controllers
         [HttpGet("Chapters/{ChapterId:int}/lesson")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        //http://localhost:5168/api/API/Chapters/2/lesson
         public async Task<ActionResult<APIResponse>> getLessons(int ChapterId)
         {
             try
@@ -144,6 +145,7 @@ namespace CoursesManagementSystem.Controllers
         [HttpGet("Courses/{CourseId:int}/CourseConfigs")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        //http://localhost:5168/api/API/Courses/2/CourseConfigs
         public async Task<ActionResult<APIResponse>> getCourseConfigs(int CourseId)
         {
             try
@@ -193,6 +195,7 @@ namespace CoursesManagementSystem.Controllers
         [HttpGet("Courses/{CourseId:int}/QuestionsConfigs")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        //http://localhost:5168/api/API/Courses/11/QuestionsConfigs
         public async Task<ActionResult<APIResponse>> getCourseQuestionConfigs(int CourseId)
         {
             try
@@ -237,6 +240,7 @@ namespace CoursesManagementSystem.Controllers
         [HttpGet("Courses/AllCoursesDetails")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        //http://localhost:5168/api/API/Courses/AllCoursesDetails
         public async Task<ActionResult<APIResponse>> getAllCoursesDetails()
         {
             try
@@ -528,7 +532,28 @@ namespace CoursesManagementSystem.Controllers
          */
 
 
+        /*
 
+         {
+          "CourseId": 2,
+          "Chapters": [
+            {
+              "ChapterId": 1,
+              "Lessons": [
+                {
+                  "LessonId": 5,
+                  "VideoUrl": "HIIIIIIIIhttps://yourstorageaccount.blob.core.windows.net/videos/lesson_5.mp4"
+                },
+                {
+                  "LessonId": 2,
+                  "VideoUrl": "HIIIIIIIIhttps://yourstorageaccount.blob.core.windows.net/videos/lesson_1.mp4"
+                }
+              ]
+            }
+          ]
+        }
+
+         */
 
 
 
