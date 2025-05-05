@@ -1,6 +1,6 @@
 ﻿namespace CoursesManagementSystem.DTOs
 {
-    public class CourseQuestionConfigDTO
+    public class _CourseQuestionConfigDTO
     {
         public int Id { get; set; }
         public int QuestionsCountPerLesson { get; set; }

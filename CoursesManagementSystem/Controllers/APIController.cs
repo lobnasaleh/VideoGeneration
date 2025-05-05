@@ -95,6 +95,7 @@ namespace CoursesManagementSystem.Controllers
 
         }
 
+
         [HttpGet("Chapters/{ChapterId:int}/lesson")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -138,6 +139,7 @@ namespace CoursesManagementSystem.Controllers
             }
 
         }
+
 
         [HttpGet("Courses/{CourseId:int}/CourseConfigs")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -185,6 +187,9 @@ namespace CoursesManagementSystem.Controllers
             }
 
         }
+
+
+
         [HttpGet("Courses/{CourseId:int}/QuestionsConfigs")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -226,6 +231,8 @@ namespace CoursesManagementSystem.Controllers
             }
 
         }
+
+
 
         [HttpGet("Courses/AllCoursesDetails")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -315,7 +322,7 @@ namespace CoursesManagementSystem.Controllers
         }
 
 
-
+        /* http://localhost:5168/api/API/CourseById/15 */
         [HttpGet("CourseById/{CourseId:int}")]
         public async Task<ActionResult<APIResponse>> CourseById(int CourseId)
         {
@@ -342,7 +349,7 @@ namespace CoursesManagementSystem.Controllers
             return Ok(response);
         }
 
-
+        /* http://localhost:5168/api/API/AllCourses */
         [HttpGet("AllCourses")]
         public async Task<ActionResult<APIResponse>> GetAllCourses()
         {
@@ -371,7 +378,7 @@ namespace CoursesManagementSystem.Controllers
             return Ok(response);
         }
 
-
+        /* http://localhost:5168/api/API/Courses/15/Chapters */
         [HttpGet("Courses/{courseId:int}/Chapters")]
         public async Task<ActionResult<APIResponse>> GetChaptersByCourseId(int courseId)
         {
@@ -397,7 +404,7 @@ namespace CoursesManagementSystem.Controllers
             return Ok(response);
         }
 
-
+        /* http://localhost:5168/api/API/CourseDetails/15 */
         [HttpGet("CourseDetails/{id:int}")]
         public async Task<ActionResult<APIResponse>> GetCourseById(int id)
         {
@@ -426,8 +433,8 @@ namespace CoursesManagementSystem.Controllers
         }
 
 
-
-        [HttpPost("PhaseOne")]
+        /* http://localhost:5168/api/API/Content-generated/PhaseOne */
+        [HttpPost("Content-generated/PhaseOne")]
         public async Task<ActionResult<APIResponse>> AddCourseContent([FromBody] PhaseOneCreateDTO dto)
         {
             var response = new APIResponse();
@@ -484,6 +491,49 @@ namespace CoursesManagementSystem.Controllers
             response.StatusCode = HttpStatusCode.Created;
             return CreatedAtAction(nameof(GetCourseById), new { id = dto.CourseId }, response);
         }
+        /*
+         {
+  "courseId": 16,
+  "chapters": [
+    {
+      "name": "Chapter 3",
+      "details": "Chapter 3 details",
+      "sort": 1,
+      "lessons": [
+        {
+          "name": "Lesson 1",
+          "details": "Lesson 1 details",
+          "scriptText": "Script text here",
+          "videoStorageURL": "https://example.com/video1.mp4",
+          "audioStorageURL": "https://example.com/audio1.mp3",
+          "sort": 1,
+          "questions": [
+            {
+              "questionText": "What is ASP.NET?",
+              "questionInstructions": "Choose the best answer.",
+              "questionType": 1,
+              "questionLevelId": 1,
+              "answers": [
+                { "answerText": "Framework", "isCorrect": true },
+                { "answerText": "Database", "isCorrect": false }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+ 
+         */
+
+
+
+
+
+
+
+
 
 
         [HttpPost("create-full-course")]

@@ -49,11 +49,11 @@ namespace CoursesManagementSystem.Helpers
             .ForMember(dest => dest.CourseConfig, opt => opt.MapFrom(src => src.CourseConfig))
             .ForMember(dest => dest.CourseQuestionsConfig, opt => opt.MapFrom(src => src.CourseQuestionsConfig));
 
-            CreateMap<CourseConfig, CourseConfigDTO>()
+            CreateMap<CourseConfig, _CourseConfigDTO>()
                 .ForMember(dest => dest.Language, opt => opt.MapFrom(src => src.Language.ToString()))
                 .ForMember(dest => dest.Persona, opt => opt.MapFrom(src => src.Persona.ToString()));
 
-            CreateMap<CourseQuestionConfig, CourseQuestionConfigDTO>()
+            CreateMap<CourseQuestionConfig, _CourseQuestionConfigDTO>()
                 .ForMember(dest => dest.QuestionLevelName, opt => opt.MapFrom(src => src.QuestionLevel.Name));
 
             CreateMap<PhaseOneCreateDTO, Chapter>()
