@@ -11,6 +11,11 @@
     <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="~/css/styleAdmin.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="~/css/styles.css">
 </head>
@@ -39,7 +44,7 @@
                     </div>
                     <div class="d-grid gap-2 d-md-flex">
                         <a href="lesson.html" class="btn btn-light btn-lg">Start Learning</a>
-                        <button class="btn btn-outline-light btn-lg">Add to Wishlist</button>
+                        @* <button class="btn btn-outline-light btn-lg">Add to Wishlist</button> *@
                     </div>
                 </div>
                 <div class="col-lg-4 mt-4 mt-lg-0">
@@ -81,9 +86,9 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="curriculum-tab" data-bs-toggle="pill" data-bs-target="#curriculum" type="button">Curriculum</button>
                 </li>
-                <li class="nav-item" role="presentation">
+                @* <li class="nav-item" role="presentation">
                     <button class="nav-link" id="instructor-tab" data-bs-toggle="pill" data-bs-target="#instructor" type="button">Instructor</button>
-                </li>
+                </li> *@
                 @* <li class="nav-item" role="presentation">
                     <button class="nav-link" id="reviews-tab" data-bs-toggle="pill" data-bs-target="#reviews" type="button">Reviews</button>
                 </li> *@
@@ -228,7 +233,7 @@
 
                     </div>
                 </div>
-
+@* 
                 <!-- Instructor Tab -->
                 <div class="tab-pane fade" id="instructor" role="tabpanel">
                     <h3 class="mb-4">Meet Your Instructor</h3>
@@ -304,7 +309,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> *@
 
               @*   <!-- Reviews Tab -->
                 <div class="tab-pane fade" id="reviews" role="tabpanel">

@@ -344,7 +344,7 @@ namespace CoursesManagementSystem.Controllers
             return Json(new { success = true });
         }
 
-
+        [HttpGet]
         public async Task<IActionResult> getGeneratedCourseById(int id)
         {
 
@@ -354,7 +354,7 @@ namespace CoursesManagementSystem.Controllers
             if (course == null)
             {
                 TempData["Error"] = "No Course with This Id is Found";
-                return RedirectToAction("Index");
+                return RedirectToAction("getGeneratedCoursees");//getGeneratedCoursees
             }
 
 
@@ -411,6 +411,75 @@ namespace CoursesManagementSystem.Controllers
                         QuestionsCountPerLesson = cqq.QuestionsCountPerLesson
                     }).ToList()
             };
+            return View(res);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> getGeneratedCourses()
+        {
+
+            var courses = await unitOfWork.CourseRepository.GetAllAsync(c => !c.IsDeleted,
+            new[] { "Category", "Level", "CourseConfig", "CourseQuestionsConfig.QuestionLevel" }
+        );
+            if (!courses.Any())
+            {
+                TempData["Error"] = "No Courses Found,Start by generating a new one!";
+                return RedirectToAction("Index");
+            }
+
+
+            var chapters = await unitOfWork.ChapterRepository.GetAllQuery(ch => !ch.IsDeleted)
+                .ToListAsync();
+            var chapterIds = chapters.Select(ch => ch.ID).ToList();
+            var lessons = await unitOfWork.LessonRepository.GetAllQuery(l => !l.IsDeleted && chapterIds.Contains(l.ChapterId))
+                .ToListAsync();
+
+            var res = courses.Select(c => new GeneratedCourseVM
+            {
+                BookStorageURL = c.BookStorageURL,
+                CategoryId = c.CategoryId,
+                CategoryName = c.Category?.Name ?? "Unknown",
+                Name = c.Name,
+                CourseId = c.ID,
+                Details = c.Details,
+                LevelId = c.LevelId,
+                LevelName = c.Level?.Name ?? "Unknown",
+                ChaptersCount = c.CourseConfig?.ChaptersCount ?? 0,
+                LessonsCountPerChapter = c.CourseConfig?.LessonsCountPerChapter ?? 0,
+                VideoDurationInMin = c.CourseConfig?.VideoDurationInMin ?? 0,
+                Language = c.CourseConfig?.Language.ToString() ?? "Unknown",
+                Persona = c.CourseConfig?.Persona.ToString() ?? "Unknown",
+                Chapters = chapters
+                        .Where(ch => ch.CourseId == c.ID)
+                        .Select(ch => new GeneratedChapterVM
+                        {
+                            ChapterId = ch.ID,
+                            Name = ch.Name,
+                            Details = ch.Details,
+                            Sort = ch.Sort,
+                            Lessons = lessons
+                                .Where(l => l.ChapterId == ch.ID)
+                                .Select(l => new GeneratedLessonVM
+                                {
+                                    LessonId = l.ID,
+                                    Name = l.Name,
+                                    Details = l.Details,
+                                    ScriptText = l.ScriptText,
+                                    VideoStorageURL = l.VideoStorageURL,
+                                    AudioStorageURL = l.AudioStorageURL,
+                                    Sort = l.Sort
+                                }).ToList(),
+                                 LessonsCount = lessons.Count(ll => ll.ChapterId == ch.ID)
+                        }).ToList(),
+                CourseQuestionConfig = c.CourseQuestionsConfig
+                        .Where(cq => !cq.IsDeleted)
+                        .Select(cqq => new GeneratedCourseQuestionConfigVM
+                        {
+                            QuestionLevelId = cqq.QuestionLevelId,
+                            QuestionLevelName = cqq.QuestionLevel?.Name ?? "Unknown",
+                            QuestionsCountPerLesson = cqq.QuestionsCountPerLesson
+                        }).ToList()
+            }).ToList();
             return View(res);
         }
     }
