@@ -1,0 +1,99 @@
+﻿/* Custom styles for LMS - Light Theme */
+
+/* General styling */
+body {
+    padding-top: 56px; /* For fixed navbar */
+    background-color: #f8f9fa;
+    color: #212529;
+}
+
+/* Course card styling */
+.course-card {
+    transition: transform 0.3s ease;
+    height: 100%;
+    border-color: #0d6efd;
+}
+
+    .course-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+.course-image {
+    height: 180px;
+    object-fit: cover;
+}
+
+/* Chapter and lesson styling */
+.chapter-card {
+    margin-bottom: 1.5rem;
+    border-color: #0d6efd;
+}
+
+.lesson-link {
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border-color: #0d6efd;
+}
+
+    .lesson-link:hover {
+        background-color: rgba(13, 110, 253, 0.1);
+    }
+
+    .lesson-link.active {
+        background-color: #0d6efd;
+        color: white;
+    }
+
+/* Video container */
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    border-radius: 0.25rem;
+}
+
+    .video-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 0.25rem;
+    }
+
+/* Quiz styling */
+.quiz-section {
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+}
+
+.question-card {
+    margin-bottom: 1.5rem;
+}
+
+/* Footer styling */
+footer {
+    margin-top: 3rem;
+    padding: 2rem 0;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .chapter-card {
+        margin-bottom: 1rem;
+    }
+
+    .video-container {
+        margin-bottom: 1.5rem;
+    }
+
+    .quiz-section {
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
+}
