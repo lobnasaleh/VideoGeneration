@@ -27,7 +27,7 @@ namespace CoursesManagementSystem.Controllers
             this._mapper = _mapper;
             this.response = new APIResponse();
         }
-
+        //http://localhost:5168/api/API/Content-generated/Phase2
         [HttpPost("Content-generated/Phase2")]
         public async Task<ActionResult<APIResponse>> ContentGeneratedPhase2([FromBody] PhaseTwoGeneratedContentDTO content)
         {
@@ -78,7 +78,7 @@ namespace CoursesManagementSystem.Controllers
                     }
                 }
                 response.IsSuccess = true;
-                response.StatusCode = HttpStatusCode.OK;
+                response.StatusCode = HttpStatusCode.Created;
                 response.Result = "Video URL Saved Successfully";
                 return Ok(response);
 
@@ -99,6 +99,7 @@ namespace CoursesManagementSystem.Controllers
         [HttpGet("Chapters/{ChapterId:int}/lesson")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        //http://localhost:5168/api/API/Chapters/2/lesson
         public async Task<ActionResult<APIResponse>> getLessons(int ChapterId)
         {
             try
@@ -144,6 +145,7 @@ namespace CoursesManagementSystem.Controllers
         [HttpGet("Courses/{CourseId:int}/CourseConfigs")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        //http://localhost:5168/api/API/Courses/2/CourseConfigs
         public async Task<ActionResult<APIResponse>> getCourseConfigs(int CourseId)
         {
             try
@@ -193,6 +195,7 @@ namespace CoursesManagementSystem.Controllers
         [HttpGet("Courses/{CourseId:int}/QuestionsConfigs")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        //http://localhost:5168/api/API/Courses/11/QuestionsConfigs
         public async Task<ActionResult<APIResponse>> getCourseQuestionConfigs(int CourseId)
         {
             try
@@ -237,6 +240,7 @@ namespace CoursesManagementSystem.Controllers
         [HttpGet("Courses/AllCoursesDetails")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        //http://localhost:5168/api/API/Courses/AllCoursesDetails
         public async Task<ActionResult<APIResponse>> getAllCoursesDetails()
         {
             try
@@ -304,6 +308,97 @@ namespace CoursesManagementSystem.Controllers
                     response.StatusCode = HttpStatusCode.NotFound;
                     return NotFound(response);
                 }
+
+                response.IsSuccess = true;
+                response.StatusCode = HttpStatusCode.OK;
+                response.Result = res;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Errors.Add(ex.Message);
+                response.StatusCode = HttpStatusCode.InternalServerError;
+                return StatusCode(500, response);
+
+            }
+
+        }
+
+
+        [HttpGet("Courses/SpecificCourseDetails/{CourseId:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        //http://localhost:5168/api/API/Courses/SpecificCourseDetails/{CourseId:int}
+        public async Task<ActionResult<APIResponse>> getSpecificCourseDetails(int CourseId)
+        {
+            try
+            {
+                var course = await _unitOfWork.CourseRepository.GetAsync(c => !c.IsDeleted && c.ID==CourseId,
+            new[] { "Category", "Level", "CourseConfig", "CourseQuestionsConfig.QuestionLevel" }
+        );
+                if (course == null)
+                {
+                    response.IsSuccess = false;
+                    response.Errors.Add("Course not found");
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    return NotFound(response);
+                }
+
+              
+                var chapters = await _unitOfWork.ChapterRepository.GetAllQuery(ch => !ch.IsDeleted && ch.CourseId==CourseId)
+                    .ToListAsync();
+                var chapterIds = chapters.Select(ch => ch.ID).ToList();
+                var lessons = await _unitOfWork.LessonRepository.GetAllQuery(l => !l.IsDeleted && chapterIds.Contains(l.ChapterId))
+                    .ToListAsync();
+
+                var res = new CoursesDetailsDTO
+                {
+                    BookStorageURL = course.BookStorageURL,
+                    CategoryId = course.CategoryId,
+                    CategoryName = course.Category?.Name ?? "Unknown",
+                    Name = course.Name,
+                    CourseId = course.ID,
+                    Details = course.Details,
+                    LevelId = course.LevelId,
+                    LevelName = course.Level?.Name ?? "Unknown",
+                    ChaptersCount = course.CourseConfig?.ChaptersCount ?? 0,
+                    LessonsCountPerChapter = course.CourseConfig?.LessonsCountPerChapter ?? 0,
+                    VideoDurationInMin = course.CourseConfig?.VideoDurationInMin ?? 0,
+                    Language = course.CourseConfig?.Language.ToString() ?? "Unknown",
+                    Persona = course.CourseConfig?.Persona.ToString() ?? "Unknown",
+                    Chapters = chapters
+                        .Where(ch => ch.CourseId == course.ID)
+                        .Select(ch => new ChapterDTO
+                        {
+                            ChapterId = ch.ID,
+                            Name = ch.Name,
+                            Details = ch.Details,
+                            Sort = ch.Sort,
+                            Lessons = lessons
+                                .Where(l => l.ChapterId == ch.ID)
+                                .Select(l => new LessonDTO
+                                {
+                                    LessonId = l.ID,
+                                    Name = l.Name,
+                                    Details = l.Details,
+                                    ScriptText = l.ScriptText,
+                                    VideoStorageURL = l.VideoStorageURL,
+                                    AudioStorageURL = l.AudioStorageURL,
+                                    Sort = l.Sort
+                                }).ToList()
+                        }).ToList(),
+                    CourseQuestionConfig = course.CourseQuestionsConfig
+                        .Where(cq => !cq.IsDeleted)
+                        .Select(cqq => new CourseQuestionConfigDTO
+                        {
+                            QuestionLevelId = cqq.QuestionLevelId,
+                            QuestionLevelName = cqq.QuestionLevel?.Name ?? "Unknown",
+                            QuestionsCountPerLesson = cqq.QuestionsCountPerLesson
+                        }).ToList()
+                };
+
+
 
                 response.IsSuccess = true;
                 response.StatusCode = HttpStatusCode.OK;
@@ -404,7 +499,7 @@ namespace CoursesManagementSystem.Controllers
             return Ok(response);
         }
 
-        /* http://localhost:5168/api/API/CourseDetails/15 */
+        /* http://localhost:5168/api/API/CourseDetails/15 *//*//shaghal bas 3amlt comment 3shan a3ml check 3ala ely feeha kol el details bel lessons wa el chapters
         [HttpGet("CourseDetails/{id:int}")]
         public async Task<ActionResult<APIResponse>> GetCourseById(int id)
         {
@@ -430,7 +525,7 @@ namespace CoursesManagementSystem.Controllers
             response.StatusCode = HttpStatusCode.OK;
 
             return Ok(response);
-        }
+        }*/
 
 
         /* http://localhost:5168/api/API/Content-generated/PhaseOne */
@@ -518,11 +613,32 @@ namespace CoursesManagementSystem.Controllers
 
             response.IsSuccess = true;
             response.StatusCode = HttpStatusCode.Created;
-            return CreatedAtAction(nameof(GetCourseById), new { id = dto.CourseId }, response);
+            return CreatedAtAction(nameof(getSpecificCourseDetails), new { id = dto.CourseId }, response);
         }
 
 
+        /*
 
+         {
+          "CourseId": 2,
+          "Chapters": [
+            {
+              "ChapterId": 1,
+              "Lessons": [
+                {
+                  "LessonId": 5,
+                  "VideoUrl": "HIIIIIIIIhttps://yourstorageaccount.blob.core.windows.net/videos/lesson_5.mp4"
+                },
+                {
+                  "LessonId": 2,
+                  "VideoUrl": "HIIIIIIIIhttps://yourstorageaccount.blob.core.windows.net/videos/lesson_1.mp4"
+                }
+              ]
+            }
+          ]
+        }
+
+         */
 
 
 
@@ -587,7 +703,7 @@ namespace CoursesManagementSystem.Controllers
 
             response.IsSuccess = true;
             response.StatusCode = HttpStatusCode.Created;
-            return CreatedAtAction(nameof(GetCourseById), new { id = dto.Name }, response);
+            return CreatedAtAction(nameof(getSpecificCourseDetails), new { id = dto.Name }, response);
         }
 
 

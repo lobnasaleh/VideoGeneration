@@ -1,0 +1,234 @@
+﻿
+@model List<GeneratedCourseVM>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduLearn LMS - Home</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Custom CSS -->
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="~/css/styleAdmin.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/styles.css">
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <div class="bg-primary py-5 mb-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <h1 class="display-4 fw-bold mb-3">Expand Your Knowledge</h1>
+                    <p class="lead mb-4">Access high-quality courses and enhance your skills with our comprehensive learning platform.</p>
+                    <div class="d-grid gap-2 d-md-flex">
+                        <a href="#featured-courses" class="btn btn-light btn-lg px-4">Browse Courses</a>
+                        <a href="#" class="btn btn-outline-light btn-lg px-4">Learn More</a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <img src="https://via.placeholder.com/600x400?text=Learning+Platform" alt="Learning Platform" class="img-fluid rounded shadow-lg">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Courses Section -->
+    <section class="py-5" id="featured-courses">
+        <div class="container">
+            <div class="row mb-4">
+                <div class="col-lg-8">
+                    <h2 class="fw-bold">Featured Courses</h2>
+                    <p class="text-muted">Expand your knowledge with our top-rated courses</p>
+                </div>
+                <div class="col-lg-4 d-flex justify-content-lg-end align-items-center">
+                    <a href="#" class="btn btn-outline-primary">View All Courses</a>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <!-- Course Card 1 -->
+                @foreach (var course in Model)
+                {
+                    <div class="col-md-4">
+                        <div class="card course-card border-primary h-100">
+                            <img src="https://via.placeholder.com/800x600?text=Web+Development" class="card-img-top course-image" alt="@course.Name">
+                            <div class="card-body">
+                                <h5 class="card-title text-black">@course.Name</h5>
+                                <p class="card-text text-muted">@course.Details</p>
+                            </div>
+                            <div class="card-footer bg-white border-primary d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="badge bg-primary me-2">@course.LevelName</span>
+                                    <span class="badge bg-secondary">@course.ChaptersCount Chapters</span>
+                                </div>
+                                <a asp-action="getGeneratedCourseById" asp-controller="Course" asp-route-id="@course.CourseId" class="btn btn-outline-primary btn-sm">View Course</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+           
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Why Choose Our Platform</h2>
+                <p class="text-muted">We offer features that help you learn effectively and efficiently</p>
+            </div>
+
+            <div class="row g-4">
+                <!-- Feature 1 -->
+                <div class="col-md-4">
+                    <div class="card border-0  h-100 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="icon-box mb-3">
+                                <i class="fas fa-laptop-code text-primary fa-3x"></i>
+                            </div>
+                            <h4 class="card-title text-primary">Interactive Lessons</h4>
+                            <p class="card-text text-primary">Engage with interactive content designed to improve retention and understanding.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="col-md-4">
+                    <div class="card border-0  h-100 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="icon-box mb-3">
+                                <i class="fas fa-certificate text-primary fa-3x"></i>
+                            </div>
+                            <h4 class="card-title text-primary">Certification</h4>
+                            <p class="card-text text-primary">Earn certificates upon course completion to showcase your new skills.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="col-md-4">
+                    <div class="card border-0  h-100 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="icon-box mb-3">
+                                <i class="fas fa-users text-primary fa-3x"></i>
+                            </div>
+                            <h4 class="card-title text-primary">Community Support</h4>
+                            <p class="card-text text-primary">Connect with learners and instructors in our supportive community forums.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+@* 
+    <!-- Testimonials Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">What Our Students Say</h2>
+                <p class="text-muted">Read testimonials from our satisfied learners</p>
+            </div>
+
+            <div class="row g-4">
+                <!-- Testimonial 1 -->
+                <div class="col-lg-4">
+                    <div class="card bg-white border-primary h-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <img src="https://via.placeholder.com/64?text=JD" class="rounded-circle me-3" width="64" height="64" alt="John Doe">
+                                <div>
+                                    <h5 class="mb-0">John Doe</h5>
+                                    <p class="text-muted mb-0">Web Developer</p>
+                                </div>
+                            </div>
+                            <p class="card-text">"The web development bootcamp transformed my career. The structured curriculum and hands-on projects gave me the skills to land my dream job."</p>
+                            <div class="text-warning">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="col-lg-4">
+                    <div class="card bg-white border-primary h-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <img src="https://via.placeholder.com/64?text=JS" class="rounded-circle me-3" width="64" height="64" alt="Jane Smith">
+                                <div>
+                                    <h5 class="mb-0">Jane Smith</h5>
+                                    <p class="text-muted mb-0">Data Analyst</p>
+                                </div>
+                            </div>
+                            <p class="card-text">"The data science course provided me with valuable skills that I use every day in my job. The instructors were knowledgeable and supportive."</p>
+                            <div class="text-warning">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="col-lg-4">
+                    <div class="card bg-white border-primary h-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <img src="https://via.placeholder.com/64?text=MB" class="rounded-circle me-3" width="64" height="64" alt="Michael Brown">
+                                <div>
+                                    <h5 class="mb-0">Michael Brown</h5>
+                                    <p class="text-muted mb-0">UX Designer</p>
+                                </div>
+                            </div>
+                            <p class="card-text">"The responsive design course improved my skills tremendously. I can now create beautiful, responsive websites that work on all devices."</p>
+                            <div class="text-warning">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> *@
+
+    <!-- CTA Section -->
+    <section class="py-5 bg-primary">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mb-4 mb-lg-0">
+                    <h2 class="fw-bold mb-3">Ready to Start Learning?</h2>
+                    <p class="lead mb-0">Join thousands of students and begin your learning journey today.</p>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <a href="#" class="btn btn-light btn-lg">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="~/js/scripts.js"></script>
+</body>
+</html>

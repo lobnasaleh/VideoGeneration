@@ -1,11 +1,15 @@
 ﻿using AutoMapper;
+using Azure;
 using CoursesManagementSystem.Constants;
 using CoursesManagementSystem.DB.Models;
+using CoursesManagementSystem.DTOs;
 using CoursesManagementSystem.Interfaces;
+using CoursesManagementSystem.Repository;
 using CoursesManagementSystem.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace CoursesManagementSystem.Controllers
 {
@@ -338,8 +342,145 @@ namespace CoursesManagementSystem.Controllers
             await unitOfWork.CompleteAsync();
             TempData["Success"] = "Course Deleted Successfully";
             return Json(new { success = true });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> getGeneratedCourseById(int id)
+        {
+
+            var course = await unitOfWork.CourseRepository.GetAsync(c => !c.IsDeleted && c.ID == id,
+            new[] { "Category", "Level", "CourseConfig", "CourseQuestionsConfig.QuestionLevel" }
+        );
+            if (course == null)
+            {
+                TempData["Error"] = "No Course with This Id is Found";
+                return RedirectToAction("getGeneratedCoursees");//getGeneratedCoursees
+            }
 
 
+            var chapters = await unitOfWork.ChapterRepository.GetAllQuery(ch => !ch.IsDeleted && ch.CourseId == id)
+                .ToListAsync();
+            var chapterIds = chapters.Select(ch => ch.ID).ToList();
+            var lessons = await unitOfWork.LessonRepository.GetAllQuery(l => !l.IsDeleted && chapterIds.Contains(l.ChapterId))
+                .ToListAsync();
+
+            var res = new GeneratedCourseVM
+            {
+                BookStorageURL = course.BookStorageURL,
+                CategoryId = course.CategoryId,
+                CategoryName = course.Category?.Name ?? "Unknown",
+                Name = course.Name,
+                CourseId = course.ID,
+                Details = course.Details,
+                LevelId = course.LevelId,
+                LevelName = course.Level?.Name ?? "Unknown",
+                ChaptersCount = course.CourseConfig?.ChaptersCount ?? 0,
+                LessonsCountPerChapter = course.CourseConfig?.LessonsCountPerChapter ?? 0,
+                VideoDurationInMin = course.CourseConfig?.VideoDurationInMin ?? 0,
+                TotalCourseDuration = (course.CourseConfig?.ChaptersCount * course.CourseConfig?.LessonsCountPerChapter * course.CourseConfig?.VideoDurationInMin )/60?? 20,
+                Language = course.CourseConfig?.Language.ToString() ?? "Unknown",
+                Persona = course.CourseConfig?.Persona.ToString() ?? "Unknown",
+                Chapters = chapters
+                    .Where(ch => ch.CourseId == course.ID)
+                    .Select(ch => new GeneratedChapterVM
+                    {
+                        ChapterId = ch.ID,
+                        Name = ch.Name,
+                        Details = ch.Details,
+                        Sort = ch.Sort,
+                        Lessons = lessons
+                            .Where(l => l.ChapterId == ch.ID)
+                            .Select(l => new GeneratedLessonVM
+                            {
+                                LessonId = l.ID,
+                                Name = l.Name,
+                                Details = l.Details,
+                                ScriptText = l.ScriptText,
+                                VideoStorageURL = l.VideoStorageURL,
+                                AudioStorageURL = l.AudioStorageURL,
+                                Sort = l.Sort
+                            }).ToList(),
+                        LessonsCount = lessons.Count(ll => ll.ChapterId == ch.ID)
+                    }).ToList(),
+                CourseQuestionConfig = course.CourseQuestionsConfig
+                    .Where(cq => !cq.IsDeleted)
+                    .Select(cqq => new GeneratedCourseQuestionConfigVM
+                    {
+                        QuestionLevelId = cqq.QuestionLevelId,
+                        QuestionLevelName = cqq.QuestionLevel?.Name ?? "Unknown",
+                        QuestionsCountPerLesson = cqq.QuestionsCountPerLesson
+                    }).ToList()
+            };
+            return View(res);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> getGeneratedCourses()
+        {
+
+            var courses = await unitOfWork.CourseRepository.GetAllAsync(c => !c.IsDeleted,
+            new[] { "Category", "Level", "CourseConfig", "CourseQuestionsConfig.QuestionLevel" }
+        );
+            if (!courses.Any())
+            {
+                TempData["Error"] = "No Courses Found,Start by generating a new one!";
+                return RedirectToAction("Index");
+            }
+
+
+            var chapters = await unitOfWork.ChapterRepository.GetAllQuery(ch => !ch.IsDeleted)
+                .ToListAsync();
+            var chapterIds = chapters.Select(ch => ch.ID).ToList();
+            var lessons = await unitOfWork.LessonRepository.GetAllQuery(l => !l.IsDeleted && chapterIds.Contains(l.ChapterId))
+                .ToListAsync();
+
+            var res = courses.Select(c => new GeneratedCourseVM
+            {
+                BookStorageURL = c.BookStorageURL,
+                CategoryId = c.CategoryId,
+                CategoryName = c.Category?.Name ?? "Unknown",
+                Name = c.Name,
+                CourseId = c.ID,
+                Details = c.Details,
+                LevelId = c.LevelId,
+                LevelName = c.Level?.Name ?? "Unknown",
+                ChaptersCount = c.CourseConfig?.ChaptersCount ?? 0,
+                LessonsCountPerChapter = c.CourseConfig?.LessonsCountPerChapter ?? 0,
+                VideoDurationInMin = c.CourseConfig?.VideoDurationInMin ?? 0,
+                Language = c.CourseConfig?.Language.ToString() ?? "Unknown",
+                Persona = c.CourseConfig?.Persona.ToString() ?? "Unknown",
+                Chapters = chapters
+                        .Where(ch => ch.CourseId == c.ID)
+                        .Select(ch => new GeneratedChapterVM
+                        {
+                            ChapterId = ch.ID,
+                            Name = ch.Name,
+                            Details = ch.Details,
+                            Sort = ch.Sort,
+                            Lessons = lessons
+                                .Where(l => l.ChapterId == ch.ID)
+                                .Select(l => new GeneratedLessonVM
+                                {
+                                    LessonId = l.ID,
+                                    Name = l.Name,
+                                    Details = l.Details,
+                                    ScriptText = l.ScriptText,
+                                    VideoStorageURL = l.VideoStorageURL,
+                                    AudioStorageURL = l.AudioStorageURL,
+                                    Sort = l.Sort
+                                }).ToList(),
+                                 LessonsCount = lessons.Count(ll => ll.ChapterId == ch.ID)
+                        }).ToList(),
+                CourseQuestionConfig = c.CourseQuestionsConfig
+                        .Where(cq => !cq.IsDeleted)
+                        .Select(cqq => new GeneratedCourseQuestionConfigVM
+                        {
+                            QuestionLevelId = cqq.QuestionLevelId,
+                            QuestionLevelName = cqq.QuestionLevel?.Name ?? "Unknown",
+                            QuestionsCountPerLesson = cqq.QuestionsCountPerLesson
+                        }).ToList()
+            }).ToList();
+            return View(res);
         }
     }
 }
