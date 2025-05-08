@@ -435,47 +435,76 @@ namespace CoursesManagementSystem.Controllers
 
         /* http://localhost:5168/api/API/Content-generated/PhaseOne */
         [HttpPost("Content-generated/PhaseOne")]
-        public async Task<ActionResult<APIResponse>> AddCourseContent([FromBody] PhaseOneCreateDTO dto)
+        public async Task<ActionResult<APIResponse>> AddCourseContentPhaseOne([FromBody] PhaseOneCreateDTO dto)
         {
             var response = new APIResponse();
 
             var course = await _unitOfWork.CourseRepository.GetByIdAsync(dto.CourseId);
             if (course == null)
             {
-
                 response.IsSuccess = false;
                 response.StatusCode = HttpStatusCode.BadRequest;
                 response.Errors.Add("Course not found.");
                 return BadRequest(response);
             }
 
-            var chapters = _mapper.Map<List<Chapter>>(dto.Chapters);
-
-            foreach (var chapter in chapters)
+            foreach (var chapterDto in dto.Chapters)
             {
-                chapter.CourseId = course.ID;
+                Chapter chapter;
 
-                await _unitOfWork.ChapterRepository.AddAsync(chapter);
-
-                if (chapter.Lessons != null)
+                if (chapterDto.ChapterId > 0)
                 {
-                    foreach (var lesson in chapter.Lessons)
+                    chapter = await _unitOfWork.ChapterRepository.GetByIdAsync(chapterDto.ChapterId);
+                    if (chapter == null) continue;
+                }
+                else
+                {
+                    chapter = _mapper.Map<Chapter>(chapterDto);
+                    chapter.CourseId = dto.CourseId;
+                    await _unitOfWork.ChapterRepository.AddAsync(chapter);
+                }
+
+                if (chapterDto.Lessons != null)
+                {
+                    foreach (var lessonDto in chapterDto.Lessons)
                     {
-                        lesson.ChapterId = chapter.ID; // will be assigned after saving, if needed
-                        await _unitOfWork.LessonRepository.AddAsync(lesson);
+                        Lesson lesson;
 
-                        if (lesson.Questions != null)
+                        if (lessonDto.LessonId > 0)
                         {
-                            foreach (var question in lesson.Questions)
-                            {
-                                question.LessonId = lesson.ID;
-                                await _unitOfWork.QuestionRepository.AddAsync(question);
+                            lesson = await _unitOfWork.LessonRepository.GetByIdAsync(lessonDto.LessonId);
+                            if (lesson == null) continue;
 
-                                if (question.Answers != null)
+                            lesson.ScriptText = lessonDto.ScriptText;
+                            lesson.VideoStorageURL = lessonDto.VideoStorageURL;
+                            lesson.AudioStorageURL = lessonDto.AudioStorageURL;
+
+                            _unitOfWork.LessonRepository.Update(lesson);
+                        }
+                        else
+                        {
+                            lesson = _mapper.Map<Lesson>(lessonDto);
+                            lesson.ChapterId = chapter.ID;
+                            await _unitOfWork.LessonRepository.AddAsync(lesson);
+                        }
+
+                        if (lessonDto.Questions != null)
+                        {
+                            foreach (var questionDto in lessonDto.Questions)
+                            {
+                                var question = _mapper.Map<Question>(questionDto);
+                                question.LessonId = lesson.ID;
+
+                                await _unitOfWork.QuestionRepository.AddAsync(question);
+                                await _unitOfWork.CompleteAsync(); // ✅ Flush to get question.ID
+
+                                if (questionDto.Answers != null)
                                 {
-                                    foreach (var answer in question.Answers)
+                                    foreach (var answerDto in questionDto.Answers)
                                     {
+                                        var answer = _mapper.Map<Answer>(answerDto);
                                         answer.QuestionId = question.ID;
+
                                         await _unitOfWork.AnswerRepository.AddAsync(answer);
                                     }
                                 }
@@ -491,41 +520,6 @@ namespace CoursesManagementSystem.Controllers
             response.StatusCode = HttpStatusCode.Created;
             return CreatedAtAction(nameof(GetCourseById), new { id = dto.CourseId }, response);
         }
-        /*
-         {
-  "courseId": 16,
-  "chapters": [
-    {
-      "name": "Chapter 3",
-      "details": "Chapter 3 details",
-      "sort": 1,
-      "lessons": [
-        {
-          "name": "Lesson 1",
-          "details": "Lesson 1 details",
-          "scriptText": "Script text here",
-          "videoStorageURL": "https://example.com/video1.mp4",
-          "audioStorageURL": "https://example.com/audio1.mp3",
-          "sort": 1,
-          "questions": [
-            {
-              "questionText": "What is ASP.NET?",
-              "questionInstructions": "Choose the best answer.",
-              "questionType": 1,
-              "questionLevelId": 1,
-              "answers": [
-                { "answerText": "Framework", "isCorrect": true },
-                { "answerText": "Database", "isCorrect": false }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
- 
-         */
 
 
 

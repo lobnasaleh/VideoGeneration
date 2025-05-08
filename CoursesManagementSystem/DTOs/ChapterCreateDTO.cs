@@ -2,9 +2,7 @@
 {
     public class ChapterCreateDTO
     {
-        public string Name { get; set; }
-        public string Details { get; set; }
-        public int Sort { get; set; }
+        public int ChapterId { get; set; }
         public List<LessonCreateDTO> Lessons { get; set; }
     }
 }
