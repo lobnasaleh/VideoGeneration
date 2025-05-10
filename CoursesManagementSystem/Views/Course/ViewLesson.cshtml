@@ -1,0 +1,135 @@
+﻿<!-- Template Stylesheet -->
+<link href="~/css/styleAdmin.css" rel="stylesheet">
+<link rel="stylesheet" href="~/css/styles.css">
+
+@model LessonDetailViewModel
+
+@{
+    ViewBag.Title = Model.Name;
+    var questionIndex = 1;
+}
+
+<!-- Lesson Header -->
+<div class="bg-primary text-white py-4">
+    <div class="container">
+        <h1 class="display-5 fw-bold mb-3">@Model.Name</h1>
+        <p class="lead">@Model.Details</p>
+    </div>
+</div>
+
+<!-- Lesson Content -->
+<div class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Video Player -->
+                <div class="card bg-white border-primary mb-4">
+                    <div class="card-body p-0">
+                        <div class="video-container">
+                            <iframe src="@Model.VideoStorageURL"
+                                    title="@Model.Name"
+                                    width="100%" height="400"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen>
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lesson Script -->
+                <div class="card bg-white border-primary mb-4">
+                    <div class="card-header bg-white">
+                        <h4 class="mb-0"><i class="fas fa-info-circle me-2"></i>Lesson Script</h4>
+                    </div>
+                    <div class="card-body">
+                        <p>@Model.ScriptText</p>
+                    </div>
+                </div>
+
+                <!-- Quiz Section -->
+                <div class="card bg-white border-primary quiz-section" id="quiz">
+                    <div class="card-header bg-white">
+                        <h4 class="mb-0"><i class="fas fa-question-circle me-2"></i>Quiz: Test Your Knowledge</h4>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-4">Complete this quiz to test your understanding of the concepts covered in this lesson.</p>
+
+                        <form class="quiz-form">
+                            @foreach (var question in Model.Questions)
+                            {
+                                var correctLetter = "";
+                                char choice = 'A';
+
+                                var correctAnswer = question.Answers.FirstOrDefault(a => a.IsCorrect);
+                                if (correctAnswer != null)
+                                {
+                                    var correctIndex = question.Answers.ToList().IndexOf(correctAnswer);
+                                    correctLetter = ((char)('A' + correctIndex)).ToString();
+                                }
+
+                                <div class="question-card mb-4" data-question-id="@question.QuestionId" data-correct="@correctLetter">
+                                    <h5 class="mb-3">Question @questionIndex: @question.QuestionText</h5>
+                                    <p><small class="text-muted">@question.QuestionInstructions</small></p>
+
+                                    <div class="list-group mb-4">
+                                        @foreach (var answer in question.Answers)
+                                        {
+                                            <label class="list-group-item bg-white border-primary d-flex align-items-center">
+                                                <input type="radio"
+                                                       name="question-@question.QuestionId"
+                                                       value="@choice"
+                                                       class="form-check-input me-2" />
+                                                <span>@choice. @answer.AnswerText</span>
+                                            </label>
+                                            choice++;
+                                        }
+                                    </div>
+                                </div>
+                                questionIndex++;
+                            }
+
+                            <div class="quiz-result d-none"></div>
+
+                            <div class="d-flex justify-content-center mt-4">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-check-circle me-2"></i>Submit Answers
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Navigation -->
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="#" class="btn btn-outline-secondary">
+                        <i class="fas fa-list me-2"></i>Course Overview
+                    </a>
+
+                    <a href="#" class="btn btn-primary">
+                        Next Lesson<i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Sidebar Placeholder -->
+            <div class="col-lg-4 mt-4 mt-lg-0">
+                <div class="card bg-white border-primary">
+                    <div class="card-header bg-white">
+                        <h4 class="mb-0"><i class="fas fa-book me-2"></i>Lesson Info</h4>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Lesson ID:</strong> @Model.LessonId</p>
+                        <p><strong>Chapter:</strong> @Model.ChapterName</p>
+                        <p><strong>Questions:</strong> @Model.Questions?.Count ?? 0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript (your existing script.js must be loaded here) -->
+@section Scripts {
+    <script src="~/js/scripts.js"></script>
+}

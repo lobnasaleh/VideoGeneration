@@ -482,5 +482,41 @@ namespace CoursesManagementSystem.Controllers
             }).ToList();
             return View(res);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> ViewLesson(int id)
+        {
+            var lesson = await unitOfWork.LessonRepository.GetLessonWithQuestionsAndAnswersAsync(id);
+
+            if (lesson == null)
+                return NotFound();
+
+            var viewModel = new LessonDetailViewModel
+            {
+                LessonId = lesson.ID,
+                Name = lesson.Name,
+                Details = lesson.Details,
+                ScriptText = lesson.ScriptText,
+                VideoStorageURL = lesson.VideoStorageURL,
+                ChapterName = lesson.Chapter?.Name, // ✅ This assumes navigation property is loaded
+
+                Questions = lesson.Questions?.Select(q => new QuestionViewModel
+                {
+                    QuestionId = q.ID,
+                    QuestionText = q.QuestionText,
+                    QuestionInstructions = q.QuestionInstructions,
+                    QuestionType = q.QuestionType.ToString(),
+                    Answers = q.Answers?.Select(a => new AnswerViewModel
+                    {
+                        AnswerId = a.ID,
+                        AnswerText = a.AnswerText,
+                        IsCorrect = a.IsCorrect
+                    }).ToList()
+                }).ToList()
+            };
+
+
+            return View(viewModel);
+        }
     }
 }

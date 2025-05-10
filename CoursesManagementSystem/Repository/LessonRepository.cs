@@ -11,5 +11,14 @@ namespace CoursesManagementSystem.Repository
         {
             this._context = _context;
         }
+
+        public async Task<Lesson> GetLessonWithQuestionsAndAnswersAsync(int lessonId)
+        {
+            return await GetAsync(
+                condition: l => l.ID == lessonId,
+                include: new[] { "Chapter","Questions.Answers" },
+                Tracking: false
+            );
+        }
     }
 }
