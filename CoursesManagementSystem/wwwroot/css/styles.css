@@ -7,6 +7,8 @@ body {
     color: #212529;
 }
 
+
+
 /* Course card styling */
 .course-card {
     transition: transform 0.3s ease;
@@ -23,6 +25,7 @@ body {
     height: 180px;
     object-fit: cover;
 }
+
 
 /* Chapter and lesson styling */
 .chapter-card {
