@@ -1,5 +1,9 @@
 ﻿
 @model List<GeneratedCourseVM>
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>

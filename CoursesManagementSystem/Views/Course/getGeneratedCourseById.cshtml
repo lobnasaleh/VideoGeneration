@@ -1,6 +1,7 @@
 ﻿@using CoursesManagementSystem.DTOs
 @model GeneratedCourseVM
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,7 +44,7 @@
                         <span class="badge bg-light text-primary"><i class="fas fa-globe me-1"></i> @Model.Language</span>
                     </div>
                     <div class="d-grid gap-2 d-md-flex">
-                        <a href="lesson.html" class="btn btn-light btn-lg">Start Learning</a>
+                       @*  <a href="lesson.html" class="btn btn-light btn-lg">Start Learning</a> *@
                         @* <button class="btn btn-outline-light btn-lg">Add to Wishlist</button> *@
                     </div>
                 </div>
@@ -66,7 +67,8 @@
                                 </div> *@
                             </div>
                             <div class="d-grid gap-2">
-                                <a href="lesson.html" class="btn btn-primary">Enroll Now</a>
+                                <a asp-controller="Course" asp-action="ViewLesson" asp-route-id="@Model.FirstGeneratedLessonOfChapterOneID" class="btn btn-primary">Enroll Now</a>
+                               
                               @*   <button class="btn btn-outline-primary">Watch Preview</button> *@
                             </div>
                         </div>
@@ -211,7 +213,7 @@
                                                 <li class="list-group-item d-flex align-items-center">
                                                     <i class="fas fa-play-circle text-primary me-3"></i>
                                                     <div>
-                                                        <a href="lesson.html" class="text-decoration-none">@lesson.Name</a>
+                                                        <a asp-controller="Course" asp-action="ViewLesson" asp-route-id="@lesson.LessonId" class="text-decoration-none">@lesson.Name</a>
                                                         <p class="text-muted small mb-0">@lesson.Details</p>
                                                         
                                                     </div>

@@ -354,7 +354,7 @@ namespace CoursesManagementSystem.Controllers
             if (course == null)
             {
                 TempData["Error"] = "No Course with This Id is Found";
-                return RedirectToAction("getGeneratedCoursees");//getGeneratedCoursees
+                return RedirectToAction("getGeneratedCourses");//getGeneratedCoursees
             }
 
 
@@ -372,6 +372,16 @@ namespace CoursesManagementSystem.Controllers
                 Name = course.Name,
                 CourseId = course.ID,
                 Details = course.Details,
+                FirstGeneratedLessonOfChapterOneID = chapters
+                                              .Where(ch => ch.CourseId == id)
+                                              .OrderBy(ch => ch.ID)
+                                              .Take(1)
+                                             .SelectMany(ch => lessons
+                                             .Where(l => l.ChapterId == ch.ID)
+                                             .OrderBy(l => l.ID)
+                                             .Take(1)
+                                             .Select(l => l.ID))
+                                            .FirstOrDefault(),
                 LevelId = course.LevelId,
                 LevelName = course.Level?.Name ?? "Unknown",
                 ChaptersCount = course.CourseConfig?.ChaptersCount ?? 0,
@@ -411,6 +421,12 @@ namespace CoursesManagementSystem.Controllers
                         QuestionsCountPerLesson = cqq.QuestionsCountPerLesson
                     }).ToList()
             };
+
+            if (res.FirstGeneratedLessonOfChapterOneID == 0) //3shan ma yb3tash el lessonid b 0 lama yeegy yeshoof el curriculum w ykoon fady
+            {
+                TempData["Error"] = "Lessons are not yet generated ,Hold On!";
+                return RedirectToAction("getGeneratedCourses");
+            }
             return View(res);
         }
 
@@ -469,7 +485,7 @@ namespace CoursesManagementSystem.Controllers
                                     AudioStorageURL = l.AudioStorageURL,
                                     Sort = l.Sort
                                 }).ToList(),
-                                 LessonsCount = lessons.Count(ll => ll.ChapterId == ch.ID)
+                            LessonsCount = lessons.Count(ll => ll.ChapterId == ch.ID)
                         }).ToList(),
                 CourseQuestionConfig = c.CourseQuestionsConfig
                         .Where(cq => !cq.IsDeleted)
