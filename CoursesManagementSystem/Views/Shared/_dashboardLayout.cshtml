@@ -48,33 +48,35 @@
         <div class="sidebar pe-4 pb-3">
             <nav class="navbar bg-light navbar-light">
                 <a href="index.html" class="navbar-brand mx-4 mb-3">
-                    <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>DASHMIN</h3>
+                    <h3 class="text-primary"><i class="bi bi-book"></i>  Edrak</h3>
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
-                        <img class="rounded-circle" src="~/images/user.jpg" alt="" style="width: 40px; height: 40px;">
-                        <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+                       @*  <img class="rounded-circle" src="~/images/user.jpg" alt="" style="width: 40px; height: 40px;"> *@
+                       @*  <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div> *@
                     </div>
                     <div class="ms-3">
-                        <h6 class="mb-0">Jhon Doe</h6>
-                        <span>Admin</span>
+                        <a class="fs-5" asp-controller="Course" asp-action="getGeneratedCourses"><i class="bi bi-bookmarks"></i>LMS</a>
+
+                        @*  <h6 class="mb-0">Jhon Doe</h6>
+                        <span>Admin</span> *@
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Configurations</a>
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="text-primary bi bi-gear me-2"></i>Configurations</a>
                         <div class="dropdown-menu bg-transparent border-0">
-                            <a asp-controller="QuestionLevel" asp-action="GetAll" class="dropdown-item "><i class="fa fa-tachometer-alt me-2 fa-icon"></i> Questions Level</a>
-                            <a asp-controller="Level" asp-action="Index" class="dropdown-item "><i class="fa fa-tachometer-alt me-2 fa-icon"></i>Course Levels</a>
-                            <a asp-controller="Category" asp-action="GetAll" class="dropdown-item "><i class="fa fa-tachometer-alt me-2 fa-icon"></i>Course Categories</a>
+                            <a asp-controller="QuestionLevel" asp-action="GetAll" class="dropdown-item "><i class="text-primary bi bi-gear me-2 fa-icon"></i> Questions Level</a>
+                            <a asp-controller="Level" asp-action="Index" class="dropdown-item "><i class="text-primary bi bi-gear me-2 fa-icon"></i>Course Levels</a>
+                            <a asp-controller="Category" asp-action="GetAll" class="dropdown-item "><i class="text-primary bi bi-gear me-2 fa-icon"></i>Course Categories</a>
                         </div>
                     </div>
                     
-                    <a asp-controller="Course" asp-action="Index" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2 fa-icon"></i>Course</a>
-                    <a asp-controller="Chapter" asp-action="Index" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2 fa-icon"></i>Chapters</a>
-                    <a asp-controller="Lesson" asp-action="Index" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2 fa-icon"></i>Lessons</a>
-                    <a asp-controller="Question" asp-action="GetAll" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2 fa-icon"></i>Questions</a>
-                    <a asp-controller="Answer" asp-action="GetAll" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2 fa-icon"></i>Answers</a>
+                    <a asp-controller="Course" asp-action="Index" class="nav-item nav-link"><i class="bi bi-book me-2 text-primary fs-3 fa-icon"></i>Course</a>
+                    <a asp-controller="Chapter" asp-action="Index" class="nav-item nav-link"><i class="bi bi-list me-2 text-primary fs-3 fa-icon"></i>Chapters</a>
+                    <a asp-controller="Lesson" asp-action="Index" class="nav-item nav-link"><i class="bi bi-play-circle text-primary fs-3 me-2 fa-icon"></i>Lessons</a>
+                    <a asp-controller="Question" asp-action="GetAll" class="nav-item nav-link"><i class="bi bi-question fs-3 me-2 text-primary fa-icon"></i>Questions</a>
+                    <a asp-controller="Answer" asp-action="GetAll" class="nav-item nav-link"><i class="bi bi-check fs-3 me-2 text-primary fa-icon"></i>Answers</a>
                    
                 </div>
             </nav>

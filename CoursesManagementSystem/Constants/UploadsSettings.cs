@@ -5,6 +5,7 @@
         public const string BooksPath = "/Uploads/Books";
         public const string AudiosPath = "/Uploads/Audios";
         public const string VideosPath = "/Uploads/Videos";
+        public const string ImagesPath = "/Uploads/Images";
 
         public const string AllowedExtensions = ".pdf,.doc,.docx,.xls,.xlsx,.txt";
         public const int MaxFileSizeInMB = 1;

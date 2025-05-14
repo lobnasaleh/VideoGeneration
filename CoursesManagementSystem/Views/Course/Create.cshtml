@@ -56,6 +56,13 @@
                         <span asp-validation-for="Book" class="text-danger"></span>
                     </div>
 
+                    <!-- Image Storage url -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold" asp-for="CourseImage">Upload Course Image:</label>
+                        <input class="form-control" type="file" asp-for="CourseImage" placeholder="Enter Course Image" />
+                        <span asp-validation-for="CourseImage" class="text-danger"></span>
+                    </div>
+
 
                     <!-- Buttons -->
                     <div class="d-flex justify-content-between mt-4">

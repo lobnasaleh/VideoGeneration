@@ -21,6 +21,8 @@ namespace CoursesManagementSystem.DB.Models
         [DataType(DataType.Url)]
         public string BookStorageURL { get; set; }
 
+        public string? CourseImageStorageURL {  get; set; }
+
 
         [ForeignKey(nameof(Category))]
         [Required(ErrorMessage = "Category ID is required")]

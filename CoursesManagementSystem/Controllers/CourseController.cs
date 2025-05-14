@@ -19,18 +19,29 @@ namespace CoursesManagementSystem.Controllers
         private readonly IUnitOfWork unitOfWork;
         private readonly IWebHostEnvironment webHostEnvironment;
         private readonly string _BookPath;
+        private readonly string _ImagePath;
         public CourseController(IMapper _mapper, IUnitOfWork _unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             mapper = _mapper;
             unitOfWork = _unitOfWork;
             this.webHostEnvironment = webHostEnvironment;
             _BookPath = $"{webHostEnvironment.WebRootPath}{UploadsSettings.BooksPath}";
+            _ImagePath= $"{webHostEnvironment.WebRootPath}{UploadsSettings.ImagesPath}";
 
             if (!Directory.Exists(_BookPath))
             {
                 Directory.CreateDirectory(_BookPath);
             }
 
+            if (!Directory.Exists(_ImagePath))
+            {
+                Directory.CreateDirectory(_ImagePath);
+                Console.WriteLine("Directory created successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Directory already exists.");
+            }
         }
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -100,38 +111,34 @@ namespace CoursesManagementSystem.Controllers
                     return RedirectToAction("Index");
 
                 }
-                if (courseVM.Book != null && courseVM.Book.Length > 0)
+                string bookStorageUrl = await ProcessFileUpload(courseVM.Book, _BookPath, UploadsSettings.BooksPath);
+                if (bookStorageUrl == null)
                 {
-                   
-                    var BookName = $"{Path.GetFileNameWithoutExtension(courseVM.Book.FileName)}_{Guid.NewGuid()}{Path.GetExtension(courseVM.Book.FileName)}";
-
-
-                    var path = Path.Combine(_BookPath, BookName);
-
-                    // Save the file to the server
-                    using (var stream = new FileStream(path, FileMode.Create))
-                    {
-                       await courseVM.Book.CopyToAsync(stream);
-                    }
-
-                //new Course
-                     Course cmp = mapper.Map<Course>(courseVM);
-                     cmp.CreatedAt = DateTime.Now;
-                     cmp.BookStorageURL = $"{UploadsSettings.BooksPath}{"/"}{BookName}";// Store relative path
-                     await unitOfWork.CourseRepository.AddAsync(cmp);
-                     await unitOfWork.CompleteAsync();
-                     return RedirectToAction("Index");
-                }
-                else
-                {
-                    ModelState.AddModelError("", "File upload failed.");
-
+                    ModelState.AddModelError("", "Book upload failed.");
                     courseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted);
                     courseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted);
 
                     return View(courseVM);
                 }
-              
+                string imageStorageUrl = await ProcessFileUpload(courseVM.CourseImage, _ImagePath, UploadsSettings.ImagesPath);
+                if (imageStorageUrl == null)
+                {
+                    ModelState.AddModelError("", "Image upload failed.");
+                    courseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted);
+                    courseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted);
+
+                    return View(courseVM);
+                }
+
+                //new Course
+                     Course cmp = mapper.Map<Course>(courseVM);
+                     cmp.CreatedAt = DateTime.Now;
+                     cmp.BookStorageURL = bookStorageUrl;// Store relative path
+                     cmp.CourseImageStorageURL = imageStorageUrl;// Store relative path
+                await unitOfWork.CourseRepository.AddAsync(cmp);
+                     await unitOfWork.CompleteAsync();
+                     return RedirectToAction("Index");
+
             }
             //refill selects
 
@@ -141,6 +148,35 @@ namespace CoursesManagementSystem.Controllers
             return View(courseVM);
 
         }
+
+        private async Task<string> ProcessFileUpload(IFormFile file, string basePath, string relativePath)
+        {
+
+            if (file==null || file.Length == 0)
+            {
+                return null;
+            }
+            try
+            {
+                var FileName = $"{Path.GetFileNameWithoutExtension(file.FileName)}_{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+                var path = Path.Combine(basePath, FileName);
+
+                // Save the file to the server
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+                return $"{relativePath}/{FileName}";
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
+
+
+        }
+
+
         [HttpGet]
         public async Task<IActionResult> Update(int id)
         {
@@ -366,6 +402,7 @@ namespace CoursesManagementSystem.Controllers
 
             var res = new GeneratedCourseVM
             {
+                CourseImage=course.CourseImageStorageURL,
                 BookStorageURL = course.BookStorageURL,
                 CategoryId = course.CategoryId,
                 CategoryName = course.Category?.Name ?? "Unknown",
@@ -452,6 +489,7 @@ namespace CoursesManagementSystem.Controllers
 
             var res = courses.Select(c => new GeneratedCourseVM
             {
+                CourseImage = c.CourseImageStorageURL,
                 BookStorageURL = c.BookStorageURL,
                 CategoryId = c.CategoryId,
                 CategoryName = c.Category?.Name ?? "Unknown",
