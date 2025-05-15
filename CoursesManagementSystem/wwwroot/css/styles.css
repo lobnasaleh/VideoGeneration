@@ -26,6 +26,9 @@ body {
     object-fit: cover;
 }
 
+.card-header h4, h1, p {
+    color: #333; /* Or any darker color */
+}
 
 /* Chapter and lesson styling */
 .chapter-card {
