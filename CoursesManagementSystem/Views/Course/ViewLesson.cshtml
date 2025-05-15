@@ -1,4 +1,4 @@
-﻿<head>
+﻿@* <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EduLearn LMS - Home</title>
@@ -13,134 +13,178 @@
     <!-- Template Stylesheet -->
     <link href="~/css/styleAdmin.css" rel="stylesheet">
     <link rel="stylesheet" href="~/css/styles.css">
-</head>
+</head> *@
 
 @model LessonDetailViewModel
-
 @{
-    ViewBag.Title = Model.Name;
-    var questionIndex = 1;
+    ViewData["Title"] = "Lesson Details";
 }
 
-<!-- Lesson Header -->
-<div class="bg-primary text-white py-4">
+<!-- AOS Animation CSS -->
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #007bff, #00c6ff);
+    }
+    .list-group-item {
+        transition: background-color 0.3s ease, border 0.3s ease;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+    .list-group-item:hover {
+        background-color: #f0f8ff;
+        border-color: #007bff;
+    }
+    input[type="radio"]:checked + span {
+        font-weight: bold;
+        color: #007bff;
+    }
+
+    .text-shadow {
+        text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .backdrop-blur {
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+
+    .text-shadow {
+        text-shadow: 1px 2px 6px rgba(0, 0, 0, 0.4);
+    }
+
+    .backdrop-blur {
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+    }
+
+    .glowing-text {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.6), 0 0 20px rgba(255, 255, 255, 0.4), 0 0 30px rgba(0, 123, 255, 0.4);
+    }
+
+    .text-light-emphasis {
+        color: rgba(255, 255, 255, 0.85);
+    }
+
+
+
+</style>
+
+<div class="bg-gradient-primary text-white py-5 text-center mb-5 rounded-4 shadow-lg mx-3">
     <div class="container">
-        <h1 class="display-5 fw-bold mb-3">@Model.Name</h1>
-        <p class="lead">@Model.Details</p>
+        <h1 class="display-3 fw-bold glowing-text mb-3">@Model.Name</h1>
+        <p class="fs-5 fw-light text-light-emphasis">@Model.Details</p>
     </div>
 </div>
 
-<!-- Lesson Content -->
-<div class="py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8">
-                <!-- Video Player -->
-                <div class="card bg-white border-primary mb-4">
-                    <div class="card-body p-0">
-                        <div class="video-container">
-                            <iframe src="@Model.VideoStorageURL"
-                                    title="@Model.Name"
-                                    width="100%" height="400"
-                                    frameborder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowfullscreen>
-                            </iframe>
-                        </div>
+<div class="container">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-lg-8" data-aos="fade-right">
+            <!-- Video Section -->
+            <div class="card shadow-sm border-0 mb-4 rounded">
+                <div class="card-body p-0">
+                    <div class="ratio ratio-16x9">
+                        <iframe class="rounded" src="@Model.VideoStorageURL"
+                                title="@Model.Name"
+                                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"
+                                allowfullscreen>
+                        </iframe>
                     </div>
-                </div>
-
-                <!-- Lesson Script -->
-                <div class="card border-primary mb-4">
-                    <div class="card-header">
-                        <h4 class="mb-0"><i class="fas fa-info-circle me-2"></i>Lesson Script</h4>
-                    </div>
-                    <div class="card-body">
-                        <p>@Model.ScriptText</p>
-                    </div>
-                </div>
-
-                <!-- Quiz Section -->
-                <div class="card bg-white border-primary quiz-section" id="quiz">
-                    <div class="card-header bg-white">
-                        <h4 class="mb-0"><i class="fas fa-question-circle me-2"></i>Quiz: Test Your Knowledge</h4>
-                    </div>
-                    <div class="card-body">
-                        <p class="mb-4">Complete this quiz to test your understanding of the concepts covered in this lesson.</p>
-
-                        <form class="quiz-form">
-                            @foreach (var question in Model.Questions)
-                            {
-                                var correctLetter = "";
-                                char choice = 'A';
-
-                                var correctAnswer = question.Answers.FirstOrDefault(a => a.IsCorrect);
-                                if (correctAnswer != null)
-                                {
-                                    var correctIndex = question.Answers.ToList().IndexOf(correctAnswer);
-                                    correctLetter = ((char)('A' + correctIndex)).ToString();
-                                }
-
-                                <div class="question-card mb-4" data-question-id="@question.QuestionId" data-correct="@correctLetter">
-                                    <h5 class="mb-3">Question @questionIndex: @question.QuestionText</h5>
-                                    <p><small class="text-muted">@question.QuestionInstructions</small></p>
-
-                                    <div class="list-group mb-4">
-                                        @foreach (var answer in question.Answers)
-                                        {
-                                            <label class="list-group-item bg-white border-primary d-flex align-items-center">
-                                                <input type="radio"
-                                                       name="question-@question.QuestionId"
-                                                       value="@choice"
-                                                       class="form-check-input me-2" />
-                                                <span>@choice. @answer.AnswerText</span>
-                                            </label>
-                                            choice++;
-                                        }
-                                    </div>
-                                </div>
-                                questionIndex++;
-                            }
-
-                            <div class="quiz-result d-none"></div>
-
-                            <div class="d-flex justify-content-center mt-4">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-check-circle me-2"></i>Submit Answers
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Navigation -->
-                <div class="d-flex justify-content-between mt-4">
-                    <a href="#" class="btn btn-outline-secondary">
-                        <i class="fas fa-list me-2"></i>Course Overview
-                    </a>
-
-                    <a href="#" class="btn btn-primary">
-                        Next Lesson<i class="fas fa-arrow-right ms-2"></i>
-                    </a>
                 </div>
             </div>
 
-            <!-- Sidebar Placeholder -->
-            <div class="col-lg-4 mt-4 mt-lg-0">
-                <div class="card bg-white border-primary">
-                    <div class="card-header bg-white">
-                        <h4 class="mb-0"><i class="fas fa-book me-2"></i>Lesson Info</h4>
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Lesson ID:</strong> @Model.LessonId</p>
-                        <p><strong>Chapter:</strong> @Model.ChapterName</p>
-                        <p><strong>Questions:</strong> @Model.Questions?.Count ?? 0</p>
-                    </div>
+            <!-- Description -->
+            <div class="mb-4">
+                <h4>Description</h4>
+                <p>@Model.Details</p>
+            </div>
+
+            <!-- Quiz Section -->
+            @if (Model.Questions != null && Model.Questions.Any())
+            {
+                <div data-aos="fade-up">
+                    <h4 class="mb-3">Quiz</h4>
+                    <form id="quizForm">
+                        @for (int i = 0; i < Model.Questions.Count; i++)
+                        {
+                            var question = Model.Questions[i];
+                            <div class="mb-4">
+                                <p><strong>Q@((i + 1)):</strong> @question.QuestionText</p>
+                                <div class="list-group">
+                                    @if (question.Answers != null && question.Answers.Any())
+                                    {
+                                        foreach (var answer in question.Answers)
+                                        {
+                                            <label class="list-group-item">
+                                                <input type="radio" name="question_@i" value="@answer.AnswerId" class="me-2" />
+                                                <span>@answer.AnswerText</span>
+                                            </label>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="alert alert-warning rounded mt-2">
+                                            ⚠ This question has no answers.
+                                        </div>
+                                    }
+
+                                </div>
+                            </div>
+                        }
+
+                        <button type="button" class="btn btn-success rounded-pill px-4 mt-2" onclick="gradeQuiz()">Submit</button>
+                    </form>
+
+                    <div id="resultMessage" class="mt-4"></div>
+                </div>
+            }
+        </div>
+
+        <!-- Sidebar Info -->
+        <div class="col-lg-4 mt-4 mt-lg-0">
+            <div class="position-sticky" style="top: 100px;" data-aos="fade-left">
+                <div class="card bg-white border-primary shadow-sm rounded p-4">
+                    <h5>Lesson Info</h5>
+                    <p><strong>Chapter:</strong> @Model.ChapterName</p>
+                    <p><strong>Questions:</strong> @(Model.Questions?.Count ?? 0)</p>
+                    <a href="#" class="btn btn-outline-secondary rounded-pill w-100 mb-2">
+                        <i class="fas fa-list me-2"></i>Course Overview
+                    </a>
+                    <a href="#" class="btn btn-primary rounded-pill w-100">
+                        Next Lesson<i class="fas fa-arrow-right ms-2"></i>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- AOS Animation JS -->
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+    AOS.init();
+
+    function gradeQuiz() {
+        const form = document.getElementById("quizForm");
+        const selectedAnswers = form.querySelectorAll("input[type='radio']:checked");
+        let correct = 0;
+
+        selectedAnswers.forEach(answer => {
+            if (answer.value === "true") {
+                correct++;
+            }
+        });
+
+        const total = @Model.Questions?.Count ?? 0;
+        const result = document.getElementById("resultMessage");
+        result.innerHTML = `<div class="alert alert-info rounded-pill text-center">
+                                You got <strong>${correct}</strong> out of <strong>${total}</strong> correct.
+                            </div>`;
+    }
+</script>
+
 
 <!-- JavaScript (your existing script.js must be loaded here) -->
 @section Scripts {
