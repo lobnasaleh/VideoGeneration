@@ -247,19 +247,56 @@ namespace CoursesManagementSystem.Controllers
                             }
                         }
 
-                        var BookName = $"{Path.GetFileNameWithoutExtension(CourseVM.Book.FileName)}_{Guid.NewGuid()}{Path.GetExtension(CourseVM.Book.FileName)}";
+                    // Process the new book file upload
+                    string bookRelativePath = await ProcessFileUpload(
+                        CourseVM.Book,
+                        _BookPath,
+                        UploadsSettings.BooksPath
+                    );
 
+                    if (bookRelativePath == null)
+                    {
+                        ModelState.AddModelError("", "Failed to upload the book file.");
+                        ViewBag.categorySelectList = GetCategorySelectList(Categories);
+                        ViewBag.levelSelectList = GetLevelSelectList(Levels);
+                        return View(CourseVM); // Return to the view with validation errors
+                    }
 
-                        var path = Path.Combine(_BookPath, BookName);
-
-                        // Save the file to the server
-                        using (var stream = new FileStream(path, FileMode.Create))
-                        {
-                            await CourseVM.Book.CopyToAsync(stream);
-                        }
 
                         // Update the file path
-                        lv.BookStorageURL = $"{UploadsSettings.BooksPath}{"/"}{BookName}";
+                        lv.BookStorageURL = bookRelativePath;
+                }
+                if (CourseVM.CourseImage != null && CourseVM.CourseImage.Length > 0)
+                {
+
+                    // Delete the old file if it exists
+                    if (!string.IsNullOrEmpty(lv.CourseImageStorageURL))
+                    {
+                        var oldFilePath2 = Path.Combine(webHostEnvironment.WebRootPath, lv.CourseImageStorageURL.TrimStart('/'));
+                        if (System.IO.File.Exists(oldFilePath2))
+                        {
+                            System.IO.File.Delete(oldFilePath2);
+                        }
+                    }
+
+                    // Process the new book file upload
+                    string ImageRelativePath = await ProcessFileUpload(
+                        CourseVM.CourseImage,
+                        _ImagePath,
+                        UploadsSettings.ImagesPath 
+                    );
+
+                    if (ImageRelativePath == null)
+                    {
+                        ModelState.AddModelError("", "Failed to upload the Image");
+                        ViewBag.categorySelectList = GetCategorySelectList(Categories);
+                        ViewBag.levelSelectList = GetLevelSelectList(Levels);
+                        return View(CourseVM); // Return to the view with validation errors
+                    }
+
+
+                    // Update the file path
+                    lv.CourseImageStorageURL = ImageRelativePath;
                 }
 
                 lv.LastModifiedAt = DateTime.Now;
@@ -368,6 +405,15 @@ namespace CoursesManagementSystem.Controllers
             if (!string.IsNullOrEmpty(l.BookStorageURL))
             {
                 var oldFilePath = Path.Combine(webHostEnvironment.WebRootPath, l.BookStorageURL.TrimStart('/'));
+                if (System.IO.File.Exists(oldFilePath))
+                {
+                    System.IO.File.Delete(oldFilePath);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(l.CourseImageStorageURL))
+            {
+                var oldFilePath = Path.Combine(webHostEnvironment.WebRootPath, l.CourseImageStorageURL.TrimStart('/'));
                 if (System.IO.File.Exists(oldFilePath))
                 {
                     System.IO.File.Delete(oldFilePath);
