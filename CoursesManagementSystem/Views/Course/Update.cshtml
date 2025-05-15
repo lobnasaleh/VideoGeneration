@@ -64,6 +64,13 @@
                         <input class="form-control" type="file" asp-for="Book" placeholder="Enter Book URL" />
                         <span asp-validation-for="Book" class="text-danger"></span>
                     </div>
+                    <!-- Image Storage url -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold" asp-for="CourseImage">Upload Course Image:</label>
+                        <p><strong>Current Image is in:</strong> @Model.CourseImageStorageURL.Split("_")[0]</p>
+                        <input class="form-control" type="file" asp-for="CourseImage" placeholder="Enter Course Image" />
+                        <span asp-validation-for="CourseImage" class="text-danger"></span>
+                    </div>
 
                     <div class="d-flex justify-content-between mt-4">
                         <a class="btn btn-secondary" asp-action="Index">Cancel</a>

@@ -25,6 +25,10 @@ namespace CoursesManagementSystem.ViewModels
 
         public string BookStorageURL { get; set; }//3shan el edit a3raf abayen feeha esm el file ely ma3mlo upload
 
+        public IFormFile CourseImage { get; set; }
+
+        public string CourseImageStorageURL { get; set; }//3shan el edit a3raf abayen feeha esm el Image ely ma3mlo upload
+
         [Required(ErrorMessage = "Category is required")]
         [Display(Name = "Category")]
 

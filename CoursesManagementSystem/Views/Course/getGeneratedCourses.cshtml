@@ -1,5 +1,9 @@
 ﻿
 @model List<GeneratedCourseVM>
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,7 +62,7 @@
                 {
                     <div class="col-md-4">
                         <div class="card course-card border-primary h-100">
-                            <img src="https://via.placeholder.com/800x600?text=Web+Development" class="card-img-top course-image" alt="@course.Name">
+                            <img src="@course.CourseImage" class="card-img-top course-image" alt="@course.Name">
                             <div class="card-body">
                                 <h5 class="card-title text-black">@course.Name</h5>
                                 <p class="card-text text-muted">@course.Details</p>
