@@ -1,0 +1,32 @@
+﻿@model RegisterVM
+
+@{
+    ViewData["Title"] = "Create an account";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+}
+
+
+<form asp-action="Register" asp-controller="Auth" method="post">
+@*     <div asp-validation-summary="All" class="text-danger"></div> *@
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label text-success"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label text-success"></label>
+        <input asp-for="Password" type="password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ConfirmPassword" class="form-label text-success"></label>
+        <input asp-for="ConfirmPassword" type="password" class="form-control" />
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success w-100">Register</button>
+    <p class="text-center mt-2">Already have an account? <a class=" text-success" asp-controller="Auth" asp-action="Login">Log in</a></p>
+    
+</form>

@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edrak - @ViewData["Title"]</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background-color: #FBF8EF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .auth-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+            .btn-success:hover {
+                background-color: #218838;
+                border-color: #1e7e34;
+            }
+    </style>
+</head>
+<body>
+    <div class="position-absolute top-0 start-0 w-100">
+        <nav class="navba navbar-light px-4 py-2" style="background-color:#FBF8EF;">
+            <a asp-action="Index" asp-controller="Course" class="navbar-brand d-flex align-items-center p-0">
+                <img src="~/images/logo2.jpeg" alt="Edrak Logo" style="width: 40px; height: 40px; margin-right: 10px;" />
+                <h3 class="text-success m-0" style="line-height: 1;">Edrak</h3>
+            </a>
+        </nav>
+    </div>
+    <div class="auth-card mt-5">
+        <h1 class="text-center text-success mb-4">@ViewData["Title"]</h1>
+        <hr />
+        @RenderBody()
+        <footer class="text-center mt-4 text-muted">
+            &copy; @DateTime.Now.Year -Edrak . All Rights Reserved.
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>
