@@ -640,12 +640,6 @@ namespace CoursesManagementSystem.Controllers
 
          */
 
-
-
-
-
-
-
         [HttpPost("create-full-course")]
         public async Task<ActionResult<APIResponse>> CreateFullCourse([FromBody] CreateFullCourseDTO dto)
         {

@@ -7,13 +7,9 @@
 
   <ItemGroup>
     <Compile Remove="APIs\**" />
-    <Compile Remove="Services\**" />
     <Content Remove="APIs\**" />
-    <Content Remove="Services\**" />
     <EmbeddedResource Remove="APIs\**" />
-    <EmbeddedResource Remove="Services\**" />
     <None Remove="APIs\**" />
-    <None Remove="Services\**" />
   </ItemGroup>
 
   <ItemGroup>
