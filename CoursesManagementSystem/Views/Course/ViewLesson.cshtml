@@ -174,25 +174,29 @@
 <!-- AOS Animation JS -->
 <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 <script>
-    AOS.init();
+    const correctAnswers = @Html.Raw(Json.Serialize(Model.Questions.Select(q => q.Answers.FirstOrDefault(a => a.IsCorrect)?.AnswerId)));
+</script>
 
-    function gradeQuiz() {
+<script>
+    AOS.init();
+        function gradeQuiz() {
         const form = document.getElementById("quizForm");
         const selectedAnswers = form.querySelectorAll("input[type='radio']:checked");
         let correct = 0;
 
-        selectedAnswers.forEach(answer => {
-            if (answer.value === "true") {
+        selectedAnswers.forEach((answer, index) => {
+            if (parseInt(answer.value) === correctAnswers[index]) {
                 correct++;
             }
         });
 
-        const total = @Model.Questions?.Count ?? 0;
+        const total = correctAnswers.length;
         const result = document.getElementById("resultMessage");
         result.innerHTML = `<div class="alert alert-info rounded-pill text-center">
                                 You got <strong>${correct}</strong> out of <strong>${total}</strong> correct.
                             </div>`;
     }
+
 </script>
 
 
