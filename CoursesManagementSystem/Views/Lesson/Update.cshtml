@@ -66,7 +66,7 @@
 
                     <!--Audio-->
                     <div class="mb-3">
-                        <label class="form-label fw-bold" asp-for="Audio">Upload Book (PDF):</label>
+                        <label class="form-label fw-bold" asp-for="Audio">Upload Audio (PDF):</label>
                         <input class="form-control" type="file" asp-for="Audio" placeholder="Enter Audio URL" />
                         <p><strong>Current File is in:</strong> @Model.AudioStorageURL.Split("_")[0]</p>
                         <span asp-validation-for="Audio" class="text-danger"></span>

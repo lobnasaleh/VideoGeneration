@@ -111,6 +111,57 @@ namespace CoursesManagementSystem.Controllers
                     return RedirectToAction("Index");
 
                 }
+
+                if (courseVM.Book != null && courseVM.Book.Length > 0)
+                {
+                    // Validate file type
+                    var allowedBookExtensions = new[] { ".pdf", ".doc", ".docx" };
+                    var bookExtension = Path.GetExtension(courseVM.Book.FileName).ToLower();
+
+                    if (!allowedBookExtensions.Contains(bookExtension))
+                    {
+                        ModelState.AddModelError("Book", "Only PDF, DOC, and DOCX files are allowed for books.");
+                        courseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted);
+                        courseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted);
+                        return View(courseVM);
+                    }
+
+                   /* // Validate file size (1 MB = 1024 * 1024 bytes)
+                    if (courseVM.Book.Length > 1024 * 1024)
+                    {
+                        ModelState.AddModelError("Book", "Book file size must not exceed 1 MB.");
+                        courseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted);
+                        courseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted);
+                        return View(courseVM);
+                    }*/
+                }
+
+                // Validate CourseImage upload
+                if (courseVM.CourseImage != null && courseVM.CourseImage.Length > 0)
+                {
+                    // Validate file type
+                    var allowedImageExtensions = new[] { ".jpg", ".jpeg", ".png" , ".gif", };
+                    var imageExtension = Path.GetExtension(courseVM.CourseImage.FileName).ToLower();
+
+                    if (!allowedImageExtensions.Contains(imageExtension))
+                    {
+                        ModelState.AddModelError("CourseImage", "Only JPEG, JPG, GIF and PNG files are allowed for images.");
+                        courseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted);
+                        courseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted);
+                        return View(courseVM);
+                    }
+
+                    // Validate file size (1 MB = 1024 * 1024 bytes)
+                   /* if (courseVM.CourseImage.Length > 1024 * 1024)
+                    {
+                        ModelState.AddModelError("CourseImage", "Image file size must not exceed 1 MB.");
+                        courseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted);
+                        courseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted);
+                        return View(courseVM);
+
+                    }*/
+                }
+
                 string bookStorageUrl = await ProcessFileUpload(courseVM.Book, _BookPath, UploadsSettings.BooksPath);
                 if (bookStorageUrl == null)
                 {
@@ -234,6 +285,7 @@ namespace CoursesManagementSystem.Controllers
                     return RedirectToAction("Index");
 
                 }
+
                 if (CourseVM.Book != null && CourseVM.Book.Length > 0)
                     {
 
