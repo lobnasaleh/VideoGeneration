@@ -154,10 +154,20 @@
                     <p><strong>Questions:</strong> @(Model.Questions?.Count ?? 0)</p>
                     <a href="#" class="btn btn-outline-secondary rounded-pill w-100 mb-2">
                         <i class="fas fa-list me-2"></i>Course Overview
-                    </a>
-                    <a href="#" class="btn btn-primary rounded-pill w-100">
-                        Next Lesson<i class="fas fa-arrow-right ms-2"></i>
-                    </a>
+                    </a>@if (Model.NextLessonId.HasValue)
+                    {
+                        <a href="@Url.Action("ViewLesson", "Course", new { id = Model.NextLessonId })"
+                           class="btn btn-primary rounded-pill w-100">
+                            Next Lesson <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    }
+                    else
+                    {
+                        <button class="btn btn-secondary rounded-pill w-100" disabled>
+                            No More Lessons <i class="fas fa-ban ms-2"></i>
+                        </button>
+                    }
+
                 </div>
             </div>
         </div>
@@ -167,25 +177,29 @@
 <!-- AOS Animation JS -->
 <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 <script>
-    AOS.init();
+    const correctAnswers = @Html.Raw(Json.Serialize(Model.Questions.Select(q => q.Answers.FirstOrDefault(a => a.IsCorrect)?.AnswerId)));
+</script>
 
-    function gradeQuiz() {
+<script>
+    AOS.init();
+        function gradeQuiz() {
         const form = document.getElementById("quizForm");
         const selectedAnswers = form.querySelectorAll("input[type='radio']:checked");
         let correct = 0;
 
-        selectedAnswers.forEach(answer => {
-            if (answer.value === "true") {
+        selectedAnswers.forEach((answer, index) => {
+            if (parseInt(answer.value) === correctAnswers[index]) {
                 correct++;
             }
         });
 
-        const total = @Model.Questions?.Count ?? 0;
+        const total = correctAnswers.length;
         const result = document.getElementById("resultMessage");
         result.innerHTML = `<div class="alert alert-info rounded-pill text-center">
                                 You got <strong>${correct}</strong> out of <strong>${total}</strong> correct.
                             </div>`;
     }
+
 </script>
 
 

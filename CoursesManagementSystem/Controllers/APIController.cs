@@ -527,6 +527,8 @@ namespace CoursesManagementSystem.Controllers
             return Ok(response);
         }
 
+
+
         /* http://localhost:5168/api/API/Courses/15/Chapters */
         [HttpGet("Courses/{courseId:int}/Chapters")]
         public async Task<ActionResult<APIResponse>> GetChaptersByCourseId(int courseId)
@@ -534,8 +536,9 @@ namespace CoursesManagementSystem.Controllers
             var response = new APIResponse();
 
             var chapters = await _unitOfWork.ChapterRepository.GetAllAsync(
-                c => c.CourseId == courseId
+                c => c.CourseId == courseId && !c.IsDeleted
             );
+        
 
             if (chapters == null || !chapters.Any())
             {
@@ -545,13 +548,15 @@ namespace CoursesManagementSystem.Controllers
                 return NotFound(response);
             }
 
-            var chapterDtos = _mapper.Map<List<ChapterDTO>>(chapters);
+            var chapterDtos = _mapper.Map<List<_ChapterDTO>>(chapters);
 
             response.Result = chapterDtos;
             response.StatusCode = HttpStatusCode.OK;
 
             return Ok(response);
         }
+
+
 
         /* http://localhost:5168/api/API/CourseDetails/15 *//*//shaghal bas 3amlt comment 3shan a3ml check 3ala ely feeha kol el details bel lessons wa el chapters
         [HttpGet("CourseDetails/{id:int}")]
@@ -693,6 +698,10 @@ namespace CoursesManagementSystem.Controllers
         }
 
          */
+
+
+
+
 
         [HttpPost("create-full-course")]
         public async Task<ActionResult<APIResponse>> CreateFullCourse([FromBody] CreateFullCourseDTO dto)

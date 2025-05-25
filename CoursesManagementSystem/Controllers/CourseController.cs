@@ -639,9 +639,20 @@ namespace CoursesManagementSystem.Controllers
         public async Task<IActionResult> ViewLesson(int id)
         {
             var lesson = await unitOfWork.LessonRepository.GetLessonWithQuestionsAndAnswersAsync(id);
-
             if (lesson == null)
                 return NotFound();
+
+            var lessonsInChapter = await unitOfWork.LessonRepository
+                .GetLessonsByChapterIdAsync(lesson.ChapterId);
+
+            var orderedLessons = lessonsInChapter.OrderBy(l => l.ID).ToList();
+            var currentIndex = orderedLessons.FindIndex(l => l.ID == id);
+
+            int? nextLessonId = null;
+            if (currentIndex >= 0 && currentIndex < orderedLessons.Count - 1)
+            {
+                nextLessonId = orderedLessons[currentIndex + 1].ID;
+            }
 
             var viewModel = new LessonDetailViewModel
             {
@@ -650,7 +661,8 @@ namespace CoursesManagementSystem.Controllers
                 Details = lesson.Details,
                 ScriptText = lesson.ScriptText,
                 VideoStorageURL = lesson.VideoStorageURL,
-                ChapterName = lesson.Chapter?.Name, // ✅ This assumes navigation property is loaded
+                ChapterName = lesson.Chapter?.Name,
+                NextLessonId = nextLessonId,
 
                 Questions = lesson.Questions?.Select(q => new QuestionViewModel
                 {
@@ -667,8 +679,8 @@ namespace CoursesManagementSystem.Controllers
                 }).ToList()
             };
 
-
             return View(viewModel);
         }
+
     }
 }
