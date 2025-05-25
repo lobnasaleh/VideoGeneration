@@ -32,8 +32,10 @@ namespace CoursesManagementSystem.DB.Models
         [ForeignKey(nameof(Level))]
         [Required(ErrorMessage = "Level ID is required")]
         public int LevelId { get; set; }
+      //  public string? UserId { get; set; }
 
         //Navigation Properties 
+       // public ApplicationUser? User { get; set; }
 
         public Category Category { get; set; }
 
