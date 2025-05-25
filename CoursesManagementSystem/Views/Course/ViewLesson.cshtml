@@ -151,10 +151,20 @@
                     <p><strong>Questions:</strong> @(Model.Questions?.Count ?? 0)</p>
                     <a href="#" class="btn btn-outline-secondary rounded-pill w-100 mb-2">
                         <i class="fas fa-list me-2"></i>Course Overview
-                    </a>
-                    <a href="#" class="btn btn-primary rounded-pill w-100">
-                        Next Lesson<i class="fas fa-arrow-right ms-2"></i>
-                    </a>
+                    </a>@if (Model.NextLessonId.HasValue)
+                    {
+                        <a href="@Url.Action("ViewLesson", "Course", new { id = Model.NextLessonId })"
+                           class="btn btn-primary rounded-pill w-100">
+                            Next Lesson <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    }
+                    else
+                    {
+                        <button class="btn btn-secondary rounded-pill w-100" disabled>
+                            No More Lessons <i class="fas fa-ban ms-2"></i>
+                        </button>
+                    }
+
                 </div>
             </div>
         </div>

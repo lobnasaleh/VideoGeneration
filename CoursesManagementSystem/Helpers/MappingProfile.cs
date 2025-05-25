@@ -65,14 +65,14 @@ namespace CoursesManagementSystem.Helpers
             CreateMap<QuestionCreateDTO, Question>()
                 .ForMember(dest => dest.Answers, opt => opt.MapFrom(src => src.Answers));
 
+            CreateMap<Chapter, _ChapterDTO>();
+
             CreateMap<PhaseOneCreateDTO, Course>(); // optional
             CreateMap<ChapterCreateDTO, Chapter>();
             CreateMap<LessonCreateDTO, Lesson>();
             CreateMap<QuestionCreateDTO, Question>();
             CreateMap<AnswerCreateDTO, Answer>();
             CreateMap<CreateFullCourseDTO, Course>();
-
-
 
 
         }

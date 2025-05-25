@@ -30,5 +30,14 @@ namespace CoursesManagementSystem.Repository
                     .ThenInclude(q => q.Answers.Where(a => !a.IsDeleted))
                 .FirstOrDefaultAsync(l => l.ID == lessonId);
         }
+
+        public async Task<IEnumerable<Lesson>> GetLessonsByChapterIdAsync(int chapterId)
+        {
+            return await _context.Lessons
+                .Where(l => l.ChapterId == chapterId)
+                .OrderBy(l => l.ID) 
+                .ToListAsync();
+        }
+
     }
 }
