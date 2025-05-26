@@ -642,10 +642,14 @@ namespace CoursesManagementSystem.Controllers
             if (lesson == null)
                 return NotFound();
 
-            var lessonsInChapter = await unitOfWork.LessonRepository
-                .GetLessonsByChapterIdAsync(lesson.ChapterId);
+            var allLessonsInCourse = await unitOfWork.LessonRepository
+                .GetLessonsByCourseIdAsync(lesson.Chapter.CourseId); // You must create this method
 
-            var orderedLessons = lessonsInChapter.OrderBy(l => l.ID).ToList();
+            var orderedLessons = allLessonsInCourse
+                .OrderBy(l => l.ChapterId)
+                .ThenBy(l => l.ID) // or by l.Order if you have a custom sort field
+                .ToList();
+
             var currentIndex = orderedLessons.FindIndex(l => l.ID == id);
 
             int? nextLessonId = null;
@@ -653,6 +657,7 @@ namespace CoursesManagementSystem.Controllers
             {
                 nextLessonId = orderedLessons[currentIndex + 1].ID;
             }
+
 
             var viewModel = new LessonDetailViewModel
             {
@@ -662,6 +667,7 @@ namespace CoursesManagementSystem.Controllers
                 ScriptText = lesson.ScriptText,
                 VideoStorageURL = lesson.VideoStorageURL,
                 ChapterName = lesson.Chapter?.Name,
+                CourseId = lesson.Chapter.CourseId,
                 NextLessonId = nextLessonId,
 
                 Questions = lesson.Questions?.Select(q => new QuestionViewModel

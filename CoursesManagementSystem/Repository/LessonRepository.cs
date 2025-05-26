@@ -39,5 +39,14 @@ namespace CoursesManagementSystem.Repository
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Lesson>> GetLessonsByCourseIdAsync(int courseId)
+        {
+            return await _context.Lessons
+                .Include(l => l.Chapter)
+                .Where(l => l.Chapter.CourseId == courseId && !l.IsDeleted && !l.Chapter.IsDeleted)
+                .ToListAsync();
+        }
+
+
     }
 }
