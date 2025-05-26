@@ -349,6 +349,7 @@ namespace CoursesManagementSystem.Controllers
                         .Where(cq => !cq.IsDeleted)
                         .Select(cqq => new CourseQuestionConfigDTO
                         {
+                            CourseId=cqq.CourseId,
                             QuestionLevelId = cqq.QuestionLevelId,
                             QuestionLevelName = cqq.QuestionLevel?.Name ?? "Unknown",
                             QuestionsCountPerLesson = cqq.QuestionsCountPerLesson
