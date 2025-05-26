@@ -711,10 +711,10 @@ namespace CoursesManagementSystem.Controllers
             // 1. Map DTO to Course
             var course = _mapper.Map<Course>(dto);
 
-            await _unitOfWork.CourseRepository.AddAsync(course);
+           // await _unitOfWork.CourseRepository.AddAsync(course);
 
             // 2. Save first to generate Course ID (if needed)
-            await _unitOfWork.CompleteAsync();
+           // await _unitOfWork.CompleteAsync();
 
             // 3. Map Chapters with the CourseId
             if (dto.Chapters != null && dto.Chapters.Any())
