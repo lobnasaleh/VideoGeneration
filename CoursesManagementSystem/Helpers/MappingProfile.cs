@@ -74,6 +74,20 @@ namespace CoursesManagementSystem.Helpers
             CreateMap<AnswerCreateDTO, Answer>();
             CreateMap<CreateFullCourseDTO, Course>();
 
+            CreateMap<Course, CourseGenerationDTO>()
+             .ForMember(dest => dest.CourseQuestionConfig,
+                opt => opt.MapFrom(src => src.CourseQuestionsConfig));
+
+            CreateMap<CourseQuestionConfig, CourseQuestionConfigToAiDTO>()
+                .ForMember(dest => dest.QuestionLevelName,
+                    opt => opt.MapFrom(src => src.QuestionLevel.Name));
+
+            CreateMap<Course, CourseGenerationDTO>();
+            CreateMap<CourseQuestionConfig, CourseQuestionConfigToAiDTO>()
+                .ForMember(dest => dest.QuestionLevelName, opt => opt.MapFrom(src => src.QuestionLevel.Name));
+
+
+
 
         }
     }
