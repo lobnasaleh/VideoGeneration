@@ -59,7 +59,7 @@ namespace CoursesManagementSystem.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Answers", (string)null);
+                    b.ToTable("Answers");
                 });
 
             modelBuilder.Entity("CoursesManagementSystem.DB.Models.ApplicationUser", b =>
@@ -160,7 +160,7 @@ namespace CoursesManagementSystem.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("CoursesManagementSystem.DB.Models.Chapter", b =>
@@ -198,14 +198,14 @@ namespace CoursesManagementSystem.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("Sort")
+                    b.Property<int?>("Sort")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Chapters", (string)null);
+                    b.ToTable("Chapters");
                 });
 
             modelBuilder.Entity("CoursesManagementSystem.DB.Models.Course", b =>
@@ -260,7 +260,7 @@ namespace CoursesManagementSystem.Migrations
 
                     b.HasIndex("LevelId");
 
-                    b.ToTable("Courses", (string)null);
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("CoursesManagementSystem.DB.Models.CourseConfig", b =>
@@ -309,7 +309,7 @@ namespace CoursesManagementSystem.Migrations
                     b.HasIndex("CourseId")
                         .IsUnique();
 
-                    b.ToTable("CourseConfigs", (string)null);
+                    b.ToTable("CourseConfigs");
                 });
 
             modelBuilder.Entity("CoursesManagementSystem.DB.Models.CourseQuestionConfig", b =>
@@ -351,7 +351,7 @@ namespace CoursesManagementSystem.Migrations
                     b.HasIndex("QuestionLevelId")
                         .IsUnique();
 
-                    b.ToTable("CourseQuestionConfigs", (string)null);
+                    b.ToTable("CourseQuestionConfigs");
                 });
 
             modelBuilder.Entity("CoursesManagementSystem.DB.Models.Lesson", b =>
@@ -363,7 +363,6 @@ namespace CoursesManagementSystem.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("AudioStorageURL")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ChapterId")
@@ -398,7 +397,7 @@ namespace CoursesManagementSystem.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Sort")
+                    b.Property<int?>("Sort")
                         .HasColumnType("int");
 
                     b.Property<string>("VideoStorageURL")
@@ -409,7 +408,7 @@ namespace CoursesManagementSystem.Migrations
 
                     b.HasIndex("ChapterId");
 
-                    b.ToTable("Lessons", (string)null);
+                    b.ToTable("Lessons");
                 });
 
             modelBuilder.Entity("CoursesManagementSystem.DB.Models.Level", b =>
@@ -447,7 +446,7 @@ namespace CoursesManagementSystem.Migrations
                     b.HasIndex(new[] { "Name" }, "UniqueLevelName")
                         .IsUnique();
 
-                    b.ToTable("Levels", (string)null);
+                    b.ToTable("Levels");
                 });
 
             modelBuilder.Entity("CoursesManagementSystem.DB.Models.Question", b =>
@@ -496,7 +495,7 @@ namespace CoursesManagementSystem.Migrations
 
                     b.HasIndex("QuestionLevelId");
 
-                    b.ToTable("Questions", (string)null);
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("CoursesManagementSystem.DB.Models.QuestionLevel", b =>
@@ -535,7 +534,7 @@ namespace CoursesManagementSystem.Migrations
                     b.HasIndex(new[] { "Name" }, "UniqueQuestionLevelName")
                         .IsUnique();
 
-                    b.ToTable("QuestionsLevel", (string)null);
+                    b.ToTable("QuestionsLevel");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

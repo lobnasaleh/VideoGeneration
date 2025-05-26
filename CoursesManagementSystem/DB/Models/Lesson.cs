@@ -26,12 +26,12 @@ namespace CoursesManagementSystem.DB.Models
 
 
         [Url(ErrorMessage = "Invalid URL format")]
-        [Required(ErrorMessage = "Audio URL is required")]
-        public string AudioStorageURL { get; set; }
+     //   [Required(ErrorMessage = "Audio URL is required")]
+        public string? AudioStorageURL { get; set; }
 
 
         [Range(1, int.MaxValue, ErrorMessage = "Sort order must be at least 1")]
-        public int Sort { get; set; }
+        public int? Sort { get; set; }
 
 
         [ForeignKey(nameof(Chapter))]

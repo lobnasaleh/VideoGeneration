@@ -709,7 +709,7 @@ namespace CoursesManagementSystem.Controllers
 
 
         [HttpPost("create-full-course")]
-        public async Task<ActionResult<APIResponse>> CreateFullCourse([FromBody] CreateFullCourseDTO dto)
+        public async Task<ActionResult<APIResponse>> CreateFullCourse([FromBody] FinalGeneratedContent dto)
         {
             var response = new APIResponse();
             // 1. Map DTO to Course
@@ -765,7 +765,7 @@ namespace CoursesManagementSystem.Controllers
 
             response.IsSuccess = true;
             response.StatusCode = HttpStatusCode.Created;
-            return CreatedAtAction(nameof(getSpecificCourseDetails), new { id = dto.Name }, response);
+            return CreatedAtAction(nameof(getSpecificCourseDetails), new { id = dto.Id }, response);
         }
 
 

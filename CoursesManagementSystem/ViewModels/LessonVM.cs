@@ -31,7 +31,7 @@ namespace CoursesManagementSystem.ViewModels
 
         [Range(1, int.MaxValue, ErrorMessage = "Sort order must be at least 1")]
         [Display(Name = "Lesson Order")]
-        public int Sort { get; set; }
+        public int? Sort { get; set; }
         [Required(ErrorMessage = "Chapter is required")]
         [Display (Name="Chapter")]
         public int ChapterId { get; set; }

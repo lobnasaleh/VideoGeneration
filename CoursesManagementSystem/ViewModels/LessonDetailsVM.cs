@@ -21,10 +21,10 @@ namespace CoursesManagementSystem.ViewModels
         public string VideoStorageURL { get; set; }
         [Url(ErrorMessage = "Invalid URL format")]
         [Required(ErrorMessage = "Audio URL is required")]
-        public string AudioStorageURL { get; set; }
+        public string? AudioStorageURL { get; set; }
         [Range(1, int.MaxValue, ErrorMessage = "Sort order must be at least 1")]
         [Display(Name = "Lesson Order")]
-        public int Sort { get; set; }
+        public int? Sort { get; set; }
         [Required(ErrorMessage = "Chapter is required")]
         [Display(Name = "Chapter")]
         public int ChapterId { get; set; }
