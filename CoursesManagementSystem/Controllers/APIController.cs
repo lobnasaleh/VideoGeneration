@@ -10,6 +10,7 @@ using System.Net;
 using CoursesManagementSystem.DB.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CoursesManagementSystem.Controllers
 {
@@ -27,9 +28,9 @@ namespace CoursesManagementSystem.Controllers
             this._mapper = _mapper;
             this.response = new APIResponse();
         }
-        //http://localhost:5168/api/API/Content-generated/Phase2
-        [HttpPost("Content-generated/Phase2")]
-        public async Task<ActionResult<APIResponse>> ContentGeneratedPhase2([FromBody] PhaseTwoGeneratedContentDTO content)
+        //http://localhost:5168/api/API/Content-generated
+        [HttpPost("Content-generated")]
+        public async Task<ActionResult<APIResponse>> ContentGenerated([FromBody] PhaseTwoGeneratedContentDTO content)
         {
             try
             {
@@ -55,7 +56,7 @@ namespace CoursesManagementSystem.Controllers
                 {
                     //validate Chapter
                     var Chapterfound = await _unitOfWork.ChapterRepository.GetAsync(ch => !ch.IsDeleted && ch.ID == item.ChapterId && ch.CourseId==content.CourseId);
-                    if (coursefound == null)
+                    if (Chapterfound == null)
                     {
                         response.IsSuccess = false;
                         response.Errors.Add("Chapter Not Found");
@@ -73,13 +74,66 @@ namespace CoursesManagementSystem.Controllers
                             response.StatusCode = HttpStatusCode.NotFound;
                             return StatusCode(404, response);
                         }
-                        Lessonfound.VideoStorageURL=lesson.VideoUrl;
+                        if (!string.IsNullOrEmpty(lesson.ScriptText ))
+                        {
+                            Lessonfound.ScriptText = lesson.ScriptText;
+                        }
+                        if (!string.IsNullOrEmpty(lesson.VideoStorageURL))
+                        {
+
+                            Lessonfound.VideoStorageURL = lesson.VideoStorageURL;
+                        }
+                        if (!string.IsNullOrEmpty(lesson.AudioStorageURL))
+                        {
+                            Lessonfound.AudioStorageURL = lesson.AudioStorageURL;
+                        }
+                       
+                        if (lesson.Questions != null)
+                        {
+                            foreach (var question in lesson.Questions)
+                            {
+                                Question q= new Question()
+                                {
+                                    QuestionType=question.QuestionType,
+                                    QuestionLevelId=question.QuestionLevelId,
+                                    QuestionInstructions=question.QuestionInstructions,
+                                    QuestionText=question.QuestionText,
+                                    LessonId=lesson.LessonId,
+                                    CreatedAt=DateTime.Now,
+                                    CreatedBy="Admin",
+                                    IsDeleted=false
+                                };
+                            
+                                await _unitOfWork.QuestionRepository.AddAsync(q);
+                                await _unitOfWork.CompleteAsync();
+                                if (question.Answers != null)
+                                {
+                                    foreach (var answer in question.Answers)
+                                    {
+                                        Answer r = new Answer()
+                                        {
+                                            QuestionId=q.ID,
+                                           AnswerText=answer.AnswerText,
+                                           IsCorrect=answer.IsCorrect,
+                                           CreatedAt= DateTime.Now,
+                                           IsDeleted=false
+
+                                        };
+                                        await _unitOfWork.AnswerRepository.AddAsync(r);
+
+                                      //  await _unitOfWork.CompleteAsync();
+                                    }
+                                }
+                            }
+                        }
+
+
                         await _unitOfWork.CompleteAsync();
                     }
                 }
                 response.IsSuccess = true;
                 response.StatusCode = HttpStatusCode.Created;
-                response.Result = "Video URL Saved Successfully";
+                response.Result = "Content saved successfully";
                 return Ok(response);
 
             }
@@ -295,6 +349,7 @@ namespace CoursesManagementSystem.Controllers
                         .Where(cq => !cq.IsDeleted)
                         .Select(cqq => new CourseQuestionConfigDTO
                         {
+                            CourseId=cqq.CourseId,
                             QuestionLevelId = cqq.QuestionLevelId,
                             QuestionLevelName = cqq.QuestionLevel?.Name ?? "Unknown",
                             QuestionsCountPerLesson = cqq.QuestionsCountPerLesson

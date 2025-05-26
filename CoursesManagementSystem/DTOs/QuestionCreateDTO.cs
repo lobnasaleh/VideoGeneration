@@ -9,6 +9,7 @@ namespace CoursesManagementSystem.DTOs
         public QuestionTypeEnum QuestionType { get; set; }
         public int QuestionLevelId { get; set; }
         public List<AnswerCreateDTO> Answers { get; set; }
+
     }
 
     

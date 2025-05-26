@@ -98,7 +98,7 @@ namespace CoursesManagementSystem.Controllers
                     && c.ChapterId == LessonVM.ChapterId 
                    // && c.AudioStorageURL == LessonVM.AudioStorageURL
                     //&& c.VideoStorageURL == LessonVM.VideoStorageURL
-                    && c.ScriptText == LessonVM.ScriptText
+                  //  && c.ScriptText == LessonVM.ScriptText
                     );
                 if (deletedLesson != null)
                 {
