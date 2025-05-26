@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using System.Net.Http;
+using System.Text.Json;
+using System.Text;
 
 namespace CoursesManagementSystem.Controllers
 {
@@ -20,8 +23,12 @@ namespace CoursesManagementSystem.Controllers
         private readonly IWebHostEnvironment webHostEnvironment;
         private readonly string _BookPath;
         private readonly string _ImagePath;
-        public CourseController(IMapper _mapper, IUnitOfWork _unitOfWork, IWebHostEnvironment webHostEnvironment)
+
+        private readonly IHttpClientFactory _httpClientFactory;
+        public CourseController(IMapper _mapper, IUnitOfWork _unitOfWork, IWebHostEnvironment webHostEnvironment ,IHttpClientFactory httpClientFactory)
         {
+
+            _httpClientFactory = httpClientFactory;
             mapper = _mapper;
             unitOfWork = _unitOfWork;
             this.webHostEnvironment = webHostEnvironment;
@@ -642,10 +649,14 @@ namespace CoursesManagementSystem.Controllers
             if (lesson == null)
                 return NotFound();
 
-            var lessonsInChapter = await unitOfWork.LessonRepository
-                .GetLessonsByChapterIdAsync(lesson.ChapterId);
+            var allLessonsInCourse = await unitOfWork.LessonRepository
+                .GetLessonsByCourseIdAsync(lesson.Chapter.CourseId); // You must create this method
 
-            var orderedLessons = lessonsInChapter.OrderBy(l => l.ID).ToList();
+            var orderedLessons = allLessonsInCourse
+                .OrderBy(l => l.ChapterId)
+                .ThenBy(l => l.ID) // or by l.Order if you have a custom sort field
+                .ToList();
+
             var currentIndex = orderedLessons.FindIndex(l => l.ID == id);
 
             int? nextLessonId = null;
@@ -653,6 +664,7 @@ namespace CoursesManagementSystem.Controllers
             {
                 nextLessonId = orderedLessons[currentIndex + 1].ID;
             }
+
 
             var viewModel = new LessonDetailViewModel
             {
@@ -662,6 +674,7 @@ namespace CoursesManagementSystem.Controllers
                 ScriptText = lesson.ScriptText,
                 VideoStorageURL = lesson.VideoStorageURL,
                 ChapterName = lesson.Chapter?.Name,
+                CourseId = lesson.Chapter.CourseId,
                 NextLessonId = nextLessonId,
 
                 Questions = lesson.Questions?.Select(q => new QuestionViewModel
@@ -681,6 +694,118 @@ namespace CoursesManagementSystem.Controllers
 
             return View(viewModel);
         }
+
+        //[HttpPost]
+        //public async Task<IActionResult> SendCourseToAI(int courseId)
+        //{
+        //    var course = await unitOfWork.CourseRepository.GetCourseWithConfigsAsync(courseId);
+        //    if (course == null)
+        //    {
+        //        TempData["Error"] = "Course not found.";
+        //        return RedirectToAction("Details", new { id = courseId });
+        //    }
+
+        //    Console.WriteLine("=== DEBUG: Raw Course Data ===");
+        //    Console.WriteLine($"CourseId: {course.ID}");
+        //    Console.WriteLine($"ChaptersCount: {course.CourseConfig?.ChaptersCount ?? -1}");
+        //    Console.WriteLine($"Language: {course.CourseConfig?.Language.ToString() ?? "NULL"}");
+        //    Console.WriteLine($"Persona: {course.CourseConfig?.Persona.ToString() ?? "NULL"}");
+
+
+        //    if (course.CourseQuestionsConfig != null)
+        //    {
+        //        foreach (var cfg in course.CourseQuestionsConfig)
+        //        {
+        //            Console.WriteLine($"  - Q Count: {cfg.QuestionsCountPerLesson}, LevelId: {cfg.QuestionLevelId}, LevelName: {cfg.QuestionLevel?.Name}");
+        //        }
+        //    }
+
+
+        //    var courseDto = mapper.Map<CourseGenerationDTO>(course);
+
+        //    var httpClient = _httpClientFactory.CreateClient();
+
+        //    var json = JsonSerializer.Serialize(courseDto);
+        //    var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        //    var response = await httpClient.PostAsync("https://httpbin.org/post", content);
+
+        //    if (!response.IsSuccessStatusCode)
+        //    {
+        //        TempData["Error"] = $"AI backend error: {response.StatusCode}";
+        //        return RedirectToAction("Details", new { id = courseId });
+        //    }
+
+        //    var result = await response.Content.ReadAsStringAsync();
+        //    TempData["Success"] = "Course sent to AI successfully! Response: " + result;
+
+        //    return RedirectToAction("Index", new { id = courseId });
+        //}
+
+        [HttpPost]
+        public async Task<IActionResult> SendCourseToAI(int courseId)
+        {
+            var course = await unitOfWork.CourseRepository.GetCourseWithConfigsAsync(courseId);
+
+            if (course == null || course.IsDeleted)
+            {
+                TempData["Error"] = "Course not found or has been deleted.";
+                return RedirectToAction("Index", new { id = courseId });
+            }
+
+            if (course.CourseConfig == null || course.CourseConfig.IsDeleted)
+            {
+                TempData["Error"] = "Course configuration is missing or has been deleted.";
+                return RedirectToAction("Index", new { id = courseId });
+            }
+
+            if (course.CourseQuestionsConfig == null || !course.CourseQuestionsConfig.Any(qc => !qc.IsDeleted))
+            {
+                TempData["Error"] = "Course question configurations are missing or have been deleted.";
+                return RedirectToAction("Index", new { id = courseId });
+            }
+
+            // Map only non-deleted question configs
+            var courseDto = new CourseGenerationDTO
+            {
+                CourseId = course.ID,
+                Name = course.Name,
+                Details = course.Details,
+                BookStorageURL = course.BookStorageURL,
+                ChaptersCount = course.CourseConfig.ChaptersCount,
+                LessonsCountPerChapter = course.CourseConfig.LessonsCountPerChapter,
+                VideoDurationInMin = course.CourseConfig.VideoDurationInMin,
+                Language = course.CourseConfig.Language.ToString(),
+                Persona = course.CourseConfig.Persona.ToString(),
+                CourseQuestionConfig = course.CourseQuestionsConfig
+                    .Where(qc => !qc.IsDeleted)
+                    .Select(qc => new CourseQuestionConfigToAiDTO
+                    {
+                        QuestionsCountPerLesson = qc.QuestionsCountPerLesson,
+                        QuestionLevelId = qc.QuestionLevelId,
+                        QuestionLevelName = qc.QuestionLevel.Name
+                    }).ToList()
+            };
+
+            var json = JsonSerializer.Serialize(courseDto);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _httpClientFactory.CreateClient().PostAsync("https://httpbin.org/post", content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                TempData["Error"] = $"AI backend error: {response.StatusCode}";
+                return RedirectToAction("Index", new { id = courseId });
+            }
+
+            var result = await response.Content.ReadAsStringAsync();
+            TempData["Success"] = "Course sent to AI successfully! Response: " + result;
+
+            return RedirectToAction("Index", new { id = courseId });
+        }
+
+
+
 
     }
 }

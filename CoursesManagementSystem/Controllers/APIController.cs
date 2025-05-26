@@ -11,6 +11,8 @@ using CoursesManagementSystem.DB.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using Microsoft.IdentityModel.Tokens;
+using System.Text.Json;
+using System.Text;
 
 namespace CoursesManagementSystem.Controllers
 {
@@ -21,12 +23,14 @@ namespace CoursesManagementSystem.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         protected readonly APIResponse response;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public APIController(IUnitOfWork _unitOfWork, IMapper _mapper)
+        public APIController(IUnitOfWork _unitOfWork, IMapper _mapper, IHttpClientFactory httpClientFactory)
         {
             this._unitOfWork = _unitOfWork;
             this._mapper = _mapper;
             this.response = new APIResponse();
+            _httpClientFactory = httpClientFactory;
         }
         //http://localhost:5168/api/API/Content-generated
         [HttpPost("Content-generated")]
@@ -766,6 +770,56 @@ namespace CoursesManagementSystem.Controllers
 
 
 
+        //[HttpPost("send-to-ai")]
+        //public async Task<IActionResult> SendCourseDataToAi([FromBody] JsonElement courseData)
+        //{
+        //    var json = courseData.GetRawText();
+
+        //    var client = _httpClientFactory.CreateClient();
+        //    var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        //    string aiBackendUrl = "https://httpbin.org/post";
+
+        //    var response = await client.PostAsync(aiBackendUrl, content);
+
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        var responseBody = await response.Content.ReadAsStringAsync();
+        //        return Ok(new { message = "Data sent to AI backend successfully", aiResponse = responseBody });
+        //    }
+        //    else
+        //    {
+        //        var error = await response.Content.ReadAsStringAsync();
+        //        return StatusCode((int)response.StatusCode, new { error = "Failed to send data to AI backend", details = error });
+        //    }
+        //}
+
+        //[HttpPost("send-course/{courseId}")]
+        //public async Task<IActionResult> SendCourseToAI(int courseId)
+        //{
+        //    var course = await _unitOfWork.CourseRepository
+        //        .GetCourseWithConfigsAsync(courseId);
+
+        //    if (course == null)
+        //        return NotFound("Course not found.");
+
+        //    var courseDto = _mapper.Map<CourseGenerationDTO>(course);
+
+        //    var httpClient = _httpClientFactory.CreateClient();
+        //    var json = JsonSerializer.Serialize(courseDto);
+        //    var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        //    var response = await httpClient.PostAsync("https://httpbin.org/post", content);
+        //    var result = await response.Content.ReadAsStringAsync();
+
+        //    if (!response.IsSuccessStatusCode)
+        //        return StatusCode((int)response.StatusCode, result);
+
+        //    return Ok(result);
+        //}
 
     }
+
+
 }
+

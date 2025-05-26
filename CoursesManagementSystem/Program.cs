@@ -35,6 +35,7 @@ namespace CoursesManagementSystem
             builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
             builder.Services.AddAutoMapper(typeof(MappingProfile));
 
+            builder.Services.AddHttpClient();
 
 
 

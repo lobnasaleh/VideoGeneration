@@ -6,6 +6,7 @@ namespace CoursesManagementSystem.Interfaces
     {
         Task<Lesson> GetLessonWithQuestionsAndAnswersAsync(int lessonId);
         Task<IEnumerable<Lesson>> GetLessonsByChapterIdAsync(int chapterId);
+        Task<IEnumerable<Lesson>> GetLessonsByCourseIdAsync(int courseId);
 
     }
 }
