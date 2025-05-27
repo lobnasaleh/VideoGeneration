@@ -650,11 +650,11 @@ namespace CoursesManagementSystem.Controllers
                 return NotFound();
 
             var allLessonsInCourse = await unitOfWork.LessonRepository
-                .GetLessonsByCourseIdAsync(lesson.Chapter.CourseId); // You must create this method
+                .GetLessonsByCourseIdAsync(lesson.Chapter.CourseId);
 
             var orderedLessons = allLessonsInCourse
                 .OrderBy(l => l.ChapterId)
-                .ThenBy(l => l.ID) // or by l.Order if you have a custom sort field
+                .ThenBy(l => l.ID) 
                 .ToList();
 
             var currentIndex = orderedLessons.FindIndex(l => l.ID == id);

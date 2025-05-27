@@ -67,12 +67,11 @@ namespace CoursesManagementSystem.Helpers
 
             CreateMap<Chapter, _ChapterDTO>();
 
-            CreateMap<PhaseOneCreateDTO, Course>(); // optional
+            CreateMap<PhaseOneCreateDTO, Course>(); 
             CreateMap<ChapterCreateDTO, Chapter>();
             CreateMap<LessonCreateDTO, Lesson>();
             CreateMap<QuestionCreateDTO, Question>();
             CreateMap<AnswerCreateDTO, Answer>();
-            CreateMap<CreateFullCourseDTO, Course>();
 
             CreateMap<Course, CourseGenerationDTO>()
              .ForMember(dest => dest.CourseQuestionConfig,
@@ -85,7 +84,6 @@ namespace CoursesManagementSystem.Helpers
             CreateMap<Course, CourseGenerationDTO>();
             CreateMap<CourseQuestionConfig, CourseQuestionConfigToAiDTO>()
                 .ForMember(dest => dest.QuestionLevelName, opt => opt.MapFrom(src => src.QuestionLevel.Name));
-
 
 
 
