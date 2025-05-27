@@ -9,7 +9,7 @@ namespace CoursesManagementSystem.DTOs
         public string Details { get; set; }
         public string ScriptText { get; set; }
         public string VideoStorageURL { get; set; }
-        public string AudioStorageURL { get; set; }
-        public int Sort { get; set; }
+        public string? AudioStorageURL { get; set; }
+        public int? Sort { get; set; }
     }
 }

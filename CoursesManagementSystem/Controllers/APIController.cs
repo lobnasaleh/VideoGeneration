@@ -708,17 +708,17 @@ namespace CoursesManagementSystem.Controllers
 
 
 
-        //[HttpPost("create-full-course")]
-        //public async Task<ActionResult<APIResponse>> CreateFullCourse([FromBody] CreateFullCourseDTO dto)
-        //{
-        //    var response = new APIResponse();
-        //    // 1. Map DTO to Course
-        //    var course = _mapper.Map<Course>(dto);
+        [HttpPost("create-full-course")]
+        public async Task<ActionResult<APIResponse>> CreateFullCourse([FromBody] FinalGeneratedContent dto)
+        {
+            var response = new APIResponse();
+            // 1. Map DTO to Course
+            var course = _mapper.Map<Course>(dto);
 
-        //    await _unitOfWork.CourseRepository.AddAsync(course);
+           // await _unitOfWork.CourseRepository.AddAsync(course);
 
-        //    // 2. Save first to generate Course ID (if needed)
-        //    await _unitOfWork.CompleteAsync();
+            // 2. Save first to generate Course ID (if needed)
+           // await _unitOfWork.CompleteAsync();
 
         //    // 3. Map Chapters with the CourseId
         //    if (dto.Chapters != null && dto.Chapters.Any())
@@ -770,6 +770,10 @@ namespace CoursesManagementSystem.Controllers
 
 
 
+            response.IsSuccess = true;
+            response.StatusCode = HttpStatusCode.Created;
+            return CreatedAtAction(nameof(getSpecificCourseDetails), new { id = dto.Id }, response);
+        }
 
 
 

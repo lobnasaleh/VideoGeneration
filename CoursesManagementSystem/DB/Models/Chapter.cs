@@ -15,7 +15,7 @@ namespace CoursesManagementSystem.DB.Models
         public string Details { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessage = "Sort order must be at least 1")]
-        public int Sort { get; set; }
+        public int? Sort { get; set; }
 
         [ForeignKey(nameof(Course))]
         [Required(ErrorMessage = "Course ID is required")]

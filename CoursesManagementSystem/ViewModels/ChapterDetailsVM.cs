@@ -15,7 +15,7 @@ namespace CoursesManagementSystem.ViewModels
         public string Details { get; set; }
         [Range(1, int.MaxValue, ErrorMessage = "Chapter order must be at least 1")]
         [Display(Name = "Chapter Order")]
-        public int Sort { get; set; }
+        public int? Sort { get; set; }
 
         [ForeignKey(nameof(Course))]
         [Required(ErrorMessage = "Course is required")]
