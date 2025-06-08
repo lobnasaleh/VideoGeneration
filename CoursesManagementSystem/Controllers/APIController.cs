@@ -719,48 +719,55 @@ namespace CoursesManagementSystem.Controllers
             // 2. Save first to generate Course ID (if needed)
            // await _unitOfWork.CompleteAsync();
 
-            // 3. Map Chapters with the CourseId
-            if (dto.Chapters != null && dto.Chapters.Any())
-            {
-                var chapters = _mapper.Map<List<Chapter>>(dto.Chapters);
+        //    // 3. Map Chapters with the CourseId
+        //    if (dto.Chapters != null && dto.Chapters.Any())
+        //    {
+        //        var chapters = _mapper.Map<List<Chapter>>(dto.Chapters);
 
                 foreach (var chapter in chapters)
                 {
                     chapter.CourseId = dto.Id;//courseid
 
-                    await _unitOfWork.ChapterRepository.AddAsync(chapter);
+        //            await _unitOfWork.ChapterRepository.AddAsync(chapter);
 
-                    if (chapter.Lessons != null)
-                    {
-                        foreach (var lesson in chapter.Lessons)
-                        {
-                            lesson.ChapterId = chapter.ID;
-                            await _unitOfWork.LessonRepository.AddAsync(lesson);
+        //            if (chapter.Lessons != null)
+        //            {
+        //                foreach (var lesson in chapter.Lessons)
+        //                {
+        //                    lesson.ChapterId = chapter.ID;
+        //                    await _unitOfWork.LessonRepository.AddAsync(lesson);
 
-                            if (lesson.Questions != null)
-                            {
-                                foreach (var question in lesson.Questions)
-                                {
-                                    question.LessonId = lesson.ID;
-                                    await _unitOfWork.QuestionRepository.AddAsync(question);
+        //                    if (lesson.Questions != null)
+        //                    {
+        //                        foreach (var question in lesson.Questions)
+        //                        {
+        //                            question.LessonId = lesson.ID;
+        //                            await _unitOfWork.QuestionRepository.AddAsync(question);
 
-                                    if (question.Answers != null)
-                                    {
-                                        foreach (var answer in question.Answers)
-                                        {
-                                            answer.QuestionId = question.ID;
-                                            await _unitOfWork.AnswerRepository.AddAsync(answer);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+        //                            if (question.Answers != null)
+        //                            {
+        //                                foreach (var answer in question.Answers)
+        //                                {
+        //                                    answer.QuestionId = question.ID;
+        //                                    await _unitOfWork.AnswerRepository.AddAsync(answer);
+        //                                }
+        //                            }
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
 
-            // 4. Final Save
-            await _unitOfWork.CompleteAsync();
+        //    // 4. Final Save
+        //    await _unitOfWork.CompleteAsync();
+
+        //    response.IsSuccess = true;
+        //    response.StatusCode = HttpStatusCode.Created;
+        //    return CreatedAtAction(nameof(getSpecificCourseDetails), new { id = dto.Name }, response);
+        //}
+
+
 
             response.IsSuccess = true;
             response.StatusCode = HttpStatusCode.Created;
