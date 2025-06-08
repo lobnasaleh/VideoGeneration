@@ -86,8 +86,11 @@ namespace CoursesManagementSystem.Helpers
             CreateMap<CourseQuestionConfig, CourseQuestionConfigToAiDTO>()
                 .ForMember(dest => dest.QuestionLevelName, opt => opt.MapFrom(src => src.QuestionLevel.Name));
 
-
-
+            CreateMap<FinalGeneratedChapterDTO, Chapter>();
+            CreateMap<FinalGeneratedLessonDTO, Lesson>();
+            CreateMap<FinalGeneratedQuestionDTO, Question>();
+            CreateMap<FinalGeneratedAnswerDTO,Answer>(); 
+ 
 
         }
     }

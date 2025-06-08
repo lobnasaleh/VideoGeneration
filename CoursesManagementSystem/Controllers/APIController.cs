@@ -712,8 +712,7 @@ namespace CoursesManagementSystem.Controllers
         public async Task<ActionResult<APIResponse>> CreateFullCourse([FromBody] FinalGeneratedContent dto)
         {
             var response = new APIResponse();
-            // 1. Map DTO to Course
-            var course = _mapper.Map<Course>(dto);
+            
 
            // await _unitOfWork.CourseRepository.AddAsync(course);
 
@@ -727,7 +726,7 @@ namespace CoursesManagementSystem.Controllers
 
                 foreach (var chapter in chapters)
                 {
-                    chapter.CourseId = course.ID;
+                    chapter.CourseId = dto.Id;//courseid
 
                     await _unitOfWork.ChapterRepository.AddAsync(chapter);
 
