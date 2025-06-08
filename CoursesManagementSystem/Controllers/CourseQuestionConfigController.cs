@@ -1,6 +1,7 @@
 ﻿using CoursesManagementSystem.DB.Models;
 using CoursesManagementSystem.Interfaces;
 using CoursesManagementSystem.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
@@ -16,18 +17,20 @@ namespace CoursesManagementSystem.Controllers
             this.unitOfWork = unitOfWork;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var courseQuestionConfigs = await unitOfWork.CourseQuestionConfigRepository.GetAllAsync(
-                c => !c.IsDeleted
+                c => !c.IsDeleted && c.CreatedBy == User.Identity.Name
                 , new[] { "Course", "QuestionLevel" }
             );
 
             return View(courseQuestionConfigs);
         }
 
-        
+
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Create(int Courseid)
         {
@@ -36,6 +39,7 @@ namespace CoursesManagementSystem.Controllers
             return View();
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CourseQuestionConfig courseQuestionConfig)
@@ -49,7 +53,7 @@ namespace CoursesManagementSystem.Controllers
 
             var existingConfig = await unitOfWork.CourseQuestionConfigRepository
                 .GetAsync(c => c.CourseId == courseQuestionConfig.CourseId
-                             && c.QuestionLevelId == courseQuestionConfig.QuestionLevelId);
+                             && c.QuestionLevelId == courseQuestionConfig.QuestionLevelId && c.CreatedBy == User.Identity.Name);
 
             if (existingConfig != null)
             {
@@ -83,12 +87,12 @@ namespace CoursesManagementSystem.Controllers
         }
 
 
-
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Edit(int id, int Courseid)
         {
             var courseQuestionConfig = await unitOfWork.CourseQuestionConfigRepository.GetAsync(
-                c => c.ID == id, new[] { "Course", "QuestionLevel" });
+                c => c.ID == id && c.CreatedBy == User.Identity.Name, new[] { "Course", "QuestionLevel" });
 
             if (courseQuestionConfig == null)
             {
@@ -101,7 +105,7 @@ namespace CoursesManagementSystem.Controllers
             return View(courseQuestionConfig);
         }
 
-
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, CourseQuestionConfig courseQuestionConfig)
@@ -118,7 +122,7 @@ namespace CoursesManagementSystem.Controllers
                 return View(courseQuestionConfig);
             }
 
-            var existingConfig = await unitOfWork.CourseQuestionConfigRepository.GetAsync(c => c.ID == id);
+            var existingConfig = await unitOfWork.CourseQuestionConfigRepository.GetAsync(c => c.ID == id && c.CreatedBy == User.Identity.Name);
 
             if (existingConfig == null)
             {
@@ -128,7 +132,7 @@ namespace CoursesManagementSystem.Controllers
             }
             var duplicate = await unitOfWork.CourseQuestionConfigRepository
                .GetAsync(c => c.ID!= courseQuestionConfig.ID && c.CourseId == courseQuestionConfig.CourseId
-                            && c.QuestionLevelId == courseQuestionConfig.QuestionLevelId);
+                            && c.QuestionLevelId == courseQuestionConfig.QuestionLevelId && c.CreatedBy == User.Identity.Name);
             if (duplicate != null)
             {
                 ModelState.AddModelError("QuestionLevelId", "A configuration already exists for this course with The Same Difficulty Level.");
@@ -149,13 +153,13 @@ namespace CoursesManagementSystem.Controllers
 
         }
 
-
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             var courseQuestionConfig = await unitOfWork.CourseQuestionConfigRepository
-                .GetAsync(q => q.ID == id);
+                .GetAsync(q => q.ID == id && q.CreatedBy == User.Identity.Name);
 
             if (courseQuestionConfig == null || courseQuestionConfig.IsDeleted)
             {
@@ -170,12 +174,12 @@ namespace CoursesManagementSystem.Controllers
             return Json(new { success = true });
         }
 
-
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
             var courseQuestionConfig = await unitOfWork.CourseQuestionConfigRepository
-                .GetAsync(q => !q.IsDeleted && q.ID == id, new[] { "Course", "QuestionLevel" });
+                .GetAsync(q => !q.IsDeleted && q.CreatedBy == User.Identity.Name && q.ID == id, new[] { "Course", "QuestionLevel" });
 
             if (courseQuestionConfig == null)
             {
@@ -186,12 +190,13 @@ namespace CoursesManagementSystem.Controllers
             return View(courseQuestionConfig);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> CourseQuestionConfigByCourseId(int Courseid)
         {
             ViewBag.CourseId = Courseid;
             var courseQuestionConfig = await unitOfWork.CourseQuestionConfigRepository
-                .GetAllAsync(q => !q.IsDeleted && q.CourseId == Courseid, new[] { "Course", "QuestionLevel" });
+                .GetAllAsync(q => !q.IsDeleted && q.CreatedBy == User.Identity.Name && q.CourseId == Courseid, new[] { "Course", "QuestionLevel" });
 
             if (courseQuestionConfig == null)
             {
@@ -207,8 +212,8 @@ namespace CoursesManagementSystem.Controllers
 
         private async Task PopulateDropdowns()
         {
-            var courses = await unitOfWork.CourseRepository.GetAllAsync(ql => !ql.IsDeleted) ?? new List<Course>();
-            var questionLevels = await unitOfWork.QuestionLevelRepository.GetAllAsync(ql=>!ql.IsDeleted) ?? new List<QuestionLevel>();
+            var courses = await unitOfWork.CourseRepository.GetAllAsync(ql => !ql.IsDeleted && ql.CreatedBy == User.Identity.Name) ?? new List<Course>();
+            var questionLevels = await unitOfWork.QuestionLevelRepository.GetAllAsync(ql=>!ql.IsDeleted ) ?? new List<QuestionLevel>();
 
             ViewBag.Courses = new SelectList(courses, "ID", "Name");
             ViewBag.QuestionLevels = new SelectList(questionLevels, "ID", "Name");
