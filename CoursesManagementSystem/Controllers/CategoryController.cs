@@ -19,7 +19,7 @@ namespace CoursesManagementSystem.Controllers
         [Authorize]
         public async Task<IActionResult> GetAll()
         {
-            var categories = await unitOfWork.CategoryRepository.GetAllAsync(c=>!c.IsDeleted && c.CreatedBy==User.Identity.Name);
+            var categories = await unitOfWork.CategoryRepository.GetAllAsync(c=>!c.IsDeleted);
            
 
             return View(categories);
@@ -41,7 +41,7 @@ namespace CoursesManagementSystem.Controllers
                 category.CreatedBy = User.Identity.Name ?? "System";
 
                 //check if category with this name already exists
-                var cat = await unitOfWork.CategoryRepository.GetAsync(c => !c.IsDeleted && c.Name == category.Name && c.CreatedBy == User.Identity.Name);
+                var cat = await unitOfWork.CategoryRepository.GetAsync(c => !c.IsDeleted && c.Name == category.Name);
                 if (cat is not null)
                 {
                     ModelState.AddModelError("Name", "A Category With This Name already exists");
@@ -51,7 +51,7 @@ namespace CoursesManagementSystem.Controllers
 
                 //check if category is already marked deleted instead of inserting another row -->mark undeleted
 
-                var foundcategory = await unitOfWork.CategoryRepository.GetAsync(c=>c.IsDeleted && c.Name==category.Name && c.CreatedBy == User.Identity.Name);
+                var foundcategory = await unitOfWork.CategoryRepository.GetAsync(c=>c.IsDeleted);
                 if (foundcategory is not null)
                 {
                     foundcategory.IsDeleted=false;
@@ -99,7 +99,7 @@ namespace CoursesManagementSystem.Controllers
                     return BadRequest();
 
                 //if category is found but deleted ,mark undeleted and delete the existing one
-                var foundcategory = await unitOfWork.CategoryRepository.GetAsync(c => c.IsDeleted && c.Name == category.Name && c.CreatedBy == User.Identity.Name);
+                var foundcategory = await unitOfWork.CategoryRepository.GetAsync(c => c.IsDeleted && c.Name == category.Name );
                 if (foundcategory is not null)
                 {
                     existcategory.IsDeleted=true;
@@ -129,7 +129,7 @@ namespace CoursesManagementSystem.Controllers
         public async Task<IActionResult> getById(int id)
     {
         //hall fe el get hahtag a3mel view model lel category law ana keda keda ana bakhtar ha3red eh?
-        Category c = await unitOfWork.CategoryRepository.GetAsync(c => !c.IsDeleted && c.ID == id && c.CreatedBy == User.Identity.Name);
+        Category c = await unitOfWork.CategoryRepository.GetAsync(c => !c.IsDeleted && c.ID == id );
         if (c == null)
         {
                 // return NotFound();
@@ -144,7 +144,7 @@ namespace CoursesManagementSystem.Controllers
         [Authorize]
         public async Task<IActionResult> getByName(string Name)
     {
-        Category c = await unitOfWork.CategoryRepository.GetAsync(c => !c.IsDeleted && c.Name == Name && c.CreatedBy == User.Identity.Name);
+        Category c = await unitOfWork.CategoryRepository.GetAsync(c => !c.IsDeleted && c.Name == Name );
 
         if (c == null)
         {
@@ -161,7 +161,7 @@ namespace CoursesManagementSystem.Controllers
         [Authorize]
         public async Task<IActionResult> Delete(int id)
     {
-        Category c = await unitOfWork.CategoryRepository.GetAsync(cat => !cat.IsDeleted && cat.ID == id && cat.CreatedBy == User.Identity.Name);
+        Category c = await unitOfWork.CategoryRepository.GetAsync(cat => !cat.IsDeleted && cat.ID == id );
 
         if (c == null)
         {
