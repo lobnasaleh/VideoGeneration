@@ -1,6 +1,7 @@
 ﻿using CoursesManagementSystem.DB.Models;
 using CoursesManagementSystem.Interfaces;
 using CoursesManagementSystem.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoursesManagementSystem.Controllers
@@ -14,7 +15,8 @@ namespace CoursesManagementSystem.Controllers
             this.unitOfWork = unitOfWork;
 
         }
-     
+        [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll()
         {
             var categories = await unitOfWork.CategoryRepository.GetAllAsync(c=>!c.IsDeleted && c.CreatedBy==User.Identity.Name);
@@ -23,12 +25,14 @@ namespace CoursesManagementSystem.Controllers
             return View(categories);
         }
         [HttpGet]
+        [Authorize]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Create(Category category)
         {
             if(ModelState.IsValid)
@@ -66,6 +70,7 @@ namespace CoursesManagementSystem.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Edit(int id)
         {
             var category = await unitOfWork.CategoryRepository.GetByIdAsync(id);
@@ -79,6 +84,7 @@ namespace CoursesManagementSystem.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Edit(int id , Category category)
         {
             if(id != category.ID)
@@ -118,8 +124,9 @@ namespace CoursesManagementSystem.Controllers
         }
 
 
-    [HttpGet]
-    public async Task<IActionResult> getById(int id)
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> getById(int id)
     {
         //hall fe el get hahtag a3mel view model lel category law ana keda keda ana bakhtar ha3red eh?
         Category c = await unitOfWork.CategoryRepository.GetAsync(c => !c.IsDeleted && c.ID == id && c.CreatedBy == User.Identity.Name);
@@ -133,8 +140,9 @@ namespace CoursesManagementSystem.Controllers
 
         return View(c);
     }
-    [HttpGet]
-    public async Task<IActionResult> getByName(string Name)
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> getByName(string Name)
     {
         Category c = await unitOfWork.CategoryRepository.GetAsync(c => !c.IsDeleted && c.Name == Name && c.CreatedBy == User.Identity.Name);
 
@@ -148,9 +156,10 @@ namespace CoursesManagementSystem.Controllers
         return View(c);
     }
    
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Delete(int id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> Delete(int id)
     {
         Category c = await unitOfWork.CategoryRepository.GetAsync(cat => !cat.IsDeleted && cat.ID == id && cat.CreatedBy == User.Identity.Name);
 

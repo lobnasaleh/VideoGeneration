@@ -13,6 +13,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CoursesManagementSystem.Controllers
 {
@@ -51,6 +52,7 @@ namespace CoursesManagementSystem.Controllers
             }
         }
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Index()
         {
 
@@ -73,6 +75,7 @@ namespace CoursesManagementSystem.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Create()
         {
             CourseVM catLvl = new CourseVM()
@@ -85,6 +88,7 @@ namespace CoursesManagementSystem.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create(CourseVM courseVM)
         {
            
@@ -238,6 +242,7 @@ namespace CoursesManagementSystem.Controllers
 
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Update(int id)
         {
             var Course = await unitOfWork.CourseRepository.GetByIdAsync(id);
@@ -258,6 +263,7 @@ namespace CoursesManagementSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Update(int id, UpdateCourseVM CourseVM)
         {
             CourseVM ??= new UpdateCourseVM();
@@ -401,6 +407,7 @@ namespace CoursesManagementSystem.Controllers
 
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> getById(int id)
         {
             CourseDetailsVM l = await unitOfWork.CourseRepository.GetQuery(c => !c.IsDeleted && c.ID == id && c.CreatedBy == User.Identity.Name)
@@ -435,6 +442,7 @@ namespace CoursesManagementSystem.Controllers
      
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             Course l = await unitOfWork.CourseRepository.GetAsync(l => !l.IsDeleted && l.ID == id && l.CreatedBy == User.Identity.Name);
@@ -488,6 +496,7 @@ namespace CoursesManagementSystem.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> getGeneratedCourseById(int id)
         {
 
@@ -575,6 +584,7 @@ namespace CoursesManagementSystem.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> getGeneratedCourses()
         {
 
@@ -645,6 +655,7 @@ namespace CoursesManagementSystem.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> ViewLesson(int id)
         {
             var lesson = await unitOfWork.LessonRepository.GetLessonWithQuestionsAndAnswersAsync(id);
@@ -745,6 +756,7 @@ namespace CoursesManagementSystem.Controllers
         //}
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> SendCourseToAI(int courseId)
         {
             var course = await unitOfWork.CourseRepository.GetCourseWithConfigsAsync(courseId);
