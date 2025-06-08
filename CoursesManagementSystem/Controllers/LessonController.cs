@@ -3,6 +3,7 @@ using CoursesManagementSystem.Constants;
 using CoursesManagementSystem.DB.Models;
 using CoursesManagementSystem.Interfaces;
 using CoursesManagementSystem.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -39,6 +40,7 @@ namespace CoursesManagementSystem.Controllers
             }
         }
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             List<LessonVM> lessons = await unitOfWork.LessonRepository.GetAllQuery(l=>!l.IsDeleted && l.CreatedBy==User.Identity.Name)
@@ -59,6 +61,7 @@ namespace CoursesManagementSystem.Controllers
             return View(lessons);
         }
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Create()
         {
             ViewBag.Chapters = await unitOfWork.ChapterRepository.GetAllQuery(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name)
@@ -75,6 +78,7 @@ namespace CoursesManagementSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create(LessonVM LessonVM)
         {
             string AudioName, VideoName;
@@ -170,6 +174,7 @@ namespace CoursesManagementSystem.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Update(int id)
         {
             var Lesson= await unitOfWork.LessonRepository.GetByIdAsync(id);
@@ -192,6 +197,7 @@ namespace CoursesManagementSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Update(int id, UpdateLessonVM LessonVM)
         {
             if (ModelState.IsValid)
@@ -313,6 +319,7 @@ namespace CoursesManagementSystem.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> getById(int id)
         {
 
@@ -361,6 +368,7 @@ namespace CoursesManagementSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             Lesson l = await unitOfWork.LessonRepository.GetAsync(l => !l.IsDeleted && l.ID == id && l.CreatedBy == User.Identity.Name);

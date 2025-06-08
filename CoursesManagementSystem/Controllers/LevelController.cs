@@ -2,6 +2,7 @@
 using CoursesManagementSystem.DB.Models;
 using CoursesManagementSystem.Interfaces;
 using CoursesManagementSystem.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,7 +18,7 @@ namespace CoursesManagementSystem.Controllers
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
         }
-
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -37,6 +38,7 @@ namespace CoursesManagementSystem.Controllers
             return View(res);
         }
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Create()
         {
             return View();
@@ -45,6 +47,7 @@ namespace CoursesManagementSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create(LevelVM levelVM)
         {
             if (ModelState.IsValid)
@@ -92,6 +95,7 @@ namespace CoursesManagementSystem.Controllers
 
         }
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Update(int id)
         {
             var Level = await unitOfWork.LevelRepository.GetByIdAsync(id);
@@ -108,6 +112,7 @@ namespace CoursesManagementSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Update(int id, LevelVM levelVM)
         {
             if (ModelState.IsValid)
@@ -160,6 +165,7 @@ namespace CoursesManagementSystem.Controllers
 
         }
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> getById(int id)
         {
            Level l = await unitOfWork.LevelRepository.GetAsync(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name && c.ID == id);
@@ -177,6 +183,7 @@ namespace CoursesManagementSystem.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             Level l = await unitOfWork.LevelRepository.GetAsync(l => !l.IsDeleted && l.CreatedBy == User.Identity.Name && l.ID == id);

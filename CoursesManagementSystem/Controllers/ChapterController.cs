@@ -2,6 +2,7 @@
 using CoursesManagementSystem.DB.Models;
 using CoursesManagementSystem.Interfaces;
 using CoursesManagementSystem.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,7 @@ namespace CoursesManagementSystem.Controllers
             this.unitOfWork = unitOfWork;
         }
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Index()
         {
           List<ChapterVM> res=  await unitOfWork.ChapterRepository.GetAllQuery(c=>!c.IsDeleted && c.CreatedBy == User.Identity.Name)
@@ -34,6 +36,7 @@ namespace CoursesManagementSystem.Controllers
             return View(res);
         }
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Create(){
         
             ViewBag.Course=await unitOfWork.CourseRepository.GetAllAsync(c=>!c.IsDeleted && c.CreatedBy == User.Identity.Name);
@@ -42,6 +45,7 @@ namespace CoursesManagementSystem.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create(ChapterVM ChapterVM)
         {
             if (ModelState.IsValid)
@@ -92,6 +96,7 @@ namespace CoursesManagementSystem.Controllers
 
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Update(int id)
         {
             var Chapter = await unitOfWork.ChapterRepository.GetByIdAsync(id);
@@ -109,6 +114,7 @@ namespace CoursesManagementSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Update(int id, ChapterVM ChapterVM)
         {
             if (ModelState.IsValid)
@@ -161,6 +167,7 @@ namespace CoursesManagementSystem.Controllers
 
         }
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> getById(int id)
         {
           
@@ -192,6 +199,7 @@ namespace CoursesManagementSystem.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             Chapter l = await unitOfWork.ChapterRepository.GetAsync(l => !l.IsDeleted && l.ID == id && l.CreatedBy == User.Identity.Name);
