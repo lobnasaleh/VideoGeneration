@@ -1,6 +1,7 @@
 ﻿using CoursesManagementSystem.DB.Models;
 using CoursesManagementSystem.Interfaces;
 using CoursesManagementSystem.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -15,17 +16,17 @@ namespace CoursesManagementSystem.Controllers
             this.unitOfWork = unitOfWork;
         }
 
-
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var answers = await unitOfWork.AnswerRepository
-                .GetAllAsync(a => !a.IsDeleted, new[] { "Question" }); 
+                .GetAllAsync(a => !a.IsDeleted && a.CreatedBy == User.Identity.Name, new[] { "Question" }); 
 
             return View(answers);
         }
 
-
+        [Authorize]
         [HttpGet]
         public IActionResult Create()
         {
@@ -33,7 +34,7 @@ namespace CoursesManagementSystem.Controllers
             return View();
         }
 
-
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Answer answer)
@@ -45,7 +46,7 @@ namespace CoursesManagementSystem.Controllers
             }
 
             var existingAnswer = await unitOfWork.AnswerRepository
-                .GetAsync(a => a.AnswerText == answer.AnswerText && a.QuestionId == answer.QuestionId);
+                .GetAsync(a => a.AnswerText == answer.AnswerText && a.QuestionId == answer.QuestionId && a.CreatedBy == User.Identity.Name);
 
             if (existingAnswer != null)
             {
@@ -76,11 +77,11 @@ namespace CoursesManagementSystem.Controllers
             return RedirectToAction(nameof(GetAll));
         }
 
-
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var answer = await unitOfWork.AnswerRepository.GetAsync(a => a.ID == id, new[] { "Question" });
+            var answer = await unitOfWork.AnswerRepository.GetAsync(a => a.ID == id && a.CreatedBy == User.Identity.Name, new[] { "Question" });
 
             if (answer == null)
             {
@@ -92,7 +93,7 @@ namespace CoursesManagementSystem.Controllers
             return View(answer);
         }
 
-
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Answer answer)
@@ -108,7 +109,7 @@ namespace CoursesManagementSystem.Controllers
                 return View(answer);
             }
 
-            var existingAnswer = await unitOfWork.AnswerRepository.GetAsync(a => a.ID == id);
+            var existingAnswer = await unitOfWork.AnswerRepository.GetAsync(a => a.ID == id && a.CreatedBy == User.Identity.Name);
             if (existingAnswer == null)
             {
                 TempData["Error"] = "Answer not found!";
@@ -128,12 +129,13 @@ namespace CoursesManagementSystem.Controllers
             return RedirectToAction(nameof(GetAll));
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             var answer = await unitOfWork.AnswerRepository
-                .GetAsync(a => a.ID == id);
+                .GetAsync(a => a.ID == id && a.CreatedBy == User.Identity.Name);
 
             if (answer == null || answer.IsDeleted)
             {
@@ -149,12 +151,12 @@ namespace CoursesManagementSystem.Controllers
             return Json(new { success = true });
         }
 
-
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
             var answer = await unitOfWork.AnswerRepository
-                .GetAsync(a => !a.IsDeleted && a.ID == id, new[] { "Question" });
+                .GetAsync(a => !a.IsDeleted && a.ID == id && a.CreatedBy == User.Identity.Name, new[] { "Question" });
 
             if (answer == null)
             {
@@ -169,7 +171,7 @@ namespace CoursesManagementSystem.Controllers
         private void PopulateDropdowns()
         {
             ViewBag.Questions = new SelectList(unitOfWork.QuestionRepository
-                .GetAllAsync(q => !q.IsDeleted).Result, "ID", "QuestionText");
+                .GetAllAsync(q => !q.IsDeleted && q.CreatedBy == User.Identity.Name).Result, "ID", "QuestionText");
         }
 
 

@@ -3,6 +3,7 @@ using CoursesManagementSystem.Enums;
 using CoursesManagementSystem.Interfaces;
 using CoursesManagementSystem.Repository;
 using CoursesManagementSystem.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -18,14 +19,15 @@ namespace CoursesManagementSystem.Controllers
 
         }
 
-    /*    public async Task<IActionResult> GetAll()
-        {
-            var courseConfigs = await unitOfWork.CourseConfigRepository
-                .GetAllAsync(c => !c.IsDeleted, new string[] { "Course" });
+        /*    public async Task<IActionResult> GetAll()
+            {
+                var courseConfigs = await unitOfWork.CourseConfigRepository
+                    .GetAllAsync(c => !c.IsDeleted, new string[] { "Course" });
 
-            return View(courseConfigs);
-        }*/
+                return View(courseConfigs);
+            }*/
 
+        [Authorize]
         [HttpGet]
         public IActionResult Create(int Courseid)
         {
@@ -34,8 +36,8 @@ namespace CoursesManagementSystem.Controllers
             return View();
         }
 
-        
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CourseConfig courseConfig)
@@ -48,7 +50,7 @@ namespace CoursesManagementSystem.Controllers
             }
 
             var existingConfig = await unitOfWork.CourseConfigRepository
-                .GetAsync(c => c.CourseId == courseConfig.CourseId);
+                .GetAsync(c => c.CourseId == courseConfig.CourseId && c.CreatedBy == User.Identity.Name);
 
             if (existingConfig != null)
             {
@@ -84,12 +86,12 @@ namespace CoursesManagementSystem.Controllers
 
         }
 
-
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Edit(int id,int Courseid)
         {
            
-            var courseConfig = await unitOfWork.CourseConfigRepository.GetAsync(c => c.ID == id, new[] { "Course" });
+            var courseConfig = await unitOfWork.CourseConfigRepository.GetAsync(c => c.ID == id && c.CreatedBy == User.Identity.Name, new[] { "Course" });
 
             if (courseConfig == null)
             {
@@ -98,11 +100,12 @@ namespace CoursesManagementSystem.Controllers
             }
 
             PopulateDropdowns();
-            ViewBag.Courses = new SelectList(await unitOfWork.CourseRepository.GetAllAsync(c=>!c.IsDeleted), "ID", "Name", courseConfig.CourseId);
+            ViewBag.Courses = new SelectList(await unitOfWork.CourseRepository.GetAllAsync(c=>!c.IsDeleted && c.CreatedBy == User.Identity.Name), "ID", "Name", courseConfig.CourseId);
             ViewBag.CourseId = Courseid;
             return View(courseConfig);
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, CourseConfig courseConfig)
@@ -114,12 +117,12 @@ namespace CoursesManagementSystem.Controllers
 
             if (!ModelState.IsValid)
             {
-                ViewBag.Courses = new SelectList(await unitOfWork.CourseRepository.GetAllAsync(c => !c.IsDeleted), "ID", "Name", courseConfig.CourseId);
+                ViewBag.Courses = new SelectList(await unitOfWork.CourseRepository.GetAllAsync(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name), "ID", "Name", courseConfig.CourseId);
                 ViewBag.CourseId = courseConfig.CourseId;
                 return View(courseConfig);
             }
 
-            var existingConfig = await unitOfWork.CourseConfigRepository.GetAsync(c => c.ID == id);
+            var existingConfig = await unitOfWork.CourseConfigRepository.GetAsync(c => c.ID == id && c.CreatedBy == User.Identity.Name);
 
             if (existingConfig == null)
             {
@@ -142,13 +145,13 @@ namespace CoursesManagementSystem.Controllers
 
         }
 
-
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             var courseConfig = await unitOfWork.CourseConfigRepository
-                .GetAsync(q => q.ID == id); 
+                .GetAsync(q => q.ID == id && q.CreatedBy == User.Identity.Name); 
 
             if (courseConfig == null || courseConfig.IsDeleted)
             {
@@ -172,12 +175,12 @@ namespace CoursesManagementSystem.Controllers
             return Json(new { success = true });
         }
 
-
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
             var courseConfig = await unitOfWork.CourseConfigRepository
-                .GetAsync(q => !q.IsDeleted && q.ID == id, new[] { "Course" });
+                .GetAsync(q => !q.IsDeleted && q.ID == id && q.CreatedBy == User.Identity.Name, new[] { "Course" });
 
             if (courseConfig == null)
             {
@@ -188,13 +191,13 @@ namespace CoursesManagementSystem.Controllers
             return View(courseConfig); 
         }
 
-
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> CourseConfigByCourseId(int Courseid)
         {
             ViewBag.CourseId = Courseid;
             var courseConfig = await unitOfWork.CourseConfigRepository
-                .GetAllAsync(q => !q.IsDeleted && q.CourseId == Courseid, new[] { "Course" });
+                .GetAllAsync(q => !q.IsDeleted && q.CourseId == Courseid && q.CreatedBy == User.Identity.Name, new[] { "Course" });
 
             if (courseConfig == null)
             {
@@ -225,7 +228,7 @@ namespace CoursesManagementSystem.Controllers
                                        Text = e.ToString()
                                    });
 
-            ViewBag.Courses = new SelectList(unitOfWork.CourseRepository.GetAllAsync(c => !c.IsDeleted).Result, "ID", "Name");
+            ViewBag.Courses = new SelectList(unitOfWork.CourseRepository.GetAllAsync(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name).Result, "ID", "Name");
         }
 
 

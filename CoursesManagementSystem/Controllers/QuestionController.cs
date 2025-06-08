@@ -3,6 +3,7 @@ using CoursesManagementSystem.DB.Models;
 using CoursesManagementSystem.Enums;
 using CoursesManagementSystem.Interfaces;
 using CoursesManagementSystem.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -19,11 +20,13 @@ namespace CoursesManagementSystem.Controllers
                 this.unitOfWork = unitOfWork;
             }
 
-            [HttpGet]
+
+        [Authorize]
+        [HttpGet]
             public async Task<IActionResult> GetAll()
             {
                    var questions = await unitOfWork.QuestionRepository.GetAllAsync(
-                       c => !c.IsDeleted,
+                       c => !c.IsDeleted && c.CreatedBy == User.Identity.Name,
                         new string[] { "Lesson", "Lesson.Chapter", "Lesson.Chapter.Course", "QuestionLevel" }
                       );
 
@@ -39,13 +42,16 @@ namespace CoursesManagementSystem.Controllers
                 return View(questions);
             }
 
-            [HttpGet]
+        [Authorize]
+        [HttpGet]
             public async Task<IActionResult> Create()
             {
                 await PopulateDropdowns();
                 return View();
             }
 
+
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Question question, List<string> Answers, string CorrectAnswer)
@@ -57,7 +63,7 @@ namespace CoursesManagementSystem.Controllers
             }
 
             var existingQuestion = await unitOfWork.QuestionRepository
-                .GetAsync(q => q.QuestionText == question.QuestionText && q.LessonId == question.LessonId);
+                .GetAsync(q => q.QuestionText == question.QuestionText && q.LessonId == question.LessonId && q.CreatedBy == User.Identity.Name);
 
             if (existingQuestion != null)
             {
@@ -123,12 +129,12 @@ namespace CoursesManagementSystem.Controllers
         }
 
 
-
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var question = await unitOfWork.QuestionRepository.GetAsync(
-                q => q.ID == id,
+                q => q.ID == id && q.CreatedBy == User.Identity.Name,
                 new[] { "Lesson", "QuestionLevel", "Answers" } // include Answers here
             );
 
@@ -142,7 +148,7 @@ namespace CoursesManagementSystem.Controllers
             return View(question);
         }
 
-
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Question question, List<Answer> Answers, int CorrectAnswerIndex)
@@ -156,7 +162,8 @@ namespace CoursesManagementSystem.Controllers
                 return View(question);
             }
 
-            var existingQuestion = await unitOfWork.QuestionRepository.GetAsync(q => q.ID == id, new[] { "Answers", "Lesson", "QuestionLevel" });
+            var existingQuestion = await unitOfWork.QuestionRepository.GetAsync(q => q.ID == id && q.CreatedBy == User.Identity.Name,
+                new[] { "Answers", "Lesson", "QuestionLevel" });
             if (existingQuestion == null)
             {
                 TempData["Error"] = "Question not found!";
@@ -188,13 +195,13 @@ namespace CoursesManagementSystem.Controllers
             return RedirectToAction(nameof(GetAll));
         }
 
-         
 
-            [HttpPost]
+        [Authorize]
+        [HttpPost]
             [ValidateAntiForgeryToken]
             public async Task<IActionResult> Delete(int id)
             {
-                var question = await unitOfWork.QuestionRepository.GetAsync(q => q.ID == id);
+                var question = await unitOfWork.QuestionRepository.GetAsync(q => q.ID == id && q.CreatedBy == User.Identity.Name);
 
                 if (question == null || question.IsDeleted)
                 {
@@ -202,7 +209,7 @@ namespace CoursesManagementSystem.Controllers
                           return Json(new { success = false });
             }
 
-            var QuestionWithAnswerfound = await unitOfWork.AnswerRepository.GetAsync(l => !l.IsDeleted && l.QuestionId == id);
+            var QuestionWithAnswerfound = await unitOfWork.AnswerRepository.GetAsync(l => !l.IsDeleted && l.QuestionId == id && l.CreatedBy == User.Identity.Name);
 
             if (QuestionWithAnswerfound != null)
             {
@@ -218,12 +225,12 @@ namespace CoursesManagementSystem.Controllers
             return Json(new { success = true });
         }
 
-            
-            [HttpGet]
+        [Authorize]
+        [HttpGet]
             public async Task<IActionResult> Details(int id)
             {
                 var question = await unitOfWork.QuestionRepository
-                    .GetAsync(q => !q.IsDeleted && q.ID == id, new[] { "Lesson", "QuestionLevel" });
+                    .GetAsync(q => !q.IsDeleted && q.ID == id && q.CreatedBy == User.Identity.Name, new[] { "Lesson", "QuestionLevel" });
 
                 if (question == null)
                 {
@@ -237,7 +244,7 @@ namespace CoursesManagementSystem.Controllers
             private async Task PopulateDropdowns()
             {
             var lessons = await unitOfWork.LessonRepository
-               .GetAllAsync(l => !l.IsDeleted, new string[] { "Chapter", "Chapter.Course" });
+               .GetAllAsync(l => !l.IsDeleted && l.CreatedBy == User.Identity.Name, new string[] { "Chapter", "Chapter.Course" });
 
             ViewBag.Lessons = lessons.Select(l => new SelectListItem
             {
@@ -245,7 +252,7 @@ namespace CoursesManagementSystem.Controllers
                 Text = $"{l.Name} - {l.Chapter?.Course?.Name}"
             });
 
-            ViewBag.QuestionLevels = (await unitOfWork.QuestionLevelRepository.GetAllAsync(q => !q.IsDeleted))
+            ViewBag.QuestionLevels = (await unitOfWork.QuestionLevelRepository.GetAllAsync(q => !q.IsDeleted ))
                     .Select(q => new SelectListItem
                     {
                         Value = q.ID.ToString(),
