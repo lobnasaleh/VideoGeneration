@@ -17,7 +17,8 @@ namespace CoursesManagementSystem.Controllers
      
         public async Task<IActionResult> GetAll()
         {
-            var categories = await unitOfWork.CategoryRepository.GetAllAsync(c=>!c.IsDeleted);
+            var categories = await unitOfWork.CategoryRepository.GetAllAsync(c=>!c.IsDeleted && c.CreatedBy==User.Identity.Name);
+           
 
             return View(categories);
         }
@@ -33,10 +34,10 @@ namespace CoursesManagementSystem.Controllers
             if(ModelState.IsValid)
             {
                 category.CreatedAt = DateTime.UtcNow;
-                // category.CreatedBy = User.Identity.Name ?? "System";
+                category.CreatedBy = User.Identity.Name ?? "System";
 
                 //check if category with this name already exists
-                var cat = await unitOfWork.CategoryRepository.GetAsync(c => !c.IsDeleted && c.Name == category.Name);
+                var cat = await unitOfWork.CategoryRepository.GetAsync(c => !c.IsDeleted && c.Name == category.Name && c.CreatedBy == User.Identity.Name);
                 if (cat is not null)
                 {
                     ModelState.AddModelError("Name", "A Category With This Name already exists");
@@ -46,7 +47,7 @@ namespace CoursesManagementSystem.Controllers
 
                 //check if category is already marked deleted instead of inserting another row -->mark undeleted
 
-                var foundcategory = await unitOfWork.CategoryRepository.GetAsync(c=>c.IsDeleted && c.Name==category.Name);
+                var foundcategory = await unitOfWork.CategoryRepository.GetAsync(c=>c.IsDeleted && c.Name==category.Name && c.CreatedBy == User.Identity.Name);
                 if (foundcategory is not null)
                 {
                     foundcategory.IsDeleted=false;
@@ -92,7 +93,7 @@ namespace CoursesManagementSystem.Controllers
                     return BadRequest();
 
                 //if category is found but deleted ,mark undeleted and delete the existing one
-                var foundcategory = await unitOfWork.CategoryRepository.GetAsync(c => c.IsDeleted && c.Name == category.Name);
+                var foundcategory = await unitOfWork.CategoryRepository.GetAsync(c => c.IsDeleted && c.Name == category.Name && c.CreatedBy == User.Identity.Name);
                 if (foundcategory is not null)
                 {
                     existcategory.IsDeleted=true;
@@ -103,6 +104,7 @@ namespace CoursesManagementSystem.Controllers
                 //Name?
                 existcategory.LastModifiedAt = DateTime.UtcNow;
                 existcategory.LastModifiedBy = User.Identity.Name ?? "System";
+                existcategory.Name = category.Name;
               
                 unitOfWork.CategoryRepository.Update(existcategory);
                 await unitOfWork.CompleteAsync();
@@ -120,7 +122,7 @@ namespace CoursesManagementSystem.Controllers
     public async Task<IActionResult> getById(int id)
     {
         //hall fe el get hahtag a3mel view model lel category law ana keda keda ana bakhtar ha3red eh?
-        Category c = await unitOfWork.CategoryRepository.GetAsync(c => !c.IsDeleted && c.ID == id);
+        Category c = await unitOfWork.CategoryRepository.GetAsync(c => !c.IsDeleted && c.ID == id && c.CreatedBy == User.Identity.Name);
         if (c == null)
         {
                 // return NotFound();
@@ -134,7 +136,7 @@ namespace CoursesManagementSystem.Controllers
     [HttpGet]
     public async Task<IActionResult> getByName(string Name)
     {
-        Category c = await unitOfWork.CategoryRepository.GetAsync(c => !c.IsDeleted && c.Name == Name);
+        Category c = await unitOfWork.CategoryRepository.GetAsync(c => !c.IsDeleted && c.Name == Name && c.CreatedBy == User.Identity.Name);
 
         if (c == null)
         {
@@ -150,7 +152,7 @@ namespace CoursesManagementSystem.Controllers
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
-        Category c = await unitOfWork.CategoryRepository.GetAsync(cat => !cat.IsDeleted && cat.ID == id);
+        Category c = await unitOfWork.CategoryRepository.GetAsync(cat => !cat.IsDeleted && cat.ID == id && cat.CreatedBy == User.Identity.Name);
 
         if (c == null)
         {
@@ -160,7 +162,7 @@ namespace CoursesManagementSystem.Controllers
                 return Json(new { success = false });
             }
         //check if Category is not assigned to a course
-        var coursewithcategoryfound = await unitOfWork.CourseRepository.GetAsync(c => !c.IsDeleted && c.CategoryId == id);
+        var coursewithcategoryfound = await unitOfWork.CourseRepository.GetAsync(c => !c.IsDeleted && c.CategoryId == id && c.CreatedBy == User.Identity.Name);
 
         if (coursewithcategoryfound != null)
         {

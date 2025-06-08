@@ -41,7 +41,7 @@ namespace CoursesManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            List<LessonVM> lessons = await unitOfWork.LessonRepository.GetAllQuery(l=>!l.IsDeleted)
+            List<LessonVM> lessons = await unitOfWork.LessonRepository.GetAllQuery(l=>!l.IsDeleted && l.CreatedBy==User.Identity.Name)
                 .Select(l => new LessonVM
                 {
                    // AudioStorageURL = l.AudioStorageURL,
@@ -61,7 +61,7 @@ namespace CoursesManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            ViewBag.Chapters = await unitOfWork.ChapterRepository.GetAllQuery(c => !c.IsDeleted)
+            ViewBag.Chapters = await unitOfWork.ChapterRepository.GetAllQuery(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name)
                  .Select(l => new SelectListItem
                  {
                      Value = l.ID.ToString(),
@@ -82,7 +82,7 @@ namespace CoursesManagementSystem.Controllers
             {
                 //check if Lesson name is unique
 
-               Lesson Lessonfound = await unitOfWork.LessonRepository.GetAsync(c => !c.IsDeleted && c.Name == LessonVM.Name && c.ChapterId==LessonVM.ChapterId);
+               Lesson Lessonfound = await unitOfWork.LessonRepository.GetAsync(c => !c.IsDeleted && c.Name == LessonVM.Name && c.ChapterId==LessonVM.ChapterId && c.CreatedBy == User.Identity.Name);
                 if (Lessonfound != null)
                 {
                     ModelState.AddModelError("Name", "There is already a Lesson for this Chapter with The same Name");
@@ -93,7 +93,7 @@ namespace CoursesManagementSystem.Controllers
                 }
                 //check if Lesson is marked deleted -->mark undeleted
                 var deletedLesson = await unitOfWork.LessonRepository
-                    .GetAsync(c => c.IsDeleted && c.Sort == LessonVM.Sort
+                    .GetAsync(c => c.IsDeleted && c.CreatedBy == User.Identity.Name && c.Sort == LessonVM.Sort
                     && c.Details == LessonVM.Details && c.Name == LessonVM.Name
                     && c.ChapterId == LessonVM.ChapterId 
                    // && c.AudioStorageURL == LessonVM.AudioStorageURL
@@ -104,7 +104,7 @@ namespace CoursesManagementSystem.Controllers
                 {
                     deletedLesson.IsDeleted = false;
                     deletedLesson.LastModifiedAt = DateTime.Now;
-                    //deletedLesson.LastModifiedBy=
+                    deletedLesson.LastModifiedBy=User.Identity.Name;
                     await unitOfWork.CompleteAsync();
                     return RedirectToAction("Index");
 
@@ -153,6 +153,7 @@ namespace CoursesManagementSystem.Controllers
                 //new Lesson
                 Lesson cmp = mapper.Map<Lesson>(LessonVM);
                 cmp.CreatedAt = DateTime.Now;
+                cmp.CreatedBy=User.Identity.Name;
                 cmp.VideoStorageURL = $"{UploadsSettings.VideosPath}{"/"}{VideoName}";
                 cmp.AudioStorageURL = $"{UploadsSettings.AudiosPath}{"/"}{AudioName}";
 
@@ -179,7 +180,7 @@ namespace CoursesManagementSystem.Controllers
             }
             UpdateLessonVM res = mapper.Map<UpdateLessonVM>(Lesson);
 
-            ViewBag.Chapters = await unitOfWork.ChapterRepository.GetAllQuery(c => !c.IsDeleted)
+            ViewBag.Chapters = await unitOfWork.ChapterRepository.GetAllQuery(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name)
                   .Select(l => new SelectListItem
                   {
                       Value = l.ID.ToString(),
@@ -204,12 +205,12 @@ namespace CoursesManagementSystem.Controllers
                 }
                 //check if it is unique
                 var Lesson = await unitOfWork.LessonRepository
-                    .GetAsync(l => !l.IsDeleted && l.Name == LessonVM.Name && l.ChapterId == LessonVM.ChapterId && l.ID != id, null, false);
+                    .GetAsync(l => !l.IsDeleted && l.CreatedBy == User.Identity.Name && l.Name == LessonVM.Name && l.ChapterId == LessonVM.ChapterId && l.ID != id, null, false);
                 //en el id mokhtalef ma3anh enha msh ely howa byhawel ye3mlha update halyan ,laken law el esm howa howa fel submit matghyrash yb2a 3ady
                 if (Lesson != null)
                 {
                     ModelState.AddModelError("Name", "There is already a Lesson for this Chapter with The same Name ");
-                    ViewBag.Chapters = await unitOfWork.ChapterRepository.GetAllAsync(c => !c.IsDeleted);
+                    ViewBag.Chapters = await unitOfWork.ChapterRepository.GetAllAsync(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name);
                     return View(LessonVM);
                 }
 
@@ -221,6 +222,7 @@ namespace CoursesManagementSystem.Controllers
                     //  && c.AudioStorageURL == LessonVM.AudioStorageURL
                      // && c.VideoStorageURL == LessonVM.VideoStorageURL
                       && c.ScriptText == LessonVM.ScriptText
+                      && c.CreatedBy == User.Identity.Name
                       );
                 if (deletedLesson != null)
                 {
@@ -284,7 +286,7 @@ namespace CoursesManagementSystem.Controllers
                     lv.AudioStorageURL = $"{UploadsSettings.AudiosPath}{"/"}{AudioName}";
                 }
                 lv.LastModifiedAt = DateTime.Now;
-                //lv.LastModifiedBy =;
+                lv.LastModifiedBy =User.Identity.Name;
                 lv.Name = LessonVM.Name;
                 lv.Details = LessonVM.Details;
                 lv.ChapterId = LessonVM.ChapterId;
@@ -298,7 +300,7 @@ namespace CoursesManagementSystem.Controllers
                 return RedirectToAction("Index");
 
             }
-            ViewBag.Chapters = await unitOfWork.ChapterRepository.GetAllQuery(c => !c.IsDeleted)
+            ViewBag.Chapters = await unitOfWork.ChapterRepository.GetAllQuery(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name) 
                  .Select(l => new SelectListItem
                  {
                      Value = l.ID.ToString(),
@@ -314,7 +316,7 @@ namespace CoursesManagementSystem.Controllers
         public async Task<IActionResult> getById(int id)
         {
 
-            LessonDetailsVM cv = await unitOfWork.LessonRepository.GetQuery(c => !c.IsDeleted && c.ID == id)
+            LessonDetailsVM cv = await unitOfWork.LessonRepository.GetQuery(c => !c.IsDeleted && c.ID == id && c.CreatedBy == User.Identity.Name)
             .Select(l => new LessonDetailsVM
             {
                 AudioStorageURL = l.AudioStorageURL,
@@ -348,7 +350,7 @@ namespace CoursesManagementSystem.Controllers
 
         private async Task<List<SelectListItem>> GetChaptersSelectList()
         {
-           return await unitOfWork.ChapterRepository.GetAllQuery(c => !c.IsDeleted)
+           return await unitOfWork.ChapterRepository.GetAllQuery(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name)
                   .Select(l => new SelectListItem
                   {
                       Value = l.ID.ToString(),
@@ -361,7 +363,7 @@ namespace CoursesManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            Lesson l = await unitOfWork.LessonRepository.GetAsync(l => !l.IsDeleted && l.ID == id);
+            Lesson l = await unitOfWork.LessonRepository.GetAsync(l => !l.IsDeleted && l.ID == id && l.CreatedBy == User.Identity.Name);
             if (l == null)
             {
                 //return NotFound();
@@ -370,7 +372,7 @@ namespace CoursesManagementSystem.Controllers
                 return Json(new { success = false});
             }
             //check if Lesson is not assigned to a Question
-            var QuestionWithLessonfound = await unitOfWork.QuestionRepository.GetAsync(q => !q.IsDeleted && q.LessonId == id);
+            var QuestionWithLessonfound = await unitOfWork.QuestionRepository.GetAsync(q => !q.IsDeleted && q.LessonId == id && q.CreatedBy == User.Identity.Name);
 
             if (QuestionWithLessonfound != null)
             {

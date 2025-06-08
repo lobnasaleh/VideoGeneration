@@ -24,7 +24,7 @@ namespace CoursesManagementSystem.Controllers
           
             
             var res=await unitOfWork.LevelRepository
-                .GetAllQuery(l=>!l.IsDeleted)
+                .GetAllQuery(l=>!l.IsDeleted && l.CreatedBy == User.Identity.Name)
                 .Select(c=>new LevelsWithAssociatedCoursesVM
                 {
                 ID = c.ID,
@@ -51,7 +51,7 @@ namespace CoursesManagementSystem.Controllers
             {
                 //check if it is unique
                 var Level = await unitOfWork.LevelRepository
-                    .GetAsync(l => !l.IsDeleted && (l.Sort == levelVM.Sort || l.Name == levelVM.Name), null, false);
+                    .GetAsync(l => !l.IsDeleted &&l.CreatedBy==User.Identity.Name && (l.Sort == levelVM.Sort || l.Name == levelVM.Name), null, false);
                 if (Level != null)
                 {
 
@@ -70,7 +70,7 @@ namespace CoursesManagementSystem.Controllers
                     return View(levelVM);
                 }
                 //check if level is marked deleted -->mark undeleted
-                var deletedlevel = await unitOfWork.LevelRepository.GetAsync(l => l.IsDeleted && l.Sort == levelVM.Sort && l.Name == levelVM.Name);
+                var deletedlevel = await unitOfWork.LevelRepository.GetAsync(l => l.IsDeleted && l.CreatedBy == User.Identity.Name && l.Sort == levelVM.Sort && l.Name == levelVM.Name);
                 if (deletedlevel != null)
                 {
                     deletedlevel.IsDeleted = false;
@@ -81,7 +81,7 @@ namespace CoursesManagementSystem.Controllers
                 //new level
                 Level levelmp = mapper.Map<Level>(levelVM);
                 levelmp.CreatedAt = DateTime.Now;
-                //levelmp.CreatedBy = User.Identity.Name ?? "System";
+                levelmp.CreatedBy = User.Identity.Name ?? "System";
                 await unitOfWork.LevelRepository.AddAsync(levelmp);
                 await unitOfWork.CompleteAsync();
                 return RedirectToAction("Index");
@@ -121,7 +121,7 @@ namespace CoursesManagementSystem.Controllers
                 }
                 //check if it is unique
                 var Level = await unitOfWork.LevelRepository
-                    .GetAsync(l => !l.IsDeleted && l.Sort == levelVM.Sort && l.Name == levelVM.Name, null, false);
+                    .GetAsync(l => !l.IsDeleted && l.CreatedBy == User.Identity.Name && l.Sort == levelVM.Sort && l.Name == levelVM.Name, null, false);
                 if (Level != null)
                 {
                     ModelState.AddModelError("Name", "Level Name already exists ");
@@ -131,7 +131,7 @@ namespace CoursesManagementSystem.Controllers
 
 
                 var Lv = await unitOfWork.LevelRepository //we want non duplicate sort
-                    .GetAsync(l => !l.IsDeleted && l.Sort == levelVM.Sort, null, false);
+                    .GetAsync(l => !l.IsDeleted && l.CreatedBy == User.Identity.Name && l.Sort == levelVM.Sort, null, false);
                 if (Lv != null)
                 {
                     ModelState.AddModelError("Sort", "Difficulty Number already exists ");
@@ -139,7 +139,7 @@ namespace CoursesManagementSystem.Controllers
                 }
 
                 //check if level is marked deleted -->mark undeleted
-                var deletedlevel = await unitOfWork.LevelRepository.GetAsync(l => l.IsDeleted && l.Sort == levelVM.Sort && l.Name == levelVM.Name);
+                var deletedlevel = await unitOfWork.LevelRepository.GetAsync(l => l.IsDeleted && l.CreatedBy == User.Identity.Name && l.Sort == levelVM.Sort && l.Name == levelVM.Name);
                 if (deletedlevel != null)
                 {
                     lv.IsDeleted = true;
@@ -149,7 +149,7 @@ namespace CoursesManagementSystem.Controllers
 
                 }
                 lv.LastModifiedAt = DateTime.Now;
-                //lv.LastModifiedBy = User.Identity.Name ?? "System";
+                lv.LastModifiedBy = User.Identity.Name ?? "System";
                 lv.Sort = levelVM.Sort;
                 await unitOfWork.CompleteAsync();
                 return RedirectToAction("Index");
@@ -162,7 +162,7 @@ namespace CoursesManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> getById(int id)
         {
-           Level l = await unitOfWork.LevelRepository.GetAsync(c => !c.IsDeleted && c.ID == id);
+           Level l = await unitOfWork.LevelRepository.GetAsync(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name && c.ID == id);
             if (l == null)
             {
                 // return NotFound();
@@ -179,7 +179,7 @@ namespace CoursesManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            Level l = await unitOfWork.LevelRepository.GetAsync(l => !l.IsDeleted && l.ID == id);
+            Level l = await unitOfWork.LevelRepository.GetAsync(l => !l.IsDeleted && l.CreatedBy == User.Identity.Name && l.ID == id);
             if (l == null)
             {
                 //return NotFound();
@@ -188,7 +188,7 @@ namespace CoursesManagementSystem.Controllers
                 return Json(new { success = false });
             }
             //check if Level is not assigned to a course
-            var coursewithlevelfound = await unitOfWork.CourseRepository.GetAsync(c => !c.IsDeleted && c.LevelId == id);
+            var coursewithlevelfound = await unitOfWork.CourseRepository.GetAsync(c => !c.IsDeleted && l.CreatedBy == User.Identity.Name && c.LevelId == id);
 
             if (coursewithlevelfound != null)
             {

@@ -20,7 +20,7 @@ namespace CoursesManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-          List<ChapterVM> res=  await unitOfWork.ChapterRepository.GetAllQuery(c=>!c.IsDeleted)
+          List<ChapterVM> res=  await unitOfWork.ChapterRepository.GetAllQuery(c=>!c.IsDeleted && c.CreatedBy == User.Identity.Name)
                 .Select(cc=>new ChapterVM
                 {
                     Details = cc.Details,
@@ -36,7 +36,7 @@ namespace CoursesManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> Create(){
         
-            ViewBag.Course=await unitOfWork.CourseRepository.GetAllAsync(c=>!c.IsDeleted);
+            ViewBag.Course=await unitOfWork.CourseRepository.GetAllAsync(c=>!c.IsDeleted && c.CreatedBy == User.Identity.Name);
             return View();
         
         }
@@ -48,14 +48,14 @@ namespace CoursesManagementSystem.Controllers
             {
                 //check if Chapter name is unique
 
-                Chapter Chapterfound = await unitOfWork.ChapterRepository.GetAsync(c => !c.IsDeleted && c.Name == ChapterVM.Name && c.CourseId==ChapterVM.CourseId);
+                Chapter Chapterfound = await unitOfWork.ChapterRepository.GetAsync(c => !c.IsDeleted && c.Name == ChapterVM.Name && c.CourseId==ChapterVM.CourseId && c.CreatedBy == User.Identity.Name);
                 if (Chapterfound != null)
                 {
                     ModelState.AddModelError("Name", "There is already a Chapter for this course with The same Name");
 
                     //refill selects
 
-                    ViewBag.Course = await unitOfWork.CourseRepository.GetAllAsync(c=>!c.IsDeleted);
+                    ViewBag.Course = await unitOfWork.CourseRepository.GetAllAsync(c=>!c.IsDeleted && c.CreatedBy == User.Identity.Name);
 
                     return View(ChapterVM);
                 }
@@ -64,6 +64,7 @@ namespace CoursesManagementSystem.Controllers
                     .GetAsync(c => c.IsDeleted
                     && c.Details == ChapterVM.Details && c.Name == ChapterVM.Name
                     && c.CourseId == ChapterVM.CourseId && c.Sort == ChapterVM.Sort
+                    && c.CreatedBy == User.Identity.Name
                     );
                 if (deletedChapter != null)
                 {
@@ -75,7 +76,7 @@ namespace CoursesManagementSystem.Controllers
                 //new Chapter
                 Chapter cmp = mapper.Map<Chapter>(ChapterVM);
                 cmp.CreatedAt = DateTime.Now;
-                //cmp.CreatedBy = User.Identity.Name ?? "System";
+                cmp.CreatedBy = User.Identity.Name ?? "System";
                 await unitOfWork.ChapterRepository.AddAsync(cmp);
                 await unitOfWork.CompleteAsync();
                 return RedirectToAction("Index");
@@ -83,7 +84,7 @@ namespace CoursesManagementSystem.Controllers
             }
             //refill selects
 
-            ViewBag.Course = await unitOfWork.CourseRepository.GetAllAsync(c=>!c.IsDeleted);
+            ViewBag.Course = await unitOfWork.CourseRepository.GetAllAsync(c=>!c.IsDeleted && c.CreatedBy == User.Identity.Name);
 
             return View(ChapterVM);
 
@@ -101,7 +102,7 @@ namespace CoursesManagementSystem.Controllers
             }
             ChapterVM res = mapper.Map<ChapterVM>(Chapter);
 
-            ViewBag.Course = await unitOfWork.CourseRepository.GetAllAsync(c=>!c.IsDeleted);
+            ViewBag.Course = await unitOfWork.CourseRepository.GetAllAsync(c=>!c.IsDeleted && c.CreatedBy == User.Identity.Name);
             return View(res);
         }
 
@@ -121,19 +122,19 @@ namespace CoursesManagementSystem.Controllers
                 }
                 //check if it is unique
                 var chapter= await unitOfWork.ChapterRepository
-                    .GetAsync(l => !l.IsDeleted && l.Name == ChapterVM.Name && l.CourseId== ChapterVM.CourseId && l.ID != id, null, false);
+                    .GetAsync(l => !l.IsDeleted && l.Name == ChapterVM.Name && l.CourseId== ChapterVM.CourseId && l.ID != id && l.CreatedBy == User.Identity.Name, null, false);
                 //en el id mokhtalef ma3anh enha msh ely howa byhawel ye3mlha update halyan ,laken law el esm howa howa fel submit matghyrash yb2a 3ady
                 if (chapter != null)
                 {
                     ModelState.AddModelError("Name", "There is already a Chapter for this course with The same Name ");
-                    ViewBag.Course = await unitOfWork.CourseRepository.GetAllAsync(c=>!c.IsDeleted);
+                    ViewBag.Course = await unitOfWork.CourseRepository.GetAllAsync(c=>!c.IsDeleted && c.CreatedBy == User.Identity.Name);
                     return View(ChapterVM);
                 }
 
                 //check if Chapter is marked deleted -->mark undeleted
-                var deletedChapter = await unitOfWork.ChapterRepository.GetAsync(l => l.IsDeleted &&
+                var deletedChapter = await unitOfWork.ChapterRepository.GetAsync(l => l.IsDeleted && 
                 l.Name == ChapterVM.Name && l.CourseId==ChapterVM.CourseId
-                && l.Details==ChapterVM.Details && l.Sort == ChapterVM.Sort);
+                && l.Details==ChapterVM.Details && l.Sort == ChapterVM.Sort && l.CreatedBy == User.Identity.Name);
                 if (deletedChapter != null)
                 {
                     lv.IsDeleted = true;
@@ -154,7 +155,7 @@ namespace CoursesManagementSystem.Controllers
                 return RedirectToAction("Index");
 
             }
-            ViewBag.Course = await unitOfWork.CourseRepository.GetAllAsync(c => !c.IsDeleted);
+            ViewBag.Course = await unitOfWork.CourseRepository.GetAllAsync(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name);
 
             return View(ChapterVM);
 
@@ -163,7 +164,7 @@ namespace CoursesManagementSystem.Controllers
         public async Task<IActionResult> getById(int id)
         {
           
-                ChapterDetailsVM cv=await unitOfWork.ChapterRepository.GetQuery(c=>!c.IsDeleted && c.ID==id)
+                ChapterDetailsVM cv=await unitOfWork.ChapterRepository.GetQuery(c=>!c.IsDeleted && c.ID==id && c.CreatedBy == User.Identity.Name)
                 .Select(cc=>new ChapterDetailsVM
                 {
                     CourseId = cc.CourseId,
@@ -193,7 +194,7 @@ namespace CoursesManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            Chapter l = await unitOfWork.ChapterRepository.GetAsync(l => !l.IsDeleted && l.ID == id);
+            Chapter l = await unitOfWork.ChapterRepository.GetAsync(l => !l.IsDeleted && l.ID == id && l.CreatedBy == User.Identity.Name);
             if (l == null)
             {
                 //return NotFound();
@@ -202,7 +203,7 @@ namespace CoursesManagementSystem.Controllers
                 return Json(new { success = false });
             }
             //check if Chapter is not assigned to a courseconfig,coursequestionconfig,chapter
-            var LessonWithChapterfound = await unitOfWork.LessonRepository.GetAsync(l => !l.IsDeleted && l.ChapterId == id);
+            var LessonWithChapterfound = await unitOfWork.LessonRepository.GetAsync(l => !l.IsDeleted && l.ChapterId == id && l.CreatedBy == User.Identity.Name);
           
             if (LessonWithChapterfound != null)
             {

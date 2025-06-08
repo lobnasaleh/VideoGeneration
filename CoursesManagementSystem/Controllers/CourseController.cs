@@ -54,7 +54,7 @@ namespace CoursesManagementSystem.Controllers
         public async Task<IActionResult> Index()
         {
 
-            List<CourseVM> res = await unitOfWork.CourseRepository.GetAllQuery(a => !a.IsDeleted)
+            List<CourseVM> res = await unitOfWork.CourseRepository.GetAllQuery(a => !a.IsDeleted && a.CreatedBy==User.Identity.Name)
                 .Select(c => new CourseVM
                 {
                     Id = c.ID,
@@ -77,8 +77,8 @@ namespace CoursesManagementSystem.Controllers
         {
             CourseVM catLvl = new CourseVM()
             {
-                Categories = await unitOfWork.CategoryRepository.GetAllAsync(c=>!c.IsDeleted),
-                Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted)
+                Categories = await unitOfWork.CategoryRepository.GetAllAsync(c=>!c.IsDeleted && c.CreatedBy == User.Identity.Name),
+                Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name)
             };
 
             return View(catLvl);
@@ -92,15 +92,15 @@ namespace CoursesManagementSystem.Controllers
             {
                 //check if course name is unique
 
-                Course coursefound = await unitOfWork.CourseRepository.GetAsync(c => !c.IsDeleted && c.Name == courseVM.Name);
+                Course coursefound = await unitOfWork.CourseRepository.GetAsync(c => !c.IsDeleted && c.Name == courseVM.Name && c.CreatedBy == User.Identity.Name);
                 if (coursefound != null)
                 {
                     ModelState.AddModelError("Name", "There is already a Course with This Name");
 
                     //refill selects
 
-                    courseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted);
-                    courseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted);
+                    courseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name);
+                    courseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name);
 
                     return View(courseVM);
                 }
@@ -110,6 +110,7 @@ namespace CoursesManagementSystem.Controllers
                     && c.Details == courseVM.Details && c.Name == courseVM.Name
                     && c.CategoryId == courseVM.CategoryId && c.LevelId == courseVM.LevelId
                     && c.BookStorageURL == courseVM.BookStorageURL
+                    && c.CreatedBy == User.Identity.Name
                     );
                 if (deletedCourse != null)
                 {
@@ -128,8 +129,8 @@ namespace CoursesManagementSystem.Controllers
                     if (!allowedBookExtensions.Contains(bookExtension))
                     {
                         ModelState.AddModelError("Book", "Only PDF, DOC, and DOCX files are allowed for books.");
-                        courseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted);
-                        courseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted);
+                        courseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name);
+                        courseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name);
                         return View(courseVM);
                     }
 
@@ -153,8 +154,8 @@ namespace CoursesManagementSystem.Controllers
                     if (!allowedImageExtensions.Contains(imageExtension))
                     {
                         ModelState.AddModelError("CourseImage", "Only JPEG, JPG, GIF and PNG files are allowed for images.");
-                        courseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted);
-                        courseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted);
+                        courseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name);
+                        courseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name);
                         return View(courseVM);
                     }
 
@@ -173,8 +174,8 @@ namespace CoursesManagementSystem.Controllers
                 if (bookStorageUrl == null)
                 {
                     ModelState.AddModelError("", "Book upload failed.");
-                    courseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted);
-                    courseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted);
+                    courseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name);
+                    courseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name);
 
                     return View(courseVM);
                 }
@@ -182,8 +183,8 @@ namespace CoursesManagementSystem.Controllers
                 if (imageStorageUrl == null)
                 {
                     ModelState.AddModelError("", "Image upload failed.");
-                    courseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted);
-                    courseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted);
+                    courseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name);
+                    courseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name);
 
                     return View(courseVM);
                 }
@@ -191,6 +192,7 @@ namespace CoursesManagementSystem.Controllers
                 //new Course
                      Course cmp = mapper.Map<Course>(courseVM);
                      cmp.CreatedAt = DateTime.Now;
+                     cmp.CreatedBy=User.Identity.Name;
                      cmp.BookStorageURL = bookStorageUrl;// Store relative path
                      cmp.CourseImageStorageURL = imageStorageUrl;// Store relative path
                 await unitOfWork.CourseRepository.AddAsync(cmp);
@@ -200,8 +202,8 @@ namespace CoursesManagementSystem.Controllers
             }
             //refill selects
 
-            courseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted);
-            courseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted);
+            courseVM.Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name);
+            courseVM.Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name);
 
             return View(courseVM);
 
@@ -246,8 +248,8 @@ namespace CoursesManagementSystem.Controllers
             }
             UpdateCourseVM res = mapper.Map<UpdateCourseVM>(Course);
 
-            var Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted) ?? new List<Category>();
-            var Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted) ?? new List<Level>();
+            var Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name) ?? new List<Category>();
+            var Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name) ?? new List<Level>();
             ViewBag.categorySelectList = GetCategorySelectList(Categories);
             ViewBag.levelSelectList = GetLevelSelectList(Levels);
             return View(res);
@@ -259,8 +261,8 @@ namespace CoursesManagementSystem.Controllers
         public async Task<IActionResult> Update(int id, UpdateCourseVM CourseVM)
         {
             CourseVM ??= new UpdateCourseVM();
-            var Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted) ?? new List<Category>();
-            var Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted) ?? new List<Level>();
+            var Categories = await unitOfWork.CategoryRepository.GetAllAsync(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name) ?? new List<Category>();
+            var Levels = await unitOfWork.LevelRepository.GetAllAsync(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name) ?? new List<Level>();
             if (ModelState.IsValid)
             {
 
@@ -272,7 +274,7 @@ namespace CoursesManagementSystem.Controllers
                 }
                 //check if it is unique
                 var Course = await unitOfWork.CourseRepository
-                    .GetAsync(l => !l.IsDeleted && l.Name == CourseVM.Name && l.ID!=id, null, false);
+                    .GetAsync(l => !l.IsDeleted && l.Name == CourseVM.Name && l.ID!=id && l.CreatedBy == User.Identity.Name, null, false);
                 //en el id mokhtalef ma3anh enha msh ely howa byhawel ye3mlha update halyan ,laken law el esm howa howa fel submit matghyrash yb2a 3ady
                 if (Course != null)
                 {
@@ -283,7 +285,7 @@ namespace CoursesManagementSystem.Controllers
                 }
 
                 //check if Course is marked deleted -->mark undeleted
-                var deletedCourse = await unitOfWork.CourseRepository.GetAsync(l => l.IsDeleted && l.Name == CourseVM.Name);
+                var deletedCourse = await unitOfWork.CourseRepository.GetAsync(l => l.IsDeleted && l.Name == CourseVM.Name && l.CreatedBy == User.Identity.Name);
                 if (deletedCourse != null)
                 {
                     lv.IsDeleted = true;
@@ -364,7 +366,7 @@ namespace CoursesManagementSystem.Controllers
                 lv.CategoryId = CourseVM.CategoryId;
                 lv.LevelId = CourseVM.LevelId;
 
-                //lv.LastModifiedBy = User.Identity.Name ?? "System";
+                lv.LastModifiedBy = User.Identity.Name ?? "System";
                 await unitOfWork.CompleteAsync();
                 return RedirectToAction("Index");
 
@@ -401,7 +403,7 @@ namespace CoursesManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> getById(int id)
         {
-            CourseDetailsVM l = await unitOfWork.CourseRepository.GetQuery(c => !c.IsDeleted && c.ID == id)
+            CourseDetailsVM l = await unitOfWork.CourseRepository.GetQuery(c => !c.IsDeleted && c.ID == id && c.CreatedBy == User.Identity.Name)
                 .Select(c => new CourseDetailsVM
                 {
                     CategoryName = c.Category.Name,
@@ -435,7 +437,7 @@ namespace CoursesManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            Course l = await unitOfWork.CourseRepository.GetAsync(l => !l.IsDeleted && l.ID == id);
+            Course l = await unitOfWork.CourseRepository.GetAsync(l => !l.IsDeleted && l.ID == id && l.CreatedBy == User.Identity.Name);
             if (l == null)
             {
                 //return NotFound();
@@ -444,9 +446,9 @@ namespace CoursesManagementSystem.Controllers
                 return Json(new { success = false });
             }
             //check if Course is not assigned to a courseconfig,coursequestionconfig,chapter
-            var coursewithChapterfound = await unitOfWork.ChapterRepository.GetAsync(c => !c.IsDeleted && c.CourseId == id);
-            var coursewithCourseConfigfound = await unitOfWork.CourseConfigRepository.GetAsync(cc => !cc.IsDeleted && cc.CourseId == id);
-            var coursewithCourseQuestionConfigfound = await unitOfWork.CourseQuestionConfigRepository.GetAsync(cq => !cq.IsDeleted && cq.CourseId == id);
+            var coursewithChapterfound = await unitOfWork.ChapterRepository.GetAsync(c => !c.IsDeleted && c.CourseId == id && c.CreatedBy == User.Identity.Name) ;
+            var coursewithCourseConfigfound = await unitOfWork.CourseConfigRepository.GetAsync(cc => !cc.IsDeleted && cc.CourseId == id && cc.CreatedBy == User.Identity.Name);
+            var coursewithCourseQuestionConfigfound = await unitOfWork.CourseQuestionConfigRepository.GetAsync(cq => !cq.IsDeleted && cq.CourseId == id && cq.CreatedBy == User.Identity.Name);
 
             if (coursewithChapterfound != null)
             {
@@ -489,7 +491,7 @@ namespace CoursesManagementSystem.Controllers
         public async Task<IActionResult> getGeneratedCourseById(int id)
         {
 
-            var course = await unitOfWork.CourseRepository.GetAsync(c => !c.IsDeleted && c.ID == id,
+            var course = await unitOfWork.CourseRepository.GetAsync(c => !c.IsDeleted && c.ID == id && c.CreatedBy == User.Identity.Name,
             new[] { "Category", "Level", "CourseConfig", "CourseQuestionsConfig.QuestionLevel" }
         );
             if (course == null)
@@ -499,10 +501,10 @@ namespace CoursesManagementSystem.Controllers
             }
 
 
-            var chapters = await unitOfWork.ChapterRepository.GetAllQuery(ch => !ch.IsDeleted && ch.CourseId == id)
+            var chapters = await unitOfWork.ChapterRepository.GetAllQuery(ch => !ch.IsDeleted && ch.CourseId == id && ch.CreatedBy == User.Identity.Name)
                 .ToListAsync();
             var chapterIds = chapters.Select(ch => ch.ID).ToList();
-            var lessons = await unitOfWork.LessonRepository.GetAllQuery(l => !l.IsDeleted && chapterIds.Contains(l.ChapterId))
+            var lessons = await unitOfWork.LessonRepository.GetAllQuery(l => !l.IsDeleted && chapterIds.Contains(l.ChapterId) && l.CreatedBy == User.Identity.Name)
                 .ToListAsync();
 
             var res = new GeneratedCourseVM
@@ -576,7 +578,7 @@ namespace CoursesManagementSystem.Controllers
         public async Task<IActionResult> getGeneratedCourses()
         {
 
-            var courses = await unitOfWork.CourseRepository.GetAllAsync(c => !c.IsDeleted,
+            var courses = await unitOfWork.CourseRepository.GetAllAsync(c => !c.IsDeleted && c.CreatedBy == User.Identity.Name,
             new[] { "Category", "Level", "CourseConfig", "CourseQuestionsConfig.QuestionLevel" }
         );
             if (!courses.Any())
@@ -586,10 +588,10 @@ namespace CoursesManagementSystem.Controllers
             }
 
 
-            var chapters = await unitOfWork.ChapterRepository.GetAllQuery(ch => !ch.IsDeleted)
+            var chapters = await unitOfWork.ChapterRepository.GetAllQuery(ch => !ch.IsDeleted && ch.CreatedBy == User.Identity.Name)
                 .ToListAsync();
             var chapterIds = chapters.Select(ch => ch.ID).ToList();
-            var lessons = await unitOfWork.LessonRepository.GetAllQuery(l => !l.IsDeleted && chapterIds.Contains(l.ChapterId))
+            var lessons = await unitOfWork.LessonRepository.GetAllQuery(l => !l.IsDeleted && l.CreatedBy == User.Identity.Name && chapterIds.Contains(l.ChapterId))
                 .ToListAsync();
 
             var res = courses.Select(c => new GeneratedCourseVM
