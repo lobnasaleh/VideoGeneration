@@ -2,6 +2,6 @@
 {
     public enum VideoPresenterPersonaEnum
     {
-        AFRICANLADY=1,AFRICANMAN=2
+        Female=1,Male=2
     }
 }

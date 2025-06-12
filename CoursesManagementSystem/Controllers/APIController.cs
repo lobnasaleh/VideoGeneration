@@ -13,6 +13,7 @@ using System.Net;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.Json;
 using System.Text;
+using CoursesManagementSystem.ViewModels;
 
 namespace CoursesManagementSystem.Controllers
 {
@@ -712,9 +713,10 @@ namespace CoursesManagementSystem.Controllers
         public async Task<ActionResult<APIResponse>> CreateFullCourse([FromBody] FinalGeneratedContent dto)
         {
             var response = new APIResponse();
+            Console.WriteLine(JsonSerializer.Serialize(dto));
 
 
-              if (dto.Chapters != null && dto.Chapters.Any())
+            if (dto.Chapters != null && dto.Chapters.Any())
              {
                    var chapters = _mapper.Map<List<Chapter>>(dto.Chapters);
 

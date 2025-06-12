@@ -2,6 +2,6 @@
 {
     public enum VideoPresenterLanguageEnum
     {
-        ENGLISH=1, SWAHILI=2
+        Arabic=1
     }
 }

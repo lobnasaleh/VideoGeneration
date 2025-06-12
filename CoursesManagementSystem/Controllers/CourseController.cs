@@ -803,8 +803,8 @@ namespace CoursesManagementSystem.Controllers
 
             var json = JsonSerializer.Serialize(courseDto);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var response = await _httpClientFactory.CreateClient().PostAsync("https://httpbin.org/post", content);
+            Console.WriteLine(json );
+            var response = await _httpClientFactory.CreateClient().PostAsync("https://2d8b-156-214-180-25.ngrok-free.app/receive-course-config", content);
 
             if (!response.IsSuccessStatusCode)
             {

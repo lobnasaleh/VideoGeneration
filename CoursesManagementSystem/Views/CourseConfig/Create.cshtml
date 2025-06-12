@@ -35,10 +35,10 @@
             <!-- Language Dropdown -->
             <div class="mb-3">
                 <label asp-for="Language" class="form-label fw-bold">Language</label>
-                <select asp-for="Language" asp-items="ViewBag.Languages" class="form-control">
-                    <option value="">Select Language</option>
+                <select selected asp-for="Language" asp-items="ViewBag.Languages" class="form-control">
+                    <option disabled selected value="">Select Language</option>
                 </select>
-                <span asp-validation-for="Language" class="text-danger"></span>
+                <span asp-validation-for="Language"  class="text-danger"></span>
             </div>
 
             <!-- Persona Dropdown -->
