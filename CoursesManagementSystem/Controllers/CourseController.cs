@@ -111,9 +111,9 @@ namespace CoursesManagementSystem.Controllers
                 //check if level is marked deleted -->mark undeleted
                 var deletedCourse = await unitOfWork.CourseRepository
                     .GetAsync(c => c.IsDeleted
-                    && c.Details == courseVM.Details && c.Name == courseVM.Name
+                   && c.Details == courseVM.Details && c.Name == courseVM.Name
                     && c.CategoryId == courseVM.CategoryId && c.LevelId == courseVM.LevelId
-                    && c.BookStorageURL == courseVM.BookStorageURL
+                   && c.BookStorageURL == courseVM.BookStorageURL
                     && c.CreatedBy == User.Identity.Name
                     );
                 if (deletedCourse != null)
@@ -540,7 +540,12 @@ namespace CoursesManagementSystem.Controllers
                 ChaptersCount = course.CourseConfig?.ChaptersCount ?? 0,
                 LessonsCountPerChapter = course.CourseConfig?.LessonsCountPerChapter ?? 0,
                 VideoDurationInMin = course.CourseConfig?.VideoDurationInMin ?? 0,
-                TotalCourseDuration = (course.CourseConfig?.ChaptersCount * course.CourseConfig?.LessonsCountPerChapter * course.CourseConfig?.VideoDurationInMin )/60?? 20,
+                TotalCourseDuration =
+    (double?)course.CourseConfig?.ChaptersCount *
+    course.CourseConfig?.LessonsCountPerChapter *
+    course.CourseConfig?.VideoDurationInMin / 60 ?? 20,
+
+                //TotalCourseDuration = (course.CourseConfig?.ChaptersCount * course.CourseConfig?.LessonsCountPerChapter * course.CourseConfig?.VideoDurationInMin )/60?? 20,
                 Language = course.CourseConfig?.Language.ToString() ?? "Unknown",
                 Persona = course.CourseConfig?.Persona.ToString() ?? "Unknown",
                 Chapters = chapters
@@ -804,7 +809,7 @@ namespace CoursesManagementSystem.Controllers
             var json = JsonSerializer.Serialize(courseDto);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             Console.WriteLine(json );
-            var response = await _httpClientFactory.CreateClient().PostAsync("https://2d8b-156-214-180-25.ngrok-free.app/receive-course-config", content);
+            var response = await _httpClientFactory.CreateClient().PostAsync("https://6a42-156-214-180-25.ngrok-free.app/receive-course-config", content);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -813,8 +818,8 @@ namespace CoursesManagementSystem.Controllers
             }
 
             var result = await response.Content.ReadAsStringAsync();
-            TempData["Success"] = "Course sent to AI successfully! Response: " + result;
-
+            //  TempData["Success"] = "Course sent to AI successfully! Response: " + result;
+            TempData["Success"] = "Processing started! It will take approximately 1 hour and 35 minutes.";
             return RedirectToAction("Index", new { id = courseId });
         }
 

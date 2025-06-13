@@ -16,7 +16,7 @@ namespace CoursesManagementSystem.ViewModels
         public int LessonsCountPerChapter { get; set; }
         public int VideoDurationInMin { get; set; }
         public int FirstGeneratedLessonOfChapterOneID { get; set; }
-        public int TotalCourseDuration { get; set; }
+        public double TotalCourseDuration { get; set; }
         public string Language { get; set; }
         public string CourseImage { get; set; }
         public string Persona { get; set; }

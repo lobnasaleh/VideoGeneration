@@ -38,7 +38,20 @@
                     <h1 class="display-5 fw-bold mb-3">@Model.Name</h1>
                     <p class="lead mb-4">@Model.Details</p>
                     <div class="d-flex flex-wrap gap-2 mb-4">
-                        <span class="badge bg-light text-primary"><i class="fas fa-clock me-1"></i> @Model.TotalCourseDuration Hours</span>
+                     @*    <span class="badge bg-light text-primary">
+                            <i class="fas fa-clock me-1"></i> @Model.TotalCourseDuration.ToString("0.0") Hours
+                        </span> *@
+                        @{
+                            var totalMinutes = (int)(Model.TotalCourseDuration * 60);
+                            var hours = totalMinutes / 60;
+                            var minutes = totalMinutes % 60;
+                        }
+
+                        <span class="badge bg-light text-primary">
+                            <i class="fas fa-clock me-1"></i>
+                            @(hours > 0 ? $"{hours} hr " : "")@(minutes > 0 ? $"{minutes} min" : "")
+                        </span>
+
                         <span class="badge bg-light text-primary"><i class="fas fa-book me-1"></i> @Model.ChaptersCount Chapters</h5></span>
                         <span class="badge bg-light text-primary"><i class="fas fa-signal me-1"></i>@Model.LevelName</span>
                         <span class="badge bg-light text-primary"><i class="fas fa-globe me-1"></i> @Model.Language</span>
