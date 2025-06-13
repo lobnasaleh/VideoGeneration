@@ -139,21 +139,71 @@ The architecture focuses on **scalability**, **maintainability**, and **robust d
      - Lessons
      - Questions
      - Configurations
-   ![Manage Courses Screenshot][Insert path to screenshot here]
-
+  
 4. **Query Course Info**
    - Use GET APIs to fetch course data as needed
    ![Query Data Screenshot][Insert path to screenshot here]
 
 ## 📸 Screenshots
 
-### 🔐 Login Page
-- Secure login for users
-- ![Login Page Screenshot][Insert path to screenshot here]
+### 🔐 Login
+![Login Screenshot](screenshots/Login.png)  
+> Secure login interface for users.
 
-### 📚 My Courses
-- Overview of generated and enrolled courses
-- ![My Courses Screenshot][Insert path to screenshot here]
+---
+
+### 🧾 All Generated Courses
+![All Generated Courses Screenshot](screenshots/AllGeneratedCourses.png)  
+> Displays a list of all AI-generated courses.
+
+---
+
+### ➕ Add New Course
+![Add Course Screenshot](screenshots/CreateCourse.png)  
+> Form to input course details before generation.
+
+---
+
+### 🛠️ Add Course Configurations
+![Add Course Config Screenshot](screenshots/CreateCourseConfigurations.png)  
+> Configuration options for chapters, lessons, etc.
+
+---
+
+### ❓ Add Question Configuration
+![Add Question Config Screenshot](screenshots/CreateQuestionConfiguration.png)  
+> Customize number and difficulty of questions.
+
+---
+
+### 📘 Course View
+![Course Screenshot](screenshots/Course.png)  
+> Detailed information for each course.
+
+---
+
+### 📚 Generated Course Curriculum
+![Curriculum Screenshot](screenshots/GeneratedCourseCurriculum.png)  
+> Full chapter and lesson breakdown of the generated course.
+
+---
+
+### 📄 Generated Course Details
+![Course Details Screenshot](screenshots/GeneratedCourseDetails.png)  
+> Metadata, objectives, and structure of a course.
+
+---
+
+### 🎥 Generated Video Lesson
+![Video Screenshot](screenshots/GeneratedVideo.png)  
+> AI-generated educational video preview for a lesson.
+
+---
+
+### ❓ Questions Overview
+![Questions Screenshot](screenshots/Questions.png)  
+> All questions generated per lesson with difficulty labels.
+
 
 ## 📈 Future Enhancements
 - Add more customizable AI options
