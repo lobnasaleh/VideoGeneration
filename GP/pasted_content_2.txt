@@ -1,0 +1,287 @@
+{
+  "Id": 57,
+  "chapters": [
+    {
+      "name": "Chapter 1: Basics of AI",
+      "details": "This chapter covers the basics of AI.",
+      "lessons": [
+        {
+          "name": "Lesson 1: What is AI?",
+          "details": "Understanding the definition and scope of AI.",
+          "scriptText": "Artificial Intelligence (AI) refers to the simulation of human intelligence in machines.",
+          "videoStorageURL": "https://storage.example.com/videos/lesson1.mp4",
+          "questions": [
+            {
+              "questionText": "What does AI stand for?",
+              "questionInstructions": "Choose the correct option.",
+              "questionType": 1,
+              "questionLevelId": 7,
+              "answers": [
+                {
+                  "answerText": "Artificial Intelligence",
+                  "isCorrect": true
+                },
+                {
+                  "answerText": "Automated Interface",
+                  "isCorrect": false
+                },
+                {
+                  "answerText": "Analog Input",
+                  "isCorrect": false
+                }
+              ]
+            },
+            {
+              "questionText": "AI simulates human intelligence in machines.",
+              "questionInstructions": "Select true or false.",
+              "questionType": 2,
+              "questionLevelId": 8,
+              "answers": [
+                {
+                  "answerText": "True",
+                  "isCorrect": true
+                },
+                {
+                  "answerText": "False",
+                  "isCorrect": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Lesson 2: History of AI",
+          "details": "Exploring the evolution and milestones of AI.",
+          "scriptText": "The concept of AI began in the 1950s with pioneers like Alan Turing.",
+          "videoStorageURL": "https://storage.example.com/videos/lesson2.mp4",
+          "questions": [
+            {
+              "questionText": "Who is considered a pioneer in AI?",
+              "questionInstructions": "Choose the correct option.",
+              "questionType": 1,
+              "questionLevelId": 8,
+              "answers": [
+                {
+                  "answerText": "Alan Turing",
+                  "isCorrect": true
+                },
+                {
+                  "answerText": "Thomas Edison",
+                  "isCorrect": false
+                },
+                {
+                  "answerText": "Nikola Tesla",
+                  "isCorrect": false
+                }
+              ]
+            },
+            {
+              "questionText": "The concept of AI emerged in the 1980s.",
+              "questionInstructions": "Select true or false.",
+              "questionType": 2,
+              "questionLevelId": 9,
+              "answers": [
+                {
+                  "answerText": "True",
+                  "isCorrect": false
+                },
+                {
+                  "answerText": "False",
+                  "isCorrect": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Chapter 2: AI Techniques",
+      "details": "This chapter explores key AI techniques and methodologies.",
+      "lessons": [
+        {
+          "name": "Lesson 1: Machine Learning Basics",
+          "details": "Introduction to machine learning concepts.",
+          "scriptText": "Machine Learning is a subset of AI that enables systems to learn from data.",
+          "videoStorageURL": "https://storage.example.com/videos/lesson3.mp4",
+          "questions": [
+            {
+              "questionText": "What is Machine Learning a subset of?",
+              "questionInstructions": "Choose the correct option.",
+              "questionType": 1,
+              "questionLevelId": 7,
+              "answers": [
+                {
+                  "answerText": "Artificial Intelligence",
+                  "isCorrect": true
+                },
+                {
+                  "answerText": "Data Storage",
+                  "isCorrect": false
+                },
+                {
+                  "answerText": "Network Security",
+                  "isCorrect": false
+                }
+              ]
+            },
+            {
+              "questionText": "Machine Learning relies primarily on data.",
+              "questionInstructions": "Select true or false.",
+              "questionType": 2,
+              "questionLevelId": 8,
+              "answers": [
+                {
+                  "answerText": "True",
+                  "isCorrect": true
+                },
+                {
+                  "answerText": "False",
+                  "isCorrect": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Lesson 2: Neural Networks",
+          "details": "Understanding the structure and function of neural networks.",
+          "scriptText": "Neural networks mimic the human brain to process complex data.",
+          "videoStorageURL": "https://storage.example.com/videos/lesson4.mp4",
+          "questions": [
+            {
+              "questionText": "What do neural networks mimic?",
+              "questionInstructions": "Choose the correct option.",
+              "questionType": 1,
+              "questionLevelId": 8,
+              "answers": [
+                {
+                  "answerText": "Human Brain",
+                  "isCorrect": true
+                },
+                {
+                  "answerText": "Computer Memory",
+                  "isCorrect": false
+                },
+                {
+                  "answerText": "Database Systems",
+                  "isCorrect": false
+                }
+              ]
+            },
+            {
+              "questionText": "Neural networks are used for processing simple data only.",
+              "questionInstructions": "Select true or false.",
+              "questionType": 2,
+              "questionLevelId": 9,
+              "answers": [
+                {
+                  "answerText": "True",
+                  "isCorrect": false
+                },
+                {
+                  "answerText": "False",
+                  "isCorrect": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Chapter 3: AI Applications",
+      "details": "This chapter discusses real-world applications of AI.",
+      "lessons": [
+        {
+          "name": "Lesson 1: AI in Healthcare",
+          "details": "How AI is transforming healthcare.",
+          "scriptText": "AI is used in healthcare for diagnostics and personalized medicine.",
+          "videoStorageURL": "https://storage.example.com/videos/lesson5.mp4",
+          "questions": [
+            {
+              "questionText": "What is one use of AI in healthcare?",
+              "questionInstructions": "Choose the correct option.",
+              "questionType": 1,
+              "questionLevelId": 7,
+              "answers": [
+                {
+                  "answerText": "Diagnostics",
+                  "isCorrect": true
+                },
+                {
+                  "answerText": "Data Backup",
+                  "isCorrect": false
+                },
+                {
+                  "answerText": "Network Optimization",
+                  "isCorrect": false
+                }
+              ]
+            },
+            {
+              "questionText": "AI is used for personalized medicine in healthcare.",
+              "questionInstructions": "Select true or false.",
+              "questionType": 2,
+              "questionLevelId": 8,
+              "answers": [
+                {
+                  "answerText": "True",
+                  "isCorrect": true
+                },
+                {
+                  "answerText": "False",
+                  "isCorrect": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Lesson 2: AI in Autonomous Vehicles",
+          "details": "The role of AI in self-driving cars.",
+          "scriptText": "AI enables autonomous vehicles to navigate and make decisions.",
+          "videoStorageURL": "https://storage.example.com/videos/lesson6.mp4",
+          "questions": [
+            {
+              "questionText": "What does AI enable in autonomous vehicles?",
+              "questionInstructions": "Choose the correct option.",
+              "questionType": 1,
+              "questionLevelId": 8,
+              "answers": [
+                {
+                  "answerText": "Navigation",
+                  "isCorrect": true
+                },
+                {
+                  "answerText": "Manual Driving",
+                  "isCorrect": false
+                },
+                {
+                  "answerText": "Fuel Management",
+                  "isCorrect": false
+                }
+              ]
+            },
+            {
+              "questionText": "AI in autonomous vehicles is used only for speed control.",
+              "questionInstructions": "Select true or false.",
+              "questionType": 2,
+              "questionLevelId": 9,
+              "answers": [
+                {
+                  "answerText": "True",
+                  "isCorrect": false
+                },
+                {
+                  "answerText": "False",
+                  "isCorrect": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
