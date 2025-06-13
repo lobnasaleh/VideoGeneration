@@ -1,7 +1,5 @@
 # 🎓 Educational Course Generator
 
-![Project Banner][Insert path to banner image here]
-
 ## 📌 Project Overview
 
 This project is a **web-based application** designed to generate structured educational courses based on user inputs such as:
@@ -45,7 +43,7 @@ The architecture focuses on **scalability**, **maintainability**, and **robust d
   
 - **POST API 2**: Receive generated course content from AI  
  
-- **6 GET APIs** to retrieve specific course information
+- **6 GET APIs** to retrieve specific course information (Optional)
 
 ### ⚙️ Additional Highlights
 - Model validation to ensure correct input
@@ -97,7 +95,6 @@ The architecture focuses on **scalability**, **maintainability**, and **robust d
      ```bash
      Update-Package -reinstall
      ```
-   ![Install Dependencies Screenshot][Insert path to screenshot here]
 
 3. **🗄️ Database Setup**
    - Set connection string in `Web.config`
@@ -105,19 +102,18 @@ The architecture focuses on **scalability**, **maintainability**, and **robust d
      ```bash
      Update-Database
      ```
-   ![Database Setup Screenshot][Insert path to screenshot here]
+ 
 
 4. **☁️ Configure Azure**
    - Deploy the project to Microsoft Azure
    - Add the API URLs for AI integration
-   ![Azure Configuration Screenshot][Insert path to screenshot here]
+
 
 5. **▶️ Run the App**
    - Via Visual Studio or CLI:
      ```bash
      dotnet run
      ```
-   ![Run Application Screenshot][Insert path to screenshot here]
 
 ## 🧑‍🏫 Usage
 
@@ -125,13 +121,13 @@ The architecture focuses on **scalability**, **maintainability**, and **robust d
    - Navigate to the course creation page
    - Fill in course details (name, chapters, lessons, language, etc.)
    - Submit the course → sends data to AI via POST API
-   ![Create Course Screenshot][Insert path to screenshot here]
+
 
 2. **Receive Generated Content**
    - AI processes the request and sends back:
      - Video lesson per lesson
      - Related questions by difficulty
-   ![Receive Content Screenshot][Insert path to screenshot here]
+
 
 3. **Manage Courses**
    - Use CRUD UI to edit or delete:
@@ -165,13 +161,13 @@ The architecture focuses on **scalability**, **maintainability**, and **robust d
 ---
 
 ### 🛠️ Add Course Configurations
-![Add Course Config Screenshot](Screenshots/CreateCourseConfigurations.png)  
+![Add Course Config Screenshot](Screenshots/CreateCourseConfiguation.png)  
 > Configuration options for chapters, lessons, etc.
 
 ---
 
 ### ❓ Add Question Configuration
-![Add Question Config Screenshot](Screenshots/CreateQuestionConfiguration.png)  
+![Add Question Config Screenshot](Screenshots/CreateCourseQuestionConfiguration.png)  
 > Customize number and difficulty of questions.
 
 ---
@@ -209,7 +205,6 @@ The architecture focuses on **scalability**, **maintainability**, and **robust d
 - Add more customizable AI options
 - Real-time learner progress tracking
 - Multilingual course generation
-- Upgrade frontend using React or Angular
 
 ## 🤝 Contributing
 1. Fork the repo
