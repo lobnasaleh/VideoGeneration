@@ -14,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text.Json;
 using System.Text;
 using CoursesManagementSystem.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CoursesManagementSystem.Controllers
 {
@@ -708,7 +709,7 @@ namespace CoursesManagementSystem.Controllers
 
 
 
-
+        [Authorize]
         [HttpPost("create-full-course")]
         public async Task<ActionResult<APIResponse>> CreateFullCourse([FromBody] FinalGeneratedContent dto)
         {
