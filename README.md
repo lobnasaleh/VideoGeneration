@@ -1,61 +1,58 @@
 # 🎓 Educational Course Generator
 
+![Project Banner][Insert path to banner image here]
+
 ## 📌 Project Overview
 
 This project is a **web-based application** designed to generate structured educational courses based on user inputs such as:
 
-- Course name & details  
-- Number of chapters and lessons per chapter  
-- Language and target audience (character)  
+- Course name & details
+- Number of chapters and lessons per chapter
+- Language and target audience (character)
 - Question configurations (number of questions per difficulty level)
 
 The application uses **AI** to generate complete course content, including **video lessons** for each lesson and **related questions**. It is built with **ASP.NET MVC** for both frontend and backend and is hosted on **Microsoft Azure** using **MS SQL Server** for storage.
 
 The architecture focuses on **scalability**, **maintainability**, and **robust data handling**, incorporating:
-- Repository & Unit of Work design patterns  
-- Authentication & authorization  
+- Repository & Unit of Work design patterns
+- Authentication & authorization
 - Model validation for data integrity
-
----
 
 ## 🚀 Features
 
 ### ✅ Course Generation
-- Structured course generation with chapters, lessons, and questions  
+- Structured course generation with chapters, lessons, and questions
 - AI-generated video lessons and assessments
 
 ### 🧠 AI Integration
-- Sends course configurations to AI  
-- Receives full course content (videos + questions)
+- Sends course configurations to AI
+- Receives back full course content (videos + questions)
 
 ### 🛠 CRUD Operations for:
-- Course Categories  
-- Courses  
-- Course Levels  
-- Course Configurations  
-- Question Configurations  
-- Chapters  
-- Lessons  
-- Questions  
-- Answers  
-- Question Levels  
+- Course Categories
+- Courses
+- Course Levels
+- Course Configurations
+- Question Configurations
+- Chapters
+- Lessons
+- Questions
+- Answers
+- Question Levels
 
 ### 📡 API Integration
 - **POST API 1**: Send course & question configurations to AI  
-  🔗 [Insert URL here]  
+  🔗 [Insert URL here]
 - **POST API 2**: Receive generated course content from AI  
   🔗 [Insert URL here]
-
 - **6 GET APIs** to retrieve specific course information
 
 ### ⚙️ Additional Highlights
-- Model validation to ensure correct input  
-- Git & GitHub for version control  
-- LINQ & Entity Framework for database querying  
-- ViewModels for frontend data flow  
+- Model validation to ensure correct input
+- Git & GitHub for version control
+- LINQ & Entity Framework for database querying
+- ViewModels for frontend data flow
 - DTOs for clean API communication
-
----
 
 ## 🧰 Tech Stack
 
@@ -73,135 +70,115 @@ The architecture focuses on **scalability**, **maintainability**, and **robust d
 | Querying        | LINQ                               |
 | Security        | Auth + Role-based Authorization    |
 
----
-
 ## 🗂 Project Structure
 
-- `Controllers/`: Handle frontend views and API routes  
-- `Models/`: Define data entities (Courses, Lessons, etc.)  
-- `ViewModels/`: Bind form data for CRUD views  
-- `DTOs/`: Used for sending/receiving API data  
-- `Repositories/`: Custom data access using Repository pattern  
-- `UnitOfWork/`: Transaction management  
-- `Migrations/`: For database schema updates  
-
----
+- `Controllers/`: Handle frontend views and API routes
+- `Models/`: Define data entities (Courses, Lessons, etc.)
+- `ViewModels/`: Bind form data for CRUD views
+- `DTOs/`: Used for sending/receiving API data
+- `Repositories/`: Custom data access using Repository pattern
+- `UnitOfWork/`: Transaction management
+- `Migrations/`: For database schema updates
 
 ## 🧪 Validation
-
-Uses built-in ASP.NET model validations to prevent invalid or incomplete data entry.
-
----
+- Uses built-in ASP.NET model validations to prevent invalid or incomplete data entry
 
 ## 🛠️ Setup Instructions
 
-### 1. 📥 Clone the Repository
-```bash
-git clone https://github.com/[your-repo-url]
-2. 🔧 Install Dependencies
-Make sure .NET SDK and ASP.NET MVC are installed
+1. **📥 Clone the Repository**
+   ```bash
+   git clone https://github.com/[your-repo-url]
+   ```
+   ![Clone Repository Screenshot][Insert path to screenshot here]
 
-Restore packages:
+2. **🔧 Install Dependencies**
+   - Make sure .NET SDK and ASP.NET MVC are installed
+   - Restore packages:
+     ```bash
+     Update-Package -reinstall
+     ```
+   ![Install Dependencies Screenshot][Insert path to screenshot here]
 
-bash
-Copy
-Edit
-Update-Package -reinstall
-3. 🗄️ Database Setup
-Set connection string in Web.config
+3. **🗄️ Database Setup**
+   - Set connection string in `Web.config`
+   - Run EF migrations:
+     ```bash
+     Update-Database
+     ```
+   ![Database Setup Screenshot][Insert path to screenshot here]
 
-Run EF migrations:
+4. **☁️ Configure Azure**
+   - Deploy the project to Microsoft Azure
+   - Add the API URLs for AI integration
+   ![Azure Configuration Screenshot][Insert path to screenshot here]
 
-bash
-Copy
-Edit
-Update-Database
-4. ☁️ Configure Azure
-Deploy the project to Microsoft Azure
+5. **▶️ Run the App**
+   - Via Visual Studio or CLI:
+     ```bash
+     dotnet run
+     ```
+   ![Run Application Screenshot][Insert path to screenshot here]
 
-Add the API URLs for AI integration
+## 🧑‍🏫 Usage
 
-5. ▶️ Run the App
-Via Visual Studio or CLI:
+1. **Create a Course**
+   - Navigate to the course creation page
+   - Fill in course details (name, chapters, lessons, language, etc.)
+   - Submit the course → sends data to AI via POST API
+   ![Create Course Screenshot][Insert path to screenshot here]
 
-bash
-Copy
-Edit
-dotnet run
-🧑‍🏫 Usage
-1. Create a Course
-Navigate to the course creation page
+2. **Receive Generated Content**
+   - AI processes the request and sends back:
+     - Video lesson per lesson
+     - Related questions by difficulty
+   ![Receive Content Screenshot][Insert path to screenshot here]
 
-Fill in course details (name, chapters, lessons, language, etc.)
+3. **Manage Courses**
+   - Use CRUD UI to edit or delete:
+     - Chapters
+     - Lessons
+     - Questions
+     - Configurations
+   ![Manage Courses Screenshot][Insert path to screenshot here]
 
-Submit the course → sends data to AI via POST API
+4. **Query Course Info**
+   - Use GET APIs to fetch course data as needed
+   ![Query Data Screenshot][Insert path to screenshot here]
 
-2. Receive Generated Content
-AI processes the request and sends back:
+## 📸 Screenshots
 
-Video lesson per lesson
+### 🔐 Login Page
+- Secure login for users
+- ![Login Page Screenshot][Insert path to screenshot here]
 
-Related questions by difficulty
+### 📚 My Courses
+- Overview of generated and enrolled courses
+- ![My Courses Screenshot][Insert path to screenshot here]
 
-3. Manage Courses
-Use CRUD UI to edit or delete:
+## 📈 Future Enhancements
+- Add more customizable AI options
+- Real-time learner progress tracking
+- Multilingual course generation
+- Upgrade frontend using React or Angular
 
-Chapters
+## 🤝 Contributing
+1. Fork the repo
+2. Create a new branch:
+   ```bash
+   git checkout -b feature-branch
+   ```
+3. Commit your changes:
+   ```bash
+   git commit -m "Add feature"
+   ```
+4. Push to GitHub:
+   ```bash
+   git push origin feature-branch
+   ```
+5. Create a Pull Request
 
-Lessons
+## 📜 License
+This project is licensed under the MIT License. See the `LICENSE` file for details.
 
-Questions
-
-Configurations
-
-4. Query Course Info
-Use GET APIs to fetch course data as needed
-
-📈 Future Enhancements
-Add more customizable AI options
-
-Real-time learner progress tracking
-
-Multilingual course generation
-
-Upgrade frontend using React or Angular
-
-🤝 Contributing
-Fork the repo
-
-Create a new branch:
-
-bash
-Copy
-Edit
-git checkout -b feature-branch
-Commit your changes:
-
-bash
-Copy
-Edit
-git commit -m "Add feature"
-Push to GitHub:
-
-bash
-Copy
-Edit
-git push origin feature-branch
-Create a Pull Request
-
-📸 Screenshots
-🔐 Login Page
-
-Secure login for users
-
-📚 My Courses
-
-Overview of generated and enrolled courses
-
-📜 License
-This project is licensed under the MIT License. See the LICENSE file for details.
-
-📬 Contact
-For questions or support, contact the project maintainer at
-📧 lobna.saleh2003@gmail.com
-
+## 📬 Contact
+For questions or support, contact the project maintainer at 📧 lobna.saleh2003@gmail.com
