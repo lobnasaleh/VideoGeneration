@@ -42,9 +42,9 @@ The architecture focuses on **scalability**, **maintainability**, and **robust d
 
 ### 📡 API Integration
 - **POST API 1**: Send course & question configurations to AI  
-  🔗 [Insert URL here]
+  
 - **POST API 2**: Receive generated course content from AI  
-  🔗 [Insert URL here]
+ 
 - **6 GET APIs** to retrieve specific course information
 
 ### ⚙️ Additional Highlights
@@ -147,61 +147,61 @@ The architecture focuses on **scalability**, **maintainability**, and **robust d
 ## 📸 Screenshots
 
 ### 🔐 Login
-![Login Screenshot](screenshots/Login.png)  
+![Login Screenshot](Screenshots/Login.png)  
 > Secure login interface for users.
 
 ---
 
 ### 🧾 All Generated Courses
-![All Generated Courses Screenshot](screenshots/AllGeneratedCourses.png)  
+![All Generated Courses Screenshot](Screenshots/AllGeneratedCourses.png)  
 > Displays a list of all AI-generated courses.
 
 ---
 
 ### ➕ Add New Course
-![Add Course Screenshot](screenshots/CreateCourse.png)  
+![Add Course Screenshot](Screenshots/CreateCourse.png)  
 > Form to input course details before generation.
 
 ---
 
 ### 🛠️ Add Course Configurations
-![Add Course Config Screenshot](screenshots/CreateCourseConfigurations.png)  
+![Add Course Config Screenshot](Screenshots/CreateCourseConfigurations.png)  
 > Configuration options for chapters, lessons, etc.
 
 ---
 
 ### ❓ Add Question Configuration
-![Add Question Config Screenshot](screenshots/CreateQuestionConfiguration.png)  
+![Add Question Config Screenshot](Screenshots/CreateQuestionConfiguration.png)  
 > Customize number and difficulty of questions.
 
 ---
 
 ### 📘 Course View
-![Course Screenshot](screenshots/Course.png)  
+![Course Screenshot](Screenshots/Course.png)  
 > Detailed information for each course.
 
 ---
 
 ### 📚 Generated Course Curriculum
-![Curriculum Screenshot](screenshots/GeneratedCourseCurriculum.png)  
+![Curriculum Screenshot](Screenshots/GeneratedCourseCurriculum.png)  
 > Full chapter and lesson breakdown of the generated course.
 
 ---
 
 ### 📄 Generated Course Details
-![Course Details Screenshot](screenshots/GeneratedCourseDetails.png)  
+![Course Details Screenshot](Screenshots/GeneratedCourseDetails.png)  
 > Metadata, objectives, and structure of a course.
 
 ---
 
 ### 🎥 Generated Video Lesson
-![Video Screenshot](screenshots/GeneratedVideo.png)  
+![Video Screenshot](Screenshots/GeneratedVideo.png)  
 > AI-generated educational video preview for a lesson.
 
 ---
 
 ### ❓ Questions Overview
-![Questions Screenshot](screenshots/Questions.png)  
+![Questions Screenshot](Screenshots/Questions.png)  
 > All questions generated per lesson with difficulty labels.
 
 
