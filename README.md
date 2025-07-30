@@ -144,7 +144,7 @@ The architecture focuses on **scalability**, **maintainability**, and **robust d
 
 ### 🔐 Login
 ![Login Screenshot](Screenshots/Login.png)  
-> Secure login interface for users.
+> Secure login interface for users
 
 ---
 
